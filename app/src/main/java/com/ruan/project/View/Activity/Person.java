@@ -105,19 +105,19 @@ public class Person extends BaseActivity implements AdapterView.OnItemClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         switch (position) {
             case 3:
-                CommonIntent.IntentActivity(context, PersonEdit.class, map.get(0).get("userName"), "name");
+                CommonIntent.IntentActivity(context, Edit.class, map.get(0).get("userName"), "name");
                 break;
             case 5:
-                CommonIntent.IntentActivity(context, PersonEdit.class, map.get(0).get("userSex"), "sex");
+                CommonIntent.IntentActivity(context, Edit.class, map.get(0).get("userSex"), "sex");
                 break;
             case 6:
-                CommonIntent.IntentActivity(context, PersonEdit.class, map.get(0).get("userHeight"), "height");
+                CommonIntent.IntentActivity(context, Edit.class, map.get(0).get("userHeight"), "height");
                 break;
             case 7:
-                CommonIntent.IntentActivity(context, PersonEdit.class, map.get(0).get("userWeight"), "weight");
+                CommonIntent.IntentActivity(context, Edit.class, map.get(0).get("userWeight"), "weight");
                 break;
             case 8:
-                CommonIntent.IntentActivity(context, PersonEdit.class, map.get(0).get("userBirthday"), "birthday");
+                CommonIntent.IntentActivity(context, Edit.class, map.get(0).get("userBirthday"), "birthday");
                 break;
         }
     }

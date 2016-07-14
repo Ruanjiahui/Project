@@ -17,7 +17,7 @@ import com.ruan.project.R;
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment2  extends Fragment {
+public class Fragment2 extends Fragment implements View.OnClickListener {
 
     private View view = null;
 
@@ -32,7 +32,7 @@ public class Fragment2  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        view = inflater.inflate(R.layout.fragment2 , container , false);
+        view = inflater.inflate(R.layout.fragment2, container, false);
 
         fragment2Top = view.findViewById(R.id.fragment2Top);
         base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
@@ -40,12 +40,29 @@ public class Fragment2  extends Fragment {
         base_top_title = (TextView) view.findViewById(R.id.base_top_title);
 
         fragment2Top.setBackgroundResource(R.color.Blue);
-        base_top_title.setPadding(0 , DensityUtil.dip2px(getActivity() , 20) , 0 , 0);
+        base_top_title.setPadding(0, DensityUtil.dip2px(getActivity(), 20), 0, 0);
+        base_top_text1.setPadding(0, DensityUtil.dip2px(getActivity(), 20), 0, 0);
         base_top_title.setText("场景");
         base_top_title.setTextColor(getResources().getColor(R.color.White));
         base_top_relative.setVisibility(View.GONE);
         base_top_text1.setText("新建场景");
 
+
+        base_top_text1.setOnClickListener(this);
+
         return view;
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.base_top_text1:
+                break;
+        }
     }
 }

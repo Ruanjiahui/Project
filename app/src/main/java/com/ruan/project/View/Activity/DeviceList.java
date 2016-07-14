@@ -1,9 +1,7 @@
 package com.ruan.project.View.Activity;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -117,6 +115,6 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CommonIntent.IntentActivity(context, Edit.class, map.get(position).get("deviceID") , DatabaseTableName.DeviceTableName);
+        CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID") , DatabaseTableName.DeviceTableName);
     }
 }

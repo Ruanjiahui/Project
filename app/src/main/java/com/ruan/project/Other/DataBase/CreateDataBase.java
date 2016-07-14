@@ -53,6 +53,8 @@ public class CreateDataBase implements Database.Check {
                 establish = getUser();
             } else if (table.equals(DatabaseTableName.UserDeviceName)) {
                 establish = getUserDevice();
+            } else if (table.equals(DatabaseTableName.SceneName)){
+                establish = getScene();
             }
             return establish;
         }
@@ -134,6 +136,20 @@ public class CreateDataBase implements Database.Check {
         establish.put("devicePic", "varchar(50)");
         establish.put("deviceName", "varchar(50)");
         establish.put("deviceRemarks", "varchar(50)");
+        establish.put("sceneID" , "varchar(50)");
+
+        return establish;
+    }
+
+    /**
+     * 场景表
+     * @return
+     */
+    private Establish getScene() {
+        Establish establish = new Establish();
+
+        establish.put("sceneName", "varchar(50)");
+        establish.put("sceneID" , "varchar(50)");
 
         return establish;
     }

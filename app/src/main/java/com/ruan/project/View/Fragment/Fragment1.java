@@ -1,12 +1,10 @@
 package com.ruan.project.View.Fragment;
 
-import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,17 +17,15 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.View.SideListView;
+import com.ruan.project.Controllar.FragmentDatabase;
 import com.ruan.project.Interface.ItemClick;
 import com.ruan.project.Moudle.Item;
-import com.ruan.project.Moudle.User;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
-import com.ruan.project.Other.DataBase.CreateDataBase;
-import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.Device;
-import com.ruan.project.View.Activity.Edit;
+import com.ruan.project.View.Activity.DeviceEdit;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -55,6 +51,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     /**
      * fragment最开始运行的地方  相当于Activity oncreate
+     *
      * @param context
      */
     @Override
@@ -63,28 +60,18 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
         list = new ArrayList<>();
 
-        //判断是否存在用户表   如果没有存在则自动创建用户表
-        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName);
-        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userID", "123456"), true, "userID = ?", new String[]{"123456"} , "userID = ?", new String[]{"123456"});
-        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName  , "" , new String[]{}));
+        //初始化数据库
+        FragmentDatabase.DataBaseHandler(context);
 
 
         //这里是获取用户设备表的数据，所以首先获取本地数据库的数据同时向服务器获取查询是否有更新数据，如果有更新数据则获取最新的数据
         //如果没有最新的数据则不进行任何的操作，如果本地没有数据库获取没有任何数据的话，就直接获取服务器上面的数据，之后插入本地数据库
 
-        //首先判断本地有没有数据库，没有则直接获取服务器的数据添加到本地数据库并且直接创建数据库
-        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName)) {
-            //本地有数据库，
-            //则获取本地数据库的数据，同时访问数据库的数据库将最新的数据库获取写到本地数据库进行更新
-            map = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        map = FragmentDatabase.getDeviceData(context);
+        if (map != null)
             for (int i = 0; i < map.size(); i++) {
                 list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceRemarks"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher)));
             }
-
-        } else {
-            //没有数据库这个时候已经创建完毕数据库
-            //接下来就是从服务器上面获取数据
-        }
     }
 
     @Nullable
@@ -175,7 +162,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         switch (View) {
             //编辑点击事件
             case 0:
-                CommonIntent.IntentActivity(context, Edit.class, map.get(position).get("deviceID") , DatabaseTableName.UserDeviceName);
+                CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID"), DatabaseTableName.UserDeviceName);
                 break;
             //删除点击事件
             case 1:
@@ -183,7 +170,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 list.remove(position);
                 adapter.RefreshData(list);
                 //删除本地数据库的数据
-                new DatabaseOpera(context).DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceID = ? and userID = ?", new String[]{map.get(position).get("deviceID") , "123456"});
+                new DatabaseOpera(context).DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceID = ? and userID = ?", new String[]{map.get(position).get("deviceID"), "123456"});
                 //删除服务器的数据库的数据
                 break;
         }

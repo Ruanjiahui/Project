@@ -1,51 +1,60 @@
 package com.ruan.project.View.Activity;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.NumberPicker;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.administrator.data_sdk.SystemUtil.TimeTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
-import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
 
-import java.util.ArrayList;
-import java.util.Map;
-
-
 /**
- * Created by Soft on 2016/7/11.
+ * Created by Administrator on 2016/7/13.
  */
-public class Edit extends BaseActivity implements TextWatcher {
-
+public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeListener, NumberPicker.OnValueChangeListener {
     private View view = null;
 
-    private Activity activity = null;
-    private Context context = null;
+    private EditText personEdit = null;
 
-    private ImageView editLogo = null;
-    private TextView editTitle = null;
-    private TextView editSubTitle = null;
-    private Button editBut = null;
+    private String content, FLAG;
+    private RadioGroup personRadio = null;
+    private RadioButton radioButton, radioButton1 = null;
+    private LinearLayout personPick = null;
+    private NumberPicker numberPicker1, numberPicker2, numberPicker3 = null;
+    private TextView OldText = null;
+    private String birthday = "";
+    private String hint = "";
+    private String sex = null;
 
-    private String FLAG = "";
-    private ArrayList<Map<String, String>> list = null;
-    private String title, subtitle;
-    private String tableName = null;
+    private int year = 1900, month = 1, day = 1;
 
-
-    private String deviceID = "";
+    private int[] getbirthday(String day) {
+        String str = "";
+        int[] a = new int[3];
+        int m = 0;
+        for (int i = 0; i < day.length(); i++) {
+            if (day.charAt(i) == '-') {
+                a[m] = Integer.parseInt(str);
+                m++;
+                str = "";
+            } else {
+                str += day.charAt(i);
+            }
+        }
+        a[m] = Integer.parseInt(str);
+        return a;
+    }
 
     /**
      * Start()
@@ -53,122 +62,168 @@ public class Edit extends BaseActivity implements TextWatcher {
     @Override
     public void init() {
         Bundle bundle = getIntent().getExtras();
-        FLAG = bundle.getString("data");
-        tableName = bundle.getString("flag");
+        content = bundle.getString("data");
+        FLAG = bundle.getString("flag");
 
-        context = this;
-        activity = (Activity) context;
+        view = LayoutInflater.from(context).inflate(R.layout.personedit, null);
 
-        view = LayoutInflater.from(context).inflate(R.layout.edit, null);
+        personEdit = (EditText) view.findViewById(R.id.personEdit);
+        personRadio = (RadioGroup) view.findViewById(R.id.personRadio);
+        radioButton = (RadioButton) view.findViewById(R.id.radioButton);
+        radioButton1 = (RadioButton) view.findViewById(R.id.radioButton1);
+        personPick = (LinearLayout) view.findViewById(R.id.personPick);
+        numberPicker1 = (NumberPicker) view.findViewById(R.id.numberPicker1);
+        numberPicker2 = (NumberPicker) view.findViewById(R.id.numberPicker2);
+        numberPicker3 = (NumberPicker) view.findViewById(R.id.numberPicker3);
+        OldText = (TextView) view.findViewById(R.id.OldText);
 
-        //判断数据库是否存在，存在则获取设备表的数据库、   通过设备的唯一ID获取到设备的信息 提供给用户是否修改备注和名称
-        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, tableName))
-            list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, "deviceID = ?", new String[]{FLAG});
-
-
-        setTopColor(R.color.Blue);
-        setTitle("修改");
-        setRightTitleVisiable(false);
-        setContentColor(R.color.WhiteSmoke);
+        setContentColor(R.color.GreySmoke);
         setLeftTitleColor(R.color.White);
+        setRightTitleColor(R.color.White);
+        setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
 
-        editLogo = (ImageView) view.findViewById(R.id.editLogo);
-        editTitle = (TextView) view.findViewById(R.id.editTitle);
-        editSubTitle = (TextView) view.findViewById(R.id.editSubTitle);
-        editBut = (Button) view.findViewById(R.id.editBut);
-
-
-        //获取到数据
-        if (list != null) {
-            deviceID = list.get(0).get("deviceID");
-            editTitle.setText(list.get(0).get("deviceName"));
-            if (list.get(0).get("deviceModel") != null)
-                editSubTitle.setText(list.get(0).get("deviceModel"));
-            else
-                editSubTitle.setText(list.get(0).get("deviceRemarks"));
+        switch (FLAG) {
+            case "name":
+                personEdit.setVisibility(View.VISIBLE);
+                hint = "请输入你的姓名";
+                setHint();
+                break;
+            case "height":
+                personEdit.setVisibility(View.VISIBLE);
+                hint = "请输入你的身高";
+                setHint();
+                break;
+            case "weight":
+                personEdit.setVisibility(View.VISIBLE);
+                hint = "请输入你的体重";
+                setHint();
+                break;
+            case "birthday":
+                personPick.setVisibility(View.VISIBLE);
+                if (content != null && !"".equals(content) && content.length() != 0) {
+                    int[] a = getbirthday(content);
+                    year = a[0];
+                    month = a[1];
+                    day = a[2];
+                    OldText.setText(TimeTool.getDayCount(year , month , day) + "");
+                }
+                NumberPicker();
+                break;
+            case "sex":
+                personRadio.setVisibility(View.VISIBLE);
+                if ("男".equals(content)) {
+                    radioButton.setChecked(true);
+                } else if ("女".equals(content)) {
+                    radioButton1.setChecked(true);
+                }
+                break;
+            //场景新建
+            case "scene":
+                personEdit.setVisibility(View.VISIBLE);
+                hint = "请输入场景名称";
+                setHint();
+                break;
         }
         setContent(view);
 
-        //监听editTitle输入事件
-        editTitle.addTextChangedListener(this);
-        editBut.setOnClickListener(this);
+        personRadio.setOnCheckedChangeListener(this);
+    }
+
+    /**
+     * 初始化编辑框的内容
+     */
+    private void setHint() {
+        if (!"".equals(content))
+            personEdit.setText(content);
+        else
+            personEdit.setHint(hint);
+    }
+
+    /**
+     * 初始化数字选择器
+     */
+    private void NumberPicker() {
+        //年
+        numberPicker1.setMaxValue(2016);
+        numberPicker1.setMinValue(1900);
+        numberPicker1.setValue(year);
+        numberPicker1.setOnValueChangedListener(this);
+        //月
+        numberPicker2.setMaxValue(12);
+        numberPicker2.setMinValue(1);
+        numberPicker2.setValue(month);
+        numberPicker2.setOnValueChangedListener(this);
+        //日
+        numberPicker3.setMaxValue(TimeTool.getDay(year, month));
+        numberPicker3.setMinValue(1);
+        numberPicker3.setValue(day);
+        numberPicker3.setOnValueChangedListener(this);
+
     }
 
     @Override
-    public void Click(View v) {
-        switch (v.getId()) {
-            case R.id.editBut:
-                //将设备添加到用户设备表
-                title = editTitle.getText().toString();
-                subtitle = editSubTitle.getText().toString();
-                new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", list, title, subtitle), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
-                Applications.getInstance().removeOneActivity(activity);
+    public void setRightTextClick(View v) {
+        DatabaseOpera databaseOpera = new DatabaseOpera(context);
+        switch (FLAG) {
+            case "name":
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userName", personEdit.getText().toString()), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
+                break;
+            case "height":
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userHeight", personEdit.getText().toString()), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
+                break;
+            case "weight":
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userWeight", personEdit.getText().toString()), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
+                break;
+            case "birthday":
+                birthday = year + "-" + month + "-" + day;
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userBirthday", birthday), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
+                break;
+            case "sex":
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userSex", sex), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
+                break;
+            case "scene":
+                break;
+        }
+        Applications.getInstance().removeOneActivity(this);
+    }
+
+    /**
+     * <p>Called when the checked radio button has changed. When the
+     * selection is cleared, checkedId is -1.</p>
+     *
+     * @param group     the group in which the checked radio button has changed
+     * @param checkedId the unique identifier of the newly checked radio button
+     */
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.radioButton:
+                sex = "男";
+                break;
+            case R.id.radioButton1:
+                sex = "女";
                 break;
         }
     }
 
     /**
-     * This method is called to notify you that, within <code>s</code>,
-     * the <code>count</code> characters beginning at <code>start</code>
-     * are about to be replaced by new text with length <code>after</code>.
-     * It is an error to attempt to make changes to <code>s</code> from
-     * this callback.
+     * Called upon a change of the current value.
      *
-     * @param s
-     * @param start
-     * @param count
-     * @param after
+     * @param picker The NumberPicker associated with this listener.
+     * @param oldVal The previous value.
+     * @param newVal The new value.
      */
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    /**
-     * This method is called to notify you that, within <code>s</code>,
-     * the <code>count</code> characters beginning at <code>start</code>
-     * have just replaced old text that had length <code>before</code>.
-     * It is an error to attempt to make changes to <code>s</code> from
-     * this callback.
-     *
-     * @param s
-     * @param start
-     * @param before
-     * @param count
-     */
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    /**
-     * This method is called to notify you that, somewhere within
-     * <code>s</code>, the text has been changed.
-     * It is legitimate to make further changes to <code>s</code> from
-     * this callback, but be careful not to get yourself into an infinite
-     * loop, because any changes you make will cause this method to be
-     * called again recursively.
-     * (You are not told where the change took place because other
-     * afterTextChanged() methods may already have made other changes
-     * and invalidated the offsets.  But if you need to know here,
-     * you can use {@link Spannable#setSpan} in {@link #onTextChanged}
-     * to mark your place and then look up from here where the span
-     * ended up.
-     *
-     * @param s
-     */
-    @Override
-    public void afterTextChanged(Editable s) {
-        //这里判断当标题输入框没有东西则按钮不允许点击，
-        if (s.toString().length() == 0 || "".equals(s.toString()) || s.toString() == null) {
-            editBut.setClickable(false);
-            editBut.setEnabled(false);
-            editBut.setBackground(context.getResources().getDrawable(R.drawable.button_down_blue));
-        } else {
-            editBut.setClickable(true);
-            editBut.setEnabled(true);
-            editBut.setBackground(context.getResources().getDrawable(R.drawable.button_selector_blue));
+    public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+        if (picker == numberPicker1) {
+            year = newVal;
+        } else if (picker == numberPicker2) {
+            month = newVal;
+        } else if (picker == numberPicker3) {
+            day = newVal;
         }
+        numberPicker3.setMaxValue(TimeTool.getDay(year, month));
+        OldText.setText(TimeTool.getDayCount(year , month , day) + "");
     }
 }

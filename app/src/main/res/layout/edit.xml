@@ -12,41 +12,66 @@
             android:id="@+id/editLogo"
             android:layout_width="50dp"
             android:layout_height="50dp"
-            android:src="@mipmap/ic_launcher"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:src="@mipmap/ic_launcher" />
     </RelativeLayout>
 
 
     <EditText
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textColor="@color/Grey"
-        android:hint="请输入标题"
+        android:layout_height="50dp"
         android:background="@drawable/whitedit"
+        android:hint="请输入标题"
         android:padding="10dp"
+        android:textColor="@color/Grey"
         android:textSize="15sp" />
 
     <EditText
         android:id="@+id/editSubTitle"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="请输入副标题"
+        android:layout_height="50dp"
         android:layout_marginTop="1dp"
         android:background="@drawable/whitedit"
+        android:hint="请输入副标题"
         android:padding="10dp"
         android:textColor="@color/Grey"
         android:textSize="15sp" />
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/editScene"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="1dp"
+            android:background="@drawable/whitedit"
+            android:text="请输入场景或者选择场景"
+            android:padding="10dp"
+            android:textColor="@color/Grey"
+            android:textSize="15sp" />
+
+        <ImageView
+            android:id="@+id/editDrop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_launcher" />
+    </RelativeLayout>
 
     <Button
         android:id="@+id/editBut"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:text="@string/center"
         android:layout_marginTop="50dp"
         android:background="@drawable/button_selector_blue"
-        android:textSize="15sp"
-        android:textColor="@color/White"/>
+        android:text="@string/center"
+        android:textColor="@color/White"
+        android:textSize="15sp" />
 
 </LinearLayout>

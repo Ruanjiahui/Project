@@ -18,11 +18,11 @@
         <activity android:name=".View.Activity.Device" />
         <activity android:name=".View.Activity.DeviceList" />
         <activity android:name=".View.Activity.Suggest" />
-        <activity android:name=".View.Activity.Edit" />
+        <activity android:name=".View.Activity.DeviceEdit" />
         <activity android:name=".View.Activity.Setting" />
         <activity android:name=".View.Activity.Help" />
         <activity android:name=".View.Activity.Person"/>
-        <activity android:name=".View.Activity.PersonEdit"/>
+        <activity android:name=".View.Activity.Edit"/>
         <activity android:name=".View.Activity.Login"/>
     </application>
 

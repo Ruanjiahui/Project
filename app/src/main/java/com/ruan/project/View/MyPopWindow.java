@@ -16,6 +16,7 @@ import android.widget.PopupWindow;
 
 
 import com.ruan.project.Interface.PopWinOnClick;
+import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
         this.setAnimationStyle(R.style.AnimationPreview);
 
         listView = (ListView) conentView.findViewById(R.id.poplistview);
-//        listView.setAdapter(new ListViewAdapter(activity, list));
+        listView.setAdapter(new LGAdapter(activity, list , "ListView"));
         listView.setOnItemClickListener(this);
     }
 

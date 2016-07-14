@@ -18,10 +18,11 @@ public class DataHandler {
      * @param deviceModel       设备的类型
      * @return
      */
-    public static ContentValues getContentValues(String userID, ArrayList<Map<String, String>> list, String deviceName, String deviceModel) {
+    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("userID", userID);
+        contentValues.put("sceneID", sceneID);
         contentValues.put("deviceID", list.get(0).get("deviceID"));
         contentValues.put("devicePic", list.get(0).get("devicePic"));
         contentValues.put("deviceName", deviceName);
@@ -40,6 +41,21 @@ public class DataHandler {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(key, values);
+
+        return contentValues;
+    }
+
+    /**
+     * 封装数据库的数据
+     * @param sceneID
+     * @param sceneName
+     * @return
+     */
+    public static ContentValues getSceneContentValues(String sceneID , String sceneName){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("sceneID", sceneID);
+        contentValues.put("sceneName", sceneName);
 
         return contentValues;
     }
