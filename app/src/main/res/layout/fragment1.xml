@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:fitsSystemWindows="true">
+
+    <!--<RelativeLayout-->
+        <!--android:id="@+id/fragment1Top"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:background="@mipmap/logo"></RelativeLayout>-->
+
+    <include
+        android:id="@+id/fragment1Top"
+        layout="@layout/base_top"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"></include>
+
+    <com.example.administrator.ui_sdk.View.SideListView
+        android:id="@+id/slideListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@color/WhiteSmoke"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/itemsector"
+        android:background="@color/White"></com.example.administrator.ui_sdk.View.SideListView>
+
+</LinearLayout>

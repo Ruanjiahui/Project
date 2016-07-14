@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <EditText
+        android:id="@+id/suggestContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@color/White"
+        android:padding="5dp"
+        android:hint="请输入反馈意见"
+        android:textColorHint="@color/GreyDeep"
+        android:textColor="@color/Grey"
+        android:textSize="15sp" />
+
+
+    <LinearLayout
+        android:id="@+id/suggestPhone"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/suggestContent"
+        android:layout_marginTop="10dp"
+        android:background="@color/White"
+        android:orientation="horizontal"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/suggestPhoneimg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@mipmap/ic_launcher"/>
+
+        <EditText
+            android:id="@+id/suggestPhonetxt"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="请输入你的电话号码"
+            android:textColor="@color/Grey"
+            android:textColorHint="@color/GreyDeep"
+            android:textSize="15sp" />
+
+
+    </LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/suggestDevice"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/White"
+        android:layout_below="@id/suggestPhone"
+        android:padding="5dp">
+
+        <ImageView
+            android:id="@+id/suggestDeviceimg"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_launcher"/>
+
+        <TextView
+            android:id="@+id/suggestDevicetxt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:gravity="center_vertical"
+            android:layout_toRightOf="@id/suggestDeviceimg"
+            android:text="选择问题设备"
+            android:textColor="@color/GreyDeep"
+            android:textSize="15sp" />
+
+
+        <ImageView
+            android:id="@+id/suggestDeviceright"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_launcher"/>
+
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/suggestSend"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/Blue"
+        android:gravity="center"
+        android:text="发送"
+        android:textColor="@color/White"
+        android:textSize="15sp" />
+
+</RelativeLayout>

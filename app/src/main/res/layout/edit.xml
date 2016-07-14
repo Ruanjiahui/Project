@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/editLogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/ic_launcher"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+
+    <EditText
+        android:id="@+id/editTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/Grey"
+        android:hint="请输入标题"
+        android:background="@drawable/whitedit"
+        android:padding="10dp"
+        android:textSize="15sp" />
+
+    <EditText
+        android:id="@+id/editSubTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="请输入副标题"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/whitedit"
+        android:padding="10dp"
+        android:textColor="@color/Grey"
+        android:textSize="15sp" />
+
+
+    <Button
+        android:id="@+id/editBut"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="@string/center"
+        android:layout_marginTop="50dp"
+        android:background="@drawable/button_selector_blue"
+        android:textSize="15sp"
+        android:textColor="@color/White"/>
+
+</LinearLayout>
