@@ -11,6 +11,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.SystemUtil.TimeTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -18,6 +19,8 @@ import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
+
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/7/13.
@@ -36,6 +39,7 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
     private String birthday = "";
     private String hint = "";
     private String sex = null;
+    private int sceneID = 0;
 
     private int year = 1900, month = 1, day = 1;
 
@@ -106,7 +110,7 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                     year = a[0];
                     month = a[1];
                     day = a[2];
-                    OldText.setText(TimeTool.getDayCount(year , month , day) + "");
+                    OldText.setText(TimeTool.getDayCount(year, month, day) + "");
                 }
                 NumberPicker();
                 break;
@@ -122,7 +126,17 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
             case "scene":
                 personEdit.setVisibility(View.VISIBLE);
                 hint = "请输入场景名称";
-                setHint();
+                Map<String, String> map = new GetDatabaseData().Query(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, new String[]{"max(sceneID)"}, "", null, "", "", "", "");
+                if ("".equals(content)) {
+                    if (map.get("max(sceneID)") != null)
+                        sceneID = Integer.parseInt(map.get("max(sceneID)"));
+                    sceneID += 1;
+                    personEdit.setHint(hint);
+                } else {
+                    sceneID = Integer.parseInt(content);
+                    hint = new GetDatabaseData().Query(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "sceneID = ?", new String[]{content}, "", "", "", "").get("sceneName");
+                    personEdit.setText(hint);
+                }
                 break;
         }
         setContent(view);
@@ -183,6 +197,7 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                 databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userSex", sex), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
                 break;
             case "scene":
+                databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID + "", personEdit.getText().toString()), true, "sceneID = ?", new String[]{sceneID + ""}, "sceneID = ?", new String[]{sceneID + ""});
                 break;
         }
         Applications.getInstance().removeOneActivity(this);
@@ -224,6 +239,6 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
             day = newVal;
         }
         numberPicker3.setMaxValue(TimeTool.getDay(year, month));
-        OldText.setText(TimeTool.getDayCount(year , month , day) + "");
+        OldText.setText(TimeTool.getDayCount(year, month, day) + "");
     }
 }

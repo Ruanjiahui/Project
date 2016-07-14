@@ -12,16 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"></include>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/fragment2Pager"
+    <com.example.administrator.ui_sdk.View.SideListView
+        android:id="@+id/slideListView1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent"
+        android:divider="@color/WhiteSmoke"
+        android:dividerHeight="1dp"
+        android:listSelector="@drawable/itemsector"
+        android:background="@color/White"></com.example.administrator.ui_sdk.View.SideListView>
 
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="80dp"
-        android:layout_marginTop="2dp"
-        android:background="@color/White" />
 
 </LinearLayout>

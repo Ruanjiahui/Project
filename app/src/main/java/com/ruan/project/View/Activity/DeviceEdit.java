@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.ui_sdk.Applications;
+import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Moudle.Item;
@@ -134,6 +135,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private Object getItem(String title) {
         Item item = new Item();
         item.setListText(title);
+        item.setHeight(DensityUtil.dip2px(context , 30));
         return item;
     }
 
@@ -146,7 +148,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 subtitle = editSubTitle.getText().toString();
                 sceneName = editScene.getText().toString();
 
-//                new GetDatabaseData().Query(context , DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName , new String[]{"max(sceneID)"} , "" , null , "" , "" , "" , "");
                 new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
                 if (!"".equals(sceneID) && sceneID != null)
                     new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
@@ -157,7 +158,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
             case R.id.editDrop:
                 //创建PopWindow的组件
                 popWindow = new MyPopWindow(activity, map, BaseActivity.width / 3 * 2);
-                popWindow.showPopupWindow(editDrop, BaseActivity.width / 3 * 2, BaseActivity.height / 3);
+                popWindow.showPopupWindow(editLogo, BaseActivity.width / 3, BaseActivity.height / 3);
                 popWindow.setOnPopWinItemClick(this);
                 break;
         }
