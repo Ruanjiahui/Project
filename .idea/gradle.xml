@@ -12,6 +12,7 @@
             <option value="$PROJECT_DIR$/DATA_SDK" />
             <option value="$PROJECT_DIR$/UI_SDK" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/udp_sdk" />
           </set>
         </option>
         <option name="myModules">
@@ -20,6 +21,7 @@
             <option value="$PROJECT_DIR$/DATA_SDK" />
             <option value="$PROJECT_DIR$/UI_SDK" />
             <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/udp_sdk" />
           </set>
         </option>
       </GradleProjectSettings>
