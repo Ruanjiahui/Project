@@ -20,10 +20,11 @@ public class CreateDataBase implements Database.Check {
 
     /**
      * 检查数据库是否存在
+     *
      * @param context
      * @param database
      * @param tablename
-     * @return  false则数据表没有存在，true则存在
+     * @return false则数据表没有存在，true则存在
      */
     public boolean FirstDataBase(Context context, String database, String tablename) {
         CheckDatabase.CheckData(context, database, tablename, this);
@@ -53,7 +54,7 @@ public class CreateDataBase implements Database.Check {
                 establish = getUser();
             } else if (table.equals(DatabaseTableName.UserDeviceName)) {
                 establish = getUserDevice();
-            } else if (table.equals(DatabaseTableName.SceneName)){
+            } else if (table.equals(DatabaseTableName.SceneName)) {
                 establish = getScene();
             }
             return establish;
@@ -82,7 +83,8 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceType", "varchar(50)");
         establish.put("deviceTypeID", "varchar(50)");
         establish.put("devicePic", "varchar(100)");
-
+        establish.put("deviceIP", "varchar(50)");
+        establish.put("devicePORT", "varchar(10)");
         return establish;
     }
 
@@ -126,6 +128,7 @@ public class CreateDataBase implements Database.Check {
 
     /**
      * 用户设备表
+     *
      * @return
      */
     private Establish getUserDevice() {
@@ -136,20 +139,21 @@ public class CreateDataBase implements Database.Check {
         establish.put("devicePic", "varchar(50)");
         establish.put("deviceName", "varchar(50)");
         establish.put("deviceRemarks", "varchar(50)");
-        establish.put("sceneID" , "varchar(50)");
+        establish.put("sceneID", "varchar(50)");
 
         return establish;
     }
 
     /**
      * 场景表
+     *
      * @return
      */
     private Establish getScene() {
         Establish establish = new Establish();
 
         establish.put("sceneName", "varchar(50)");
-        establish.put("sceneID" , "varchar(50)");
+        establish.put("sceneID", "varchar(50)");
 
         return establish;
     }

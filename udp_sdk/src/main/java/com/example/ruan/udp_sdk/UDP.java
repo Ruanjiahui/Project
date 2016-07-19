@@ -12,12 +12,11 @@ public class UDP {
 
     /**
      * 实例化对象
-     * @param PORT      UDP链接本地端口
      */
-    public UDP(int PORT) {
+    public UDP() {
         udpBase = new UDPBase();
         //初始化链接
-        udpBase.Connect(PORT);
+        udpBase.Connect();
     }
 
     /**

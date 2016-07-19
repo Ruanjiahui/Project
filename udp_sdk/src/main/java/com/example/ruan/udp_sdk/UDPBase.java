@@ -23,17 +23,17 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
     private String IP = null;
     private int PORT = 0;
     private byte[] buffer = null;
-    private int size = 10240;
+    private int size = 5120;
 
 
     /**
      * 这个方法是初始化udp链接
      */
     @Override
-    protected void Connect(int PORT) {
+    protected void Connect() {
         if (datagramSocket == null) {
             try {
-                datagramSocket = new DatagramSocket(PORT);
+                datagramSocket = new DatagramSocket();
             } catch (SocketException e) {
                 e.printStackTrace();
             }
@@ -77,15 +77,26 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
      * @return
      */
     @Override
-    public byte[] Reviced() {
+    public Object[] Reviced() {
+        //创建一个Object对象数组
+        //0 储存接收的数据
+        //1 储存接收数据的长度
+        //2 储存接收的地址
+        //3 储存接收的端口
+        Object[] objects = new Object[4];
         try {
             buffer = new byte[size];
             indatagramPacket = new DatagramPacket(buffer, buffer.length);
             datagramSocket.receive(indatagramPacket);
+            //获取返回数据的长度
+            objects[0] = buffer;
+            objects[1] = indatagramPacket.getLength();
+            objects[2] = indatagramPacket.getAddress().getHostName();
+            objects[3] = indatagramPacket.getPort();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return buffer;
+        return objects;
     }
 
     /**

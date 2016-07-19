@@ -12,7 +12,7 @@ public abstract class UDPSource{
     /**
      * 这个方法是初始化udp链接
      */
-    protected abstract void Connect(int PORT);
+    protected abstract void Connect();
 
     /**
      * 这个方法是发送信息

@@ -1,6 +1,7 @@
 package com.example.ruan.udp_sdk;
 
 import java.net.DatagramSocket;
+import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016/7/15.
@@ -21,12 +22,12 @@ public interface UDPInterface {
          *
          * @return
          */
-        public byte[] Reviced();
+        public Object[] Reviced();
     }
 
     public interface UDPHandler {
 
-        public void Handler(byte[] buffer);
+        public void Handler(Object[] objects);
     }
 
 }

@@ -11,6 +11,9 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.ruan.project.Controllar.UdpOpera;
+import com.ruan.project.Interface.Other;
+import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.Other.DataBase.CreateDataBase;
@@ -24,12 +27,13 @@ import java.util.Map;
 /**
  * Created by Soft on 2016/7/9.
  */
-public class Device extends BaseActivity implements AdapterView.OnItemClickListener {
+public class Device extends BaseActivity implements AdapterView.OnItemClickListener, Other.HandlerMac {
 
     private View view = null;
     private ListView productList = null;
     private ArrayList<Object> list = null;
     private LGAdapter adapter = null;
+    private DatabaseOpera databaseOpera = null;
 
     /**
      * Start()
@@ -47,6 +51,7 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
         productList = (ListView) view.findViewById(R.id.productList);
         //实例化链表
         list = new ArrayList<>();
+        databaseOpera = new DatabaseOpera(this);
 
         //一进来马上判断有没有设备数据库和设备表，如果没有则自动会创建数据库
         //第二个参数是数据库名称,第三个参数是数据库表的名称
@@ -56,16 +61,21 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
         //（3）本地数据库数据库里面有数据，则马上显示同时访问服务器是否有更新，有更新则将新的数据库获
         //     取到本地更新本地数据库，更新显示界面
         //如果返回false则说明没有该表，返回true则存在该表
-        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)){
-            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName , DatabaseTableName.DeviceTableName , "");
-        }else{
-            ArrayList<Map<String , String>> map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName , DatabaseTableName.DeviceTableName);
-            //没有该表则自动创建表，并且从服务器上面获取设备的数据
-            //从服务器上面获取的数据首先要存本地数据库，之后才显示到界面
-            for (int i = 0; i < map.size(); i++) {
-                list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher),map.get(i).get("deviceType"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60) , map.get(i).get("deviceTypeID")));
-            }
-        }
+//        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)) {
+//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, "");
+//        } else {
+        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
+        //获取不同类别的设备
+        ArrayList<Map<String, String>> map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
+        //没有该表则自动创建表，并且从服务器上面获取设备的数据
+        //从服务器上面获取的数据首先要存本地数据库，之后才显示到界面
+        for (int i = 0; i < map.size(); i++)
+            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), map.get(i).get("deviceType"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), map.get(i).get("deviceTypeID")));
+//            }
+
+
+        //扫描局域网的设备
+        new UdpOpera(this).UDPDeviceScan(this);
 
         adapter = new LGAdapter(context, list, "ListView");
         productList.setAdapter(adapter);
@@ -75,7 +85,7 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
         setContent(view);
     }
 
-    private Object getItem(Drawable drawable, String text, Drawable right, int height , String FLAG) {
+    private Object getItem(Drawable drawable, String text, Drawable right, int height, String FLAG) {
         Item item = new Item();
 
         item.setListImage(drawable);
@@ -103,5 +113,24 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         CommonIntent.IntentActivity(context, DeviceList.class, ((Item) list.get(position)).getFLAG(), ((Item) list.get(position)).getListText());
+    }
+
+    /**
+     * 这个方法获取Mac值
+     *
+     * @param objects 这个Object数组里面包含一些列的设备信息
+     */
+    @Override
+    public void getMac(Object[] objects) {
+        //创建一个Object对象数组
+        //0 储存接收的数据
+        //1 储存接收数据的长度
+        //2 储存接收的地址
+        //3 储存接收的端口
+        //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
+        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
+        String IP = (String) objects[2];
+        int PORT = (int) objects[3];
+        databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, DataHandler.getContentValues(mac, IP, PORT));
     }
 }

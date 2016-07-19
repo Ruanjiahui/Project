@@ -59,4 +59,22 @@ public class DataHandler {
 
         return contentValues;
     }
+
+    /**
+     * 封装数据库的数据
+     * @param Mac
+     * @param IP
+     * @param PORT
+     * @return
+     */
+    public static ContentValues getContentValues(String Mac , String IP , int PORT){
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put("deviceID", Mac);
+        contentValues.put("deviceIP", IP);
+        contentValues.put("devicePORT", PORT);
+
+        return contentValues;
+    }
+
 }

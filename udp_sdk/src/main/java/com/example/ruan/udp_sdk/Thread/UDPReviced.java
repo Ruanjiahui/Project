@@ -33,7 +33,7 @@ public class UDPReviced implements Runnable {
     public void run() {
         while (true) {
             Message message = new Message();
-            byte[] data = uReviced.Reviced();
+            Object[] data = uReviced.Reviced();
             if (data != null) {
                 message.obj = data;
                 handler.sendMessage(message);
@@ -45,7 +45,7 @@ public class UDPReviced implements Runnable {
 
         @Override
         public void dispatchMessage(Message msg) {
-            uHandler.Handler((byte[]) msg.obj);
+            uHandler.Handler((Object[]) msg.obj);
         }
     };
 }

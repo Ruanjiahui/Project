@@ -97,10 +97,14 @@ public class DatabaseOpera {
 
     /**
      * 插数据的时候可以接受ContentValues
-     *
-     * @param db            数据库的名称
-     * @param table_name    数据库的表的名称
-     * @param contentValues 插进去的数据
+     * @param db                数据库的名称
+     * @param table_name        数据库的表名称
+     * @param contentValues     数据库插数据的对象
+     * @param update            是否更新            true(自动判断更新获取插数据)false只是插数据
+     * @param key               更新数据的set后面的变量
+     * @param values            更新数据的数据
+     * @param whereclause       where后面的变量
+     * @param whereargs         where后面的数据
      */
     public void DataInert(String db, String table_name, ContentValues contentValues, boolean update, String key, String[] values , String whereclause, String[] whereargs) {
         if (update) {
