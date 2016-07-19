@@ -73,6 +73,7 @@ public class DataHandler {
         contentValues.put("deviceID", Mac);
         contentValues.put("deviceIP", IP);
         contentValues.put("devicePORT", PORT);
+        contentValues.put("deviceTypeID", Mac);
 
         return contentValues;
     }

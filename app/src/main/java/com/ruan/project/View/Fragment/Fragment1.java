@@ -72,6 +72,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
             for (int i = 0; i < map.size(); i++) {
                 list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceRemarks"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher)));
             }
+
+        //检测设备是否在线
     }
 
     @Nullable

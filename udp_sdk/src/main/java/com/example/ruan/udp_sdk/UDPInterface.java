@@ -27,6 +27,16 @@ public interface UDPInterface {
 
     public interface UDPHandler {
 
+        /**
+         * 处理接收消息的接口
+         * //创建一个Object对象数组
+         * //0 储存接收的数据
+         * //1 储存接收数据的长度
+         * //2 储存接收的地址
+         * //3 储存接收的端口
+         *
+         * @param objects
+         */
         public void Handler(Object[] objects);
     }
 

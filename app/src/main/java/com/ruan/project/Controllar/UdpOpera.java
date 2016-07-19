@@ -25,6 +25,12 @@ public class UdpOpera implements TimerHandler {
     private int count = 0;
     private ArrayList<String> mac = null;
     private Context context = null;
+    //广播的发送的端口
+    private int PORT = 3000;
+    //广播发送的数据包
+    private String data = "123";
+    //广播发送间隔的时间
+    private int time = 1000;
 
     public UdpOpera(Context context){
         this.context = context;
@@ -35,6 +41,7 @@ public class UdpOpera implements TimerHandler {
      * @param handlerMac
      */
     public void UDPDeviceScan(Other.HandlerMac handlerMac){
+        mac = new ArrayList<>();
         //获取所有的设备ID
         //从数据库中获取设备的ID
         ArrayList<Map<String, String>> mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, new String[]{"deviceID"}, "", null, "", "", "", "");
@@ -44,12 +51,12 @@ public class UdpOpera implements TimerHandler {
         this.handlerMac = handlerMac;
         //计时器，广播没一秒发送一次，总共发送10次
         timer = new Timer();
-        timer.schedule(new MyTimerTask(this), 0, 1000);
+        timer.schedule(new MyTimerTask(this), 0, time);
     }
 
     @Override
     public void timerHandler(Message msg) {
-        new ScanDevice(mac).Scanner(3000, "123", handlerMac);
+        new ScanDevice(mac).Scanner(PORT, data, handlerMac);
         count++;
         if (count == 10)
             timer.cancel();
