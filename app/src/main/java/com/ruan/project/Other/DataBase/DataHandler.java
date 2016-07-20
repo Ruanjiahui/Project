@@ -18,7 +18,7 @@ public class DataHandler {
      * @param deviceModel       设备的类型
      * @return
      */
-    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel) {
+    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel , String IP , String Mac , int Port) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("userID", userID);
@@ -27,6 +27,9 @@ public class DataHandler {
         contentValues.put("devicePic", list.get(0).get("devicePic"));
         contentValues.put("deviceName", deviceName);
         contentValues.put("deviceRemarks", deviceModel);
+        contentValues.put("deviceMac", Mac);
+        contentValues.put("deviceIP", IP);
+        contentValues.put("devicePORT", Port);
 
         return contentValues;
     }
@@ -73,7 +76,6 @@ public class DataHandler {
         contentValues.put("deviceID", Mac);
         contentValues.put("deviceIP", IP);
         contentValues.put("devicePORT", PORT);
-        contentValues.put("deviceTypeID", Mac);
 
         return contentValues;
     }

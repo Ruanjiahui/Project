@@ -49,6 +49,7 @@ public class SystemTool {
 
     /**
      * 获取软件的应用的包名
+     *
      * @param context
      * @return
      */
@@ -150,5 +151,31 @@ public class SystemTool {
             cursor.close();
         }
         return imageList;
+    }
+
+    /**
+     * 判断Mac地址的合法性
+     *
+     * @param Mac
+     * @return
+     */
+    public static boolean isMac(String Mac) {
+        int num = 2;
+        if (Mac.length() == 17) {
+            for (int i = 0; i < Mac.length(); i++) {
+                if (num == i) {
+                    if (Mac.charAt(i) == ':' || Mac.charAt(i) == '-') {
+                        num += 3;
+                    } else
+                        return false;
+                    continue;
+                }
+                if ((Mac.charAt(i) >= '0' && Mac.charAt(i) <= '9') || (Mac.charAt(i) >= 'A' && Mac.charAt(i) <= 'F') || (Mac.charAt(i) >= 'a' && Mac.charAt(i) <= 'f')) {
+                } else
+                    return false;
+            }
+            return true;
+        }
+        return false;
     }
 }

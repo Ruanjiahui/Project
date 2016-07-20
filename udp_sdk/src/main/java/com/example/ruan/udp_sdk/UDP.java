@@ -22,10 +22,11 @@ public class UDP {
     /**
      * 外部调用的函数接口 接收数据
      *
+     * @param position      接收数据的标识
      * @param handler
      */
-    public void uReviced(UDPInterface.UDPHandler handler) {
-        udpBase.Revice(handler);
+    public void uReviced(int position , UDPInterface.UDPHandler handler) {
+        udpBase.Revice(position , handler);
     }
 
     /**

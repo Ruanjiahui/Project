@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.Device;
+import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
 
 import java.util.ArrayList;
@@ -150,6 +152,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        CommonIntent.IntentActivity(context , DeviceControl.class , map.get(0).get("deviceID"));
     }
 
     /**
@@ -164,7 +167,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         switch (View) {
             //编辑点击事件
             case 0:
-                CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID"), DatabaseTableName.UserDeviceName);
+                CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID"), "edit");
                 break;
             //删除点击事件
             case 1:

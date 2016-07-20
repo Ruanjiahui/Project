@@ -26,6 +26,7 @@
         <activity android:name=".View.Activity.Person"/>
         <activity android:name=".View.Activity.Edit"/>
         <activity android:name=".View.Activity.Login"/>
+        <activity android:name=".View.Activity.DeviceControl"/>
     </application>
 
 </manifest>

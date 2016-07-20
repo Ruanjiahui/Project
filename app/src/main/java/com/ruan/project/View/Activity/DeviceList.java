@@ -115,6 +115,6 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID") , DatabaseTableName.DeviceTableName);
+        CommonIntent.IntentActivity(context, DeviceEdit.class, map.get(position).get("deviceID") , "new");
     }
 }

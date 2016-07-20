@@ -1,7 +1,9 @@
 package com.example.ruan.udp_sdk;
 
+import android.os.Message;
 import android.util.Log;
 
+import com.example.ruan.udp_sdk.Thread.MyTimerTask;
 import com.example.ruan.udp_sdk.Thread.UDPReviced;
 import com.example.ruan.udp_sdk.Thread.UDPSend;
 
@@ -10,11 +12,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.SocketException;
+import java.util.Timer;
 
 /**
  * Created by Administrator on 2016/7/16.
  */
-public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPInterface.UDPSend {
+public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPInterface.UDPSend , TimerHandler{
 
 
     private DatagramSocket datagramSocket = null;
@@ -24,6 +27,10 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
     private int PORT = 0;
     private byte[] buffer = null;
     private int size = 5120;
+    private Thread thread = null;
+    private Timer timer = null;
+    private UDPInterface.UDPHandler handler = null;
+    private int position = 0;
 
 
     /**
@@ -57,8 +64,13 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
      * 这个方法是接收信息
      */
     @Override
-    protected void Revice(UDPInterface.UDPHandler handler) {
-        new Thread(new UDPReviced(this, handler)).start();
+    protected void Revice(int position , UDPInterface.UDPHandler handler) {
+        this.position = position;
+        this.handler = handler;
+        thread = new Thread(new UDPReviced(position , this, handler));
+        thread.start();
+        timer = new Timer();
+        timer.schedule(new MyTimerTask(this), 30000, 30000);
     }
 
 
@@ -93,6 +105,7 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
             objects[1] = indatagramPacket.getLength();
             objects[2] = indatagramPacket.getAddress().getHostName();
             objects[3] = indatagramPacket.getPort();
+            timer.cancel();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -110,5 +123,18 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public void timerHandler(Message msg) {
+        thread.interrupt();
+        timer.cancel();
+        //超时
+        handler.Error(position , 0);
+    }
+
+    @Override
+    public Message timerRun() {
+        return new Message();
     }
 }

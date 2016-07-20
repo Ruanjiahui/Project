@@ -12,6 +12,7 @@ import com.example.ruan.udp_sdk.UDPInterface;
 public class UDPReviced implements Runnable {
     private UDPInterface.UDPReviced uReviced = null;
     private UDPInterface.UDPHandler uHandler = null;
+    private int position = 0;
 
     /**
      * 这个方法是接收信息调用的方法
@@ -19,7 +20,8 @@ public class UDPReviced implements Runnable {
      * @param uReviced 接收信息的接口
      * @param uHandler 处理接收信息的接口
      */
-    public UDPReviced(UDPInterface.UDPReviced uReviced, UDPInterface.UDPHandler uHandler) {
+    public UDPReviced(int position , UDPInterface.UDPReviced uReviced, UDPInterface.UDPHandler uHandler) {
+        this.position = position;
         this.uReviced = uReviced;
         this.uHandler = uHandler;
     }
@@ -45,7 +47,7 @@ public class UDPReviced implements Runnable {
 
         @Override
         public void dispatchMessage(Message msg) {
-            uHandler.Handler((Object[]) msg.obj);
+            uHandler.Handler(position , (Object[]) msg.obj);
         }
     };
 }

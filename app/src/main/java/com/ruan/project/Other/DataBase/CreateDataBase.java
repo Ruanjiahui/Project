@@ -83,8 +83,6 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceType", "varchar(50)");
         establish.put("deviceTypeID", "varchar(50)");
         establish.put("devicePic", "varchar(100)");
-        establish.put("deviceIP", "varchar(50)");
-        establish.put("devicePORT", "varchar(10)");
         return establish;
     }
 
@@ -125,6 +123,10 @@ public class CreateDataBase implements Database.Check {
 //    设备图片
 //    设备名称
 //    设备备注
+//    场景ID
+//    设备Ip
+//    设备端口
+//    设备Mac
 
     /**
      * 用户设备表
@@ -140,6 +142,9 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceName", "varchar(50)");
         establish.put("deviceRemarks", "varchar(50)");
         establish.put("sceneID", "varchar(50)");
+        establish.put("deviceIP", "varchar(50)");
+        establish.put("devicePORT", "varchar(10)");
+        establish.put("deviceMac", "varchar(50)");
 
         return establish;
     }

@@ -35,9 +35,18 @@ public interface UDPInterface {
          * //2 储存接收的地址
          * //3 储存接收的端口
          *
-         * @param objects
+         * @param position 调用接口的表示
+         * @param objects  返回的数组
          */
-        public void Handler(Object[] objects);
+        public void Handler(int position, Object[] objects);
+
+        /**
+         * 接收出错或者超时
+         *
+         * @param position
+         * @param error    0就是超时(30秒)
+         */
+        public void Error(int position, int error);
     }
 
 }

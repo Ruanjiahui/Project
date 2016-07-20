@@ -12,7 +12,7 @@ import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Controllar.UdpOpera;
-import com.ruan.project.Interface.Other;
+import com.ruan.project.Interface.UDPInterface;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.LGAdapter;
@@ -27,7 +27,7 @@ import java.util.Map;
 /**
  * Created by Soft on 2016/7/9.
  */
-public class Device extends BaseActivity implements AdapterView.OnItemClickListener, Other.HandlerMac {
+public class Device extends BaseActivity implements AdapterView.OnItemClickListener, UDPInterface.HandlerMac{
 
     private View view = null;
     private ListView productList = null;
@@ -50,6 +50,7 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
 
         productList = (ListView) view.findViewById(R.id.productList);
         //实例化链表
+        list = new ArrayList<>();
         databaseOpera = new DatabaseOpera(this);
 
         //一进来马上判断有没有设备数据库和设备表，如果没有则自动会创建数据库
@@ -60,20 +61,27 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
         //（3）本地数据库数据库里面有数据，则马上显示同时访问服务器是否有更新，有更新则将新的数据库获
         //     取到本地更新本地数据库，更新显示界面
         //如果返回false则说明没有该表，返回true则存在该表
-//        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)) {
-//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, "");
-//        } else {
-        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
+        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)) {
+            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, "");
+        } else {
+            //从数据中获取数据出来
+            ArrayList<Map<String, String>> map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
+            for (int i = 0; i < map.size(); i++)
+                list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), map.get(i).get("deviceType"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), map.get(i).get("deviceTypeID")));
+        }
+//        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
         //从数据库里面获取数据进行处理
-        ListViewData();
-//            }
+//        ListViewData();
+
+
+
         adapter = new LGAdapter(context, list, "ListView");
         productList.setAdapter(adapter);
 
         productList.setOnItemClickListener(this);
 
         //扫描局域网的设备
-        new UdpOpera(this).UDPDeviceScan(this);
+//        new UdpOpera(this).UDPDeviceScan(this);
 
 
         setContent(view);
@@ -126,19 +134,35 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
         String IP = (String) objects[2];
         int PORT = (int) objects[3];
         databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, DataHandler.getContentValues(mac, IP, PORT));
+        //通过获取到设备的mac和IP端口之后可以对设备进行单播获取该设备的更多的设备信息
+//        new UdpOpera(context).UDPDeviceInfo(IP, PORT, "123".getBytes(), this);
+
         //重写获取设备的信息
-        ListViewData();
+//        ListViewData();
         //检测搜索到新设备进行界面的更新
         adapter.RefreshData(list);
     }
 
-    private void ListViewData() {
-        list = new ArrayList<>();
-        //获取不同类别的设备
-        ArrayList<Map<String, String>> map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
-        //没有该表则自动创建表，并且从服务器上面获取设备的数据
-        //从服务器上面获取的数据首先要存本地数据库，之后才显示到界面
-        for (int i = 0; i < map.size(); i++)
-            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), map.get(i).get("deviceType"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), map.get(i).get("deviceTypeID")));
+    /**
+     * 超时
+     *
+     * @param position
+     */
+    @Override
+    public void Error(int position) {
     }
+
+//    private void ListViewData() {
+//        list = new ArrayList<>();
+//        //获取不同类别的设备
+//        ArrayList<Map<String, String>> map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName);
+//        //没有该表则自动创建表，并且从服务器上面获取设备的数据
+//        //从服务器上面获取的数据首先要存本地数据库，之后才显示到界面
+//        //for (int i = 0; i < map.size(); i++)
+//        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "空调", ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), "1"));
+//        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "电视", ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), "2"));
+//        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "电饭煲", ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), "3"));
+//
+//    }
+
 }

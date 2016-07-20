@@ -5,7 +5,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,12 +12,14 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.ruan.project.Controllar.UdpOpera;
 import com.ruan.project.Interface.PopWinOnClick;
+import com.ruan.project.Interface.UDPInterface;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
@@ -31,10 +32,11 @@ import java.util.ArrayList;
 import java.util.Map;
 
 
+
 /**
  * Created by Soft on 2016/7/11.
  */
-public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnClick {
+public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnClick, UDPInterface.HandlerMac {
 
     private View view = null;
 
@@ -59,6 +61,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private ArrayList<Object> map = null;
     private MyPopWindow popWindow = null;
 
+    private String databaseName = "";
+
 
     private String deviceID = "";
     private String sceneID = "";
@@ -78,12 +82,18 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
 
         view = LayoutInflater.from(context).inflate(R.layout.edit, null);
 
+        if (tableName.equals("edit")) {
+            databaseName = DatabaseTableName.UserDeviceName;
+        } else if (tableName.equals("new")) {
+            databaseName = DatabaseTableName.DeviceTableName;
+        }
+
         //判断数据是否存在，存在则获取场景表的数据
         if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName))
             scene = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
         //判断数据库是否存在，存在则获取设备表的数据库、   通过设备的唯一ID获取到设备的信息 提供给用户是否修改备注和名称
-        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, tableName))
-            list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, "deviceID = ?", new String[]{FLAG});
+        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, databaseName))
+            list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, databaseName, "deviceID = ?", new String[]{FLAG});
 
 
         setTopColor(R.color.Blue);
@@ -124,6 +134,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
             }
         }
 
+
         setContent(view);
 
         //监听editTitle输入事件
@@ -135,7 +146,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private Object getItem(String title) {
         Item item = new Item();
         item.setListText(title);
-        item.setHeight(DensityUtil.dip2px(context , 30));
+        item.setHeight(DensityUtil.dip2px(context, 30));
         return item;
     }
 
@@ -148,12 +159,12 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 subtitle = editSubTitle.getText().toString();
                 sceneName = editScene.getText().toString();
 
-                new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
-                if (!"".equals(sceneID) && sceneID != null)
-                    new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
-
-
-                Applications.getInstance().removeOneActivity(activity);
+                if (tableName.equals("new"))
+                    //扫描局域网的设备
+                    new UdpOpera(this).UDPDeviceScan(this);
+                else if(tableName.equals("edit"))
+                    //插入数据
+                    Exists(Integer.parseInt(list.get(0).get("devicePORT")), list.get(0).get("deviceIP"), list.get(0).get("deviceMac"));
                 break;
             case R.id.editDrop:
                 //创建PopWindow的组件
@@ -241,5 +252,55 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         editScene.setText(scene.get(position).get("sceneName"));
         sceneID = scene.get(position).get("sceneID");
         popWindow.disShow();
+    }
+
+
+    /**
+     * 这个方法获取Mac值
+     * //0 储存接收的数据
+     * //1 储存接收数据的长度
+     * //2 储存接收的地址
+     * //3 储存接收的端口
+     *
+     * @param objects 这个Object数组里面包含一些列的设备信息
+     */
+    @Override
+    public void getMac(Object[] objects) {
+        //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
+        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
+        String IP = (String) objects[2];
+        int PORT = (int) objects[3];
+//        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues(mac, IP, PORT));
+        //通过获取到设备的mac和IP端口之后可以对设备进行单播获取该设备的更多的设备信息
+//        new UdpOpera(context).UDPDeviceInfo(IP, PORT, "123".getBytes(), this);
+        Exists(PORT, IP, mac);
+//        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
+//        if (!"".equals(sceneID) && sceneID != null)
+//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
+//
+//        Applications.getInstance().removeOneActivity(activity);
+    }
+
+    private void Exists(int PORT, String IP, String mac) {
+        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
+        if (!"".equals(sceneID) && sceneID != null)
+            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
+
+        Applications.getInstance().removeOneActivity(activity);
+    }
+
+    /**
+     * 超时
+     *
+     * @param position
+     */
+    private boolean visiable = false;
+
+    @Override
+    public void Error(int position) {
+        if (!visiable) {
+            Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT);
+            visiable = true;
+        }
     }
 }

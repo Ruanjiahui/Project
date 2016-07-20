@@ -2,14 +2,13 @@ package com.ruan.project.Other.UDP;
 
 import com.example.ruan.udp_sdk.UDP;
 import com.example.ruan.udp_sdk.UDPInterface;
-import com.ruan.project.Interface.Other;
 
 /**
  * Created by Administrator on 2016/7/19.
  * <p/>
  * 检测设备在不在线
  */
-public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler{
+public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
 
 
     /**
@@ -21,15 +20,15 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler{
 
     /**
      * 调用该方法可以检测该设备是否在线
-     * @param IP            设备的IP
-     * @param PORT          设备的端口
-     * @param msg           传输的数据包
+     *
+     * @param IP   设备的IP
+     * @param PORT 设备的端口
+     * @param msg  传输的数据包
      */
-    public void Online(String IP , int PORT, String msg) {
+    public void Online(String IP, int PORT, String msg) {
         uSend(IP, PORT, msg.getBytes());
-        uReviced(this);
+        uReviced(1, this);
     }
-
 
     /**
      * 处理接收消息的接口
@@ -39,10 +38,22 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler{
      * //2 储存接收的地址
      * //3 储存接收的端口
      *
-     * @param objects
+     * @param position 调用接口的表示
+     * @param objects  返回的数组
      */
     @Override
-    public void Handler(Object[] objects) {
+    public void Handler(int position, Object[] objects) {
+
+    }
+
+    /**
+     * 接收出错或者超时
+     *
+     * @param position
+     * @param error    0就是超时(30秒)
+     */
+    @Override
+    public void Error(int position, int error) {
 
     }
 }
