@@ -29,6 +29,8 @@ public class HTTP implements HttpInterface.HttpConnect {
     private HttpRequest httpRequest = null;
     //创建下载上传的对象
     private HttpUploadDown httpUploadDown = null;
+    //请求的标示
+    private  int position = 0;
 
     /**
      * POST请求的方法
@@ -37,12 +39,13 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param url
      * @param data
      */
-    public HTTP(HttpInterface.HttpHandler httpHandler, String url, String data) {
+    public HTTP(HttpInterface.HttpHandler httpHandler, String url, String data , int position) {
         this.url = url;
         this.data = data;
+        this.position = position;
         //实例化对象
         httpRequest = new HttpConnection();
-        new Thread(new MyRunnable(this, httpHandler)).start();
+        new Thread(new MyRunnable(this, httpHandler , position)).start();
     }
 
     /**

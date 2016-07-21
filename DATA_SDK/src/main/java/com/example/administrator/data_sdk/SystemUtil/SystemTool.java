@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.util.Base64;
@@ -37,7 +39,49 @@ public class SystemTool {
         return pi;
     }
 
+    /**
+     * 判断手机是否链接网络
+     *
+     * @param context
+     * @return
+     */
+    public static boolean isNetConnection(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context
+                .getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * 判断当前网络类型
+     *
+     * @param context
+     * @return
+     */
+    public static int isNetState(Context context) {
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+            if (netInfo.getType() == ConnectivityManager.TYPE_WIFI) {
+                //当前wifi网络状态
+                return 1;
+            } else {
+//                if (netInfo.getType() == ConnectivityManager.TYPE_MOBILE) {
+                //当前移动数据网络状态
+                return 2;
+            }
+        } else {
+            //当前没有网络
+            return 0;
+        }
+    }
+
+
     //版本名
+
     public static String getVersionName(Context context) {
         return PackageInfo(context).versionName;
     }

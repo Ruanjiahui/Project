@@ -3,7 +3,10 @@
     package="com.ruan.project">
 
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -23,10 +26,22 @@
         <activity android:name=".View.Activity.DeviceEdit" />
         <activity android:name=".View.Activity.Setting" />
         <activity android:name=".View.Activity.Help" />
-        <activity android:name=".View.Activity.Person"/>
-        <activity android:name=".View.Activity.Edit"/>
-        <activity android:name=".View.Activity.Login"/>
-        <activity android:name=".View.Activity.DeviceControl"/>
+        <activity android:name=".View.Activity.Person" />
+        <activity android:name=".View.Activity.Edit" />
+        <activity android:name=".View.Activity.Login" />
+        <activity android:name=".View.Activity.DeviceControl" />
+
+
+        <!-- 注册广播 -->
+        <receiver android:name=".Other.System.WifiReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.wifi.RSSI_CHANGED" />
+                <action android:name="android.net.wifi.STATE_CHANGE" />
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

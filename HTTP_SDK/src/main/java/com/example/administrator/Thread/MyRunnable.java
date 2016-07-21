@@ -13,6 +13,7 @@ public class MyRunnable implements Runnable {
 
     private HttpInterface.HttpConnect httpConnect = null;
     private HttpInterface.HttpHandler httpHandler = null;
+    private int position = 0;
 
     public MyRunnable(HttpInterface.HttpConnect httpConnect) {
         this.httpConnect = httpConnect;
@@ -21,6 +22,12 @@ public class MyRunnable implements Runnable {
     public MyRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler) {
         this.httpConnect = httpConnect;
         this.httpHandler = httpHandler;
+    }
+
+    public MyRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler , int position) {
+        this.httpConnect = httpConnect;
+        this.httpHandler = httpHandler;
+        this.position = position;
     }
 
     @Override
@@ -43,7 +50,7 @@ public class MyRunnable implements Runnable {
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
 
-            httpHandler.handler((String) msg.obj);
+            httpHandler.handler(position , (String) msg.obj);
         }
     };
 }

@@ -7,8 +7,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
 import com.ruan.project.Controllar.CheckOnline;
+import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.Fragment.Fragment2;
 import com.ruan.project.View.Fragment.Fragment3;
@@ -63,9 +65,16 @@ public class MainActivity extends NavActivity {
 
         setNavContent(view);
 
+        HttpURL.STATE = SystemTool.isNetState(context);
+
         //通过udp单播进行设备检测是否在线
-        new CheckOnline(this).UDPCheck();
+        //如果有连接wifi则使用udp判断设备是否在线
+        if (HttpURL.STATE == 1)
+            new CheckOnline(this , getSupportFragmentManager()).UDPCheck();
         //通过云端进行设备检测是否在线
+        //如果wifi没有连接则使用外网判断设备是否在线
+        if (HttpURL.STATE == 2)
+            new CheckOnline(this , getSupportFragmentManager()).HTTPCheck();
     }
 
     /**

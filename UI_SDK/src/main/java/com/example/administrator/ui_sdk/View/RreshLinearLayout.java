@@ -1,4 +1,4 @@
-package com.ruan.project.View;
+package com.example.administrator.ui_sdk.View;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -8,7 +8,6 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,8 +18,7 @@ import android.widget.TextView;
 
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.ItemClick;
-import com.example.administrator.ui_sdk.View.SideListView;
-import com.ruan.project.R;
+import com.example.administrator.ui_sdk.R;
 
 /**
  * Created by Administrator on 2016/7/20.
@@ -62,6 +60,7 @@ public class RreshLinearLayout extends LinearLayout {
         this(context, attrs, 0);
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public RreshLinearLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         this.context = context;
@@ -77,7 +76,7 @@ public class RreshLinearLayout extends LinearLayout {
         super.onFinishInflate();
 
         View v = LayoutInflater.from(context).inflate(R.layout.listview_top, null);
-        sideListView = (SideListView) this.findViewById(R.id.slideListView);
+        sideListView = (SideListView) this.getChildAt(0);
         sideListView.addHeaderView(v);
         TopView = v;
 //
@@ -216,6 +215,9 @@ public class RreshLinearLayout extends LinearLayout {
     private void freshData() {
         image.setVisibility(GONE);
         progress.setVisibility(VISIBLE);
+
+        StopHeight = dropHeight;
+        isShow = false;
 
         if (reshInterface != null)
             reshInterface.RreshData();

@@ -76,13 +76,6 @@ public class UdpOpera implements TimerHandler, UDPHandler {
                     timer.cancel();
                 }
                 break;
-//            case 1:
-//                new CheckOnline().Check(IP , PORT, data, handlerMac);
-//                count++;
-//                if (count == 5) {
-//                    timer.cancel();
-//                }
-//                break;
         }
     }
 
@@ -144,20 +137,20 @@ public class UdpOpera implements TimerHandler, UDPHandler {
 
     /**
      * 内网检测设备是否在线
+     *
      * @param handlerMac
      */
     private ArrayList<Map<String, String>> mapMac = null;
-    public ArrayList<Map<String, String>> CheckOnline(UDPInterface.HandlerMac handlerMac) {
-        //获取所有的设备ID
-        //从数据库中获取设备的ID
-        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
-        mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "");
 
-        for (int i = 0 ; i < mapMac.size() ; i++){
-            new OnlineDeveice().Check(i , "172.24.192.1" , 9999, mapMac.get(i).get("deviceMac") , handlerMac);
-            new OnlineDeveice().Check(i , "172.24.192.1" , 9999, mapMac.get(i).get("deviceMac") , handlerMac);
+    public ArrayList<Map<String, String>> CheckOnline(UDPInterface.HandlerMac handlerMac) {
+        mapMac = FragmentDatabase.getUserDeviceData(context);
+        for (int i = 0; i < mapMac.size(); i++) {
+            new OnlineDeveice().Check(i, "172.24.192.1", 9999, mapMac.get(i).get("deviceMac"), handlerMac);
+            new OnlineDeveice().Check(i, "172.24.192.1", 9999, mapMac.get(i).get("deviceMac"), handlerMac);
             //计时器，广播没一秒发送一次，总共发送5次
         }
         return mapMac;
     }
+
+
 }

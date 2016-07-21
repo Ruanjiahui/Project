@@ -28,8 +28,12 @@ public interface HttpInterface {
     }
 
     public interface HttpHandler {
-        //这个是处理Http返回来的结果
-        public void handler(String result);
+        /**
+         * 这个是处理Http返回来的结果
+         * @param position      请求的表示
+         * @param result        请求返回的结果
+         */
+        public void handler(int position , String result);
 
     }
 

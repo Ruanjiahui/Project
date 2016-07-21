@@ -5,12 +5,10 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -19,19 +17,22 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.example.administrator.ui_sdk.View.RreshLinearLayout;
 import com.example.administrator.ui_sdk.View.SideListView;
 import com.example.ruan.udp_sdk.UDP;
+import com.ruan.project.Controllar.CheckOnline;
 import com.ruan.project.Controllar.FragmentDatabase;
 import com.example.administrator.ui_sdk.ItemClick;
+import com.ruan.project.Interface.DataHandler;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.Device;
 import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
-import com.ruan.project.View.RreshLinearLayout;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -39,7 +40,7 @@ import java.util.Map;
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface , DataHandler {
 
     private View view = null;
     private SideListView sideListView;
@@ -58,14 +59,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private String online = null;
 
 
-    /**
-     * fragment最开始运行的地方  相当于Activity oncreate
-     *
-     * @param context
-     */
+    @Nullable
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        view = inflater.inflate(R.layout.fragment1, null);
+        context = getActivity();
 
         list = new ArrayList<>();
 
@@ -75,24 +74,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
         //这里是获取用户设备表的数据，所以首先获取本地数据库的数据同时向服务器获取查询是否有更新数据，如果有更新数据则获取最新的数据
         //如果没有最新的数据则不进行任何的操作，如果本地没有数据库获取没有任何数据的话，就直接获取服务器上面的数据，之后插入本地数据库
-
-        map = FragmentDatabase.getDeviceData(context);
-        if (map != null)
-            for (int i = 0; i < map.size(); i++) {
-                if (map.get(i).get("deviceOnline").equals("1"))
-                    online = "离线";
-                else if (map.get(i).get("deviceOnline").equals("2"))
-                    online = "在线";
-                list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceMac"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), online));
-            }
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        view = inflater.inflate(R.layout.fragment1, null);
-        context = getActivity();
+        //获取数据库数据
+        getDatabaseData();
 
         sideListView = (SideListView) view.findViewById(R.id.slideListView);
         fragment1Top = view.findViewById(R.id.fragment1Top);
@@ -198,6 +181,18 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         }
     }
 
+    private void getDatabaseData() {
+        map = FragmentDatabase.getDeviceData(context);
+        if (map != null)
+            for (int i = 0; i < map.size(); i++) {
+                if (map.get(i).get("deviceOnline").equals("1"))
+                    online = "离线";
+                else if (map.get(i).get("deviceOnline").equals("2"))
+                    online = "在线";
+                list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceMac"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), online));
+            }
+    }
+
     /**
      * 重写调用Fragment的时候启动这个方法
      */
@@ -205,18 +200,36 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     public void onResume() {
         super.onResume();
 
+        ReData();
+    }
+
+    /**
+     * 更新数据
+     */
+    private void ReData() {
         list.clear();
-        //更新界面的数据
-        map = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
-        for (int i = 0; i < map.size(); i++) {
-            list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceMac"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "在线"));
-        }
+        getDatabaseData();
         adapter.RefreshData(list);
     }
 
     @Override
     public void RreshData() {
-//        udp = new UDP();
-//        udp.uSend();
+        //通过udp单播进行设备检测是否在线
+        //如果有连接wifi则使用udp判断设备是否在线
+        if (HttpURL.STATE == 1)
+            new CheckOnline(context , this).UDPCheck();
+        //通过云端进行设备检测是否在线
+        //如果wifi没有连接则使用外网判断设备是否在线
+        if (HttpURL.STATE == 2)
+            new CheckOnline(context , this).HTTPCheck();
+    }
+
+    /**
+     * 更新数据的接口
+     */
+    @Override
+    public void ReStartData() {
+        ReData();
+        sideListView.setVisiableTopView();
     }
 }

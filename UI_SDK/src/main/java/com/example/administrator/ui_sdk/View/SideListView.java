@@ -153,7 +153,6 @@ public class SideListView extends ListView {
             isScroll = false;
             isDrop = true;
 
-
             scroll = (nowY - downY) / 2;
             scroll += StopHeight;
             //当滑动距离大于侧滑菜单的宽度的时候设置最大为侧滑的宽度
@@ -301,6 +300,9 @@ public class SideListView extends ListView {
      */
     public void setVisiableTopView() {
         BitmapRotate(0, "下拉即可刷新");
+        this.setPadding(0, downHeight, 0, 0);
+        StopHeight = downHeight;
+        isShow = false;
     }
 
     /**
