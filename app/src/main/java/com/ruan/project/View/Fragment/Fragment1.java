@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,9 +18,11 @@ import android.widget.TextView;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
+import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.SideListView;
+import com.example.ruan.udp_sdk.UDP;
 import com.ruan.project.Controllar.FragmentDatabase;
-import com.ruan.project.Interface.ItemClick;
+import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
@@ -28,6 +31,7 @@ import com.ruan.project.R;
 import com.ruan.project.View.Activity.Device;
 import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
+import com.ruan.project.View.RreshLinearLayout;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -35,7 +39,7 @@ import java.util.Map;
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface {
 
     private View view = null;
     private SideListView sideListView;
@@ -46,9 +50,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private TextView base_top_text1 = null;
     private TextView base_top_title = null;
     private View fragment1Top = null;
+    private RreshLinearLayout myLinear = null;
 
     private ArrayList<Map<String, String>> map = null;
-//    private RelativeLayout fragment1Top = null;
+
+    private UDP udp = null;
+    private String online = null;
 
 
     /**
@@ -72,10 +79,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         map = FragmentDatabase.getDeviceData(context);
         if (map != null)
             for (int i = 0; i < map.size(); i++) {
-                list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceRemarks"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher)));
+                if (map.get(i).get("deviceOnline").equals("1"))
+                    online = "离线";
+                else if (map.get(i).get("deviceOnline").equals("2"))
+                    online = "在线";
+                list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceMac"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), online));
             }
-
-        //检测设备是否在线
     }
 
     @Nullable
@@ -90,6 +99,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
         base_top_text1 = (TextView) view.findViewById(R.id.base_top_text1);
         base_top_title = (TextView) view.findViewById(R.id.base_top_title);
+        myLinear = (RreshLinearLayout) view.findViewById(R.id.myLinear);
 
 
         adapter = new SideListViewAdapter(context, list);
@@ -101,23 +111,29 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         base_top_title.setText("首页");
         base_top_relative.setVisibility(View.GONE);
         base_top_title.setTextColor(context.getResources().getColor(R.color.White));
-        sideListView.setAdapter(adapter);
 
+        sideListView.setAdapter(adapter);
 
         base_top_text1.setOnClickListener(this);
         adapter.setItemClick(this);
         sideListView.setOnItemClickListener(this);
+        sideListView.setRreshClick(this);
+        myLinear.setRreshClick(this);
+
+
+        DensityUtil.setHeight(view, BaseActivity.height);
 
         return view;
     }
 
 
-    private Object getItem(String title, String subtitile, Drawable drawable) {
+    private Object getItem(String title, String subtitile, Drawable drawable, String rightTitle) {
         Item item = new Item();
 
         item.setSubtitle(subtitile);
         item.setTitle(title);
         item.setLogo(drawable);
+        item.setRightTitle(rightTitle);
 
         return item;
     }
@@ -152,7 +168,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        CommonIntent.IntentActivity(context , DeviceControl.class , map.get(0).get("deviceID"));
+        if (position > 0)
+            CommonIntent.IntentActivity(context, DeviceControl.class, map.get(0).get("deviceID"));
     }
 
     /**
@@ -192,8 +209,14 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         //更新界面的数据
         map = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         for (int i = 0; i < map.size(); i++) {
-            list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceRemarks"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher)));
+            list.add(getItem(map.get(i).get("deviceName"), map.get(i).get("deviceMac"), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "在线"));
         }
         adapter.RefreshData(list);
+    }
+
+    @Override
+    public void RreshData() {
+//        udp = new UDP();
+//        udp.uSend();
     }
 }

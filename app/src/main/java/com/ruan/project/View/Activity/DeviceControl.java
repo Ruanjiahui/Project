@@ -1,12 +1,16 @@
 package com.ruan.project.View.Activity;
 
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
 
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.example.administrator.ui_sdk.View.ColorPickerDialog;
 import com.example.ruan.udp_sdk.UDP;
 import com.example.ruan.udp_sdk.UDPInterface;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.UDP.UDPData;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -15,10 +19,13 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/7/20.
  */
-public class DeviceControl extends BaseActivity implements UDPInterface.UDPHandler{
+public class DeviceControl extends BaseActivity implements UDPInterface.UDPHandler , ColorPickerDialog.OnColorChangedListener{
     private UDP udp = null;
     private ArrayList<Map<String, String>> map = null;
     private String deviceID = null;
+
+
+    private View view = null;
 
     /**
      * Start()
@@ -28,19 +35,28 @@ public class DeviceControl extends BaseActivity implements UDPInterface.UDPHandl
 
         deviceID = getIntent().getExtras().getString("data");
 
+        view = LayoutInflater.from(context).inflate(R.layout.devicecontrol , null);
+
         setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
         setTitle("设备控制");
         setRightTitleVisiable(false);
         setLeftTitleColor(R.color.White);
 
+
+        new ColorPickerDialog(context , "请选择" , this).show();
+
+
         map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceID = ?", new String[]{deviceID});
 
 //        Log.e("Ruan" , map.get(0).get("deviceIP") + "-" + Integer.parseInt(map.get(0).get("devicePORT")));
-        udp = new UDP();
+//        udp = new UDP();
 //        map.get(0).get("deviceIP")
-        udp.uSend("192.160.25.116" , Integer.parseInt(map.get(0).get("devicePORT")) , "LB-Link".getBytes());
-        udp.uReviced(1 , this);
+        Log.e("Ruan" , new UDPData().setRGBColor("1.000000" , "1.000000" , "1.000000" , "1.000000"));
+//        udp.uSend("172.24.192.1" , 9999 , new UDPData().setRGBColor("1.000000" , "1.000000" , "1.000000" , "1.000000").getBytes());
+//        udp.uReviced(1 , this);
+
+        setContent(view);
     }
 
     /**
@@ -68,5 +84,15 @@ public class DeviceControl extends BaseActivity implements UDPInterface.UDPHandl
     @Override
     public void Error(int position, int error) {
         Log.e("Ruan" ,  error + "--超时");
+    }
+
+    /**
+     * 回调函数
+     *
+     * @param color 选中的颜色
+     */
+    @Override
+    public void colorChanged(int color) {
+
     }
 }

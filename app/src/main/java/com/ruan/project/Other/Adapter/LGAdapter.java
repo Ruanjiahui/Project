@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 
 import com.example.administrator.ui_sdk.DensityUtil;
-import com.ruan.project.Interface.ItemClick;
+import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.ViewHolder;
 import com.ruan.project.R;

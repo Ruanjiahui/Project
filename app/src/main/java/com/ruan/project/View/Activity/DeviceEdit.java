@@ -164,7 +164,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                     new UdpOpera(this).UDPDeviceScan(this);
                 else if(tableName.equals("edit"))
                     //插入数据
-                    Exists(Integer.parseInt(list.get(0).get("devicePORT")), list.get(0).get("deviceIP"), list.get(0).get("deviceMac"));
+                    Exists(Integer.parseInt(list.get(0).get("devicePORT")), list.get(0).get("deviceIP"), list.get(0).get("deviceMac") , list.get(0).get("deviceOnline"));
                 break;
             case R.id.editDrop:
                 //创建PopWindow的组件
@@ -262,10 +262,11 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
      * //2 储存接收的地址
      * //3 储存接收的端口
      *
+     * @param  position
      * @param objects 这个Object数组里面包含一些列的设备信息
      */
     @Override
-    public void getMac(Object[] objects) {
+    public void getMac(int position , Object[] objects) {
         //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
         String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
         String IP = (String) objects[2];
@@ -273,7 +274,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
 //        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues(mac, IP, PORT));
         //通过获取到设备的mac和IP端口之后可以对设备进行单播获取该设备的更多的设备信息
 //        new UdpOpera(context).UDPDeviceInfo(IP, PORT, "123".getBytes(), this);
-        Exists(PORT, IP, mac);
+        Exists(PORT, IP, mac , "2");
 //        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
 //        if (!"".equals(sceneID) && sceneID != null)
 //            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
@@ -281,8 +282,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
 //        Applications.getInstance().removeOneActivity(activity);
     }
 
-    private void Exists(int PORT, String IP, String mac) {
-        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
+    private void Exists(int PORT, String IP, String mac , String online) {
+        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT , online), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
         if (!"".equals(sceneID) && sceneID != null)
             new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
 
@@ -297,7 +298,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private boolean visiable = false;
 
     @Override
-    public void Error(int position) {
+    public void Error(int position , int error) {
         if (!visiable) {
             Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT);
             visiable = true;

@@ -13,6 +13,7 @@ public class Item {
     private String Subtitle = null;
     private Drawable Logo = null;
     private int height = 0;
+    private String RightTitle = null;
 
     private Drawable gridImage = null;
     private String gridText = null;
@@ -23,6 +24,15 @@ public class Item {
     private String listSubText = null;
     private String listRightText = null;
     private String FLAG = null;
+
+
+    public String getRightTitle() {
+        return RightTitle;
+    }
+
+    public void setRightTitle(String rightTitle) {
+        RightTitle = rightTitle;
+    }
 
     public String getListRightText() {
         return listRightText;

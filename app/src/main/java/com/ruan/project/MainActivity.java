@@ -8,16 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
+import com.ruan.project.Controllar.CheckOnline;
 import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.Fragment.Fragment2;
 import com.ruan.project.View.Fragment.Fragment3;
 import com.ruan.project.View.Fragment.Fragment4;
 
 
-
 public class MainActivity extends NavActivity {
     private View view = null;
     private Context context = null;
+
 
     /**
      * 这个是四个导航的点击事件
@@ -61,6 +62,10 @@ public class MainActivity extends NavActivity {
         intentFragment(new Fragment1());
 
         setNavContent(view);
+
+        //通过udp单播进行设备检测是否在线
+        new CheckOnline(this).UDPCheck();
+        //通过云端进行设备检测是否在线
     }
 
     /**

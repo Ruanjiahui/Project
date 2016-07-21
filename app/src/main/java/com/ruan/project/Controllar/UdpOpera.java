@@ -6,8 +6,10 @@ import android.os.Message;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.ruan.udp_sdk.UDP;
 import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.MyTimerTask;
+import com.ruan.project.Other.UDP.OnlineDeveice;
 import com.ruan.project.Other.UDP.ScanDevice;
 import com.example.ruan.udp_sdk.UDPInterface.UDPHandler;
 import com.ruan.project.TimerHandler;
@@ -21,19 +23,24 @@ import java.util.Timer;
  */
 public class UdpOpera implements TimerHandler, UDPHandler {
 
+    //扫描设备的定时器
     private Timer timer = null;
     private UDPInterface.HandlerMac handlerMac = null;
     private UDPInterface.HandlerInfo handlerInfo = null;
-    //记录循环发送次数
+    //统计扫描设备记录循环发送次数
     private int count = 0;
+    //统计检测设备是否在线
+    private int checkCount = 0;
     private ArrayList<String> mac = null;
     private Context context = null;
     //广播的发送的端口
     private int PORT = 3000;
-    //广播发送的数据包
+    //扫描设备广播发送的数据包
     private String data = "123";
     //广播发送间隔的时间
     private int time = 1000;
+
+    private String IP = "";
 
     public UdpOpera(Context context) {
         this.context = context;
@@ -48,28 +55,42 @@ public class UdpOpera implements TimerHandler, UDPHandler {
         mac = new ArrayList<>();
         //获取所有的设备ID
         //从数据库中获取设备的ID
-        ArrayList<Map<String, String>> mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, new String[]{"deviceID"}, "", null, "", "", "", "");
+        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        ArrayList<Map<String, String>> mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, new String[]{"deviceMac"}, "", null, "", "", "", "");
         for (int i = 0; i < mapMac.size(); i++)
-            mac.add(mapMac.get(i).get("deviceID"));
+            mac.add(mapMac.get(i).get("deviceMac"));
 
         this.handlerMac = handlerMac;
         //计时器，广播没一秒发送一次，总共发送10次
         timer = new Timer();
-        timer.schedule(new MyTimerTask(this), 0, time);
+        timer.schedule(new MyTimerTask(this, 0), 0, time);
     }
 
     @Override
     public void timerHandler(Message msg) {
-        new ScanDevice(mac).Scanner(PORT, data, handlerMac);
-        count++;
-        if (count == 10) {
-            timer.cancel();
+        switch (msg.arg1) {
+            case 0:
+                new ScanDevice(mac).Scanner(PORT, data, handlerMac);
+                count++;
+                if (count == 10) {
+                    timer.cancel();
+                }
+                break;
+//            case 1:
+//                new CheckOnline().Check(IP , PORT, data, handlerMac);
+//                count++;
+//                if (count == 5) {
+//                    timer.cancel();
+//                }
+//                break;
         }
     }
 
     @Override
-    public Message timerRun() {
-        return new Message();
+    public Message timerRun(int position) {
+        Message msg = new Message();
+        msg.arg1 = position;
+        return msg;
     }
 
 
@@ -121,5 +142,22 @@ public class UdpOpera implements TimerHandler, UDPHandler {
 
     }
 
+    /**
+     * 内网检测设备是否在线
+     * @param handlerMac
+     */
+    private ArrayList<Map<String, String>> mapMac = null;
+    public ArrayList<Map<String, String>> CheckOnline(UDPInterface.HandlerMac handlerMac) {
+        //获取所有的设备ID
+        //从数据库中获取设备的ID
+        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "");
 
+        for (int i = 0 ; i < mapMac.size() ; i++){
+            new OnlineDeveice().Check(i , "172.24.192.1" , 9999, mapMac.get(i).get("deviceMac") , handlerMac);
+            new OnlineDeveice().Check(i , "172.24.192.1" , 9999, mapMac.get(i).get("deviceMac") , handlerMac);
+            //计时器，广播没一秒发送一次，总共发送5次
+        }
+        return mapMac;
+    }
 }

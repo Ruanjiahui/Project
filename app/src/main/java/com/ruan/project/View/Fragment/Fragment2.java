@@ -1,7 +1,6 @@
 package com.ruan.project.View.Fragment;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -16,7 +15,7 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.View.SideListView;
-import com.ruan.project.Interface.ItemClick;
+import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DataHandler;

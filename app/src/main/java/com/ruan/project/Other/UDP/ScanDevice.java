@@ -69,7 +69,7 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
         int lenght = (int) objects[1];
         if (isEmpty(buffer, lenght)) {
             if (SystemTool.isMac(new String(buffer, 0, lenght))) {
-                handlerMac.getMac(objects);
+                handlerMac.getMac(position , objects);
                 mac.add(new String(buffer, 0, lenght));
             }
             return;
@@ -84,6 +84,6 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
      */
     @Override
     public void Error(int position, int error) {
-        handlerMac.Error(position);
+        handlerMac.Error(position , error);
     }
 }

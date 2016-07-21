@@ -16,9 +16,11 @@ import java.util.TimerTask;
 public class MyTimerTask extends TimerTask {
 
     private TimerHandler timerHandler = null;
+    private int position = 0;
 
-    public MyTimerTask(TimerHandler timerHandler) {
+    public MyTimerTask(TimerHandler timerHandler , int position) {
         this.timerHandler = timerHandler;
+        this.position = position;
     }
 
     public MyTimerTask() {
@@ -28,8 +30,8 @@ public class MyTimerTask extends TimerTask {
     @Override
     public void run() {
 //        Looper.prepare();
-        if (timerHandler.timerRun() != null)
-            handler.sendMessage(timerHandler.timerRun());
+        if (timerHandler.timerRun(position) != null)
+            handler.sendMessage(timerHandler.timerRun(position));
 //        Looper.loop();
     }
 

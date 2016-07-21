@@ -26,4 +26,5 @@ dependencies {
     compile project(':DATA_SDK')
     compile project(':UI_SDK')
     compile project(':udp_sdk')
+    compile project(':HTTP_SDK')
 }

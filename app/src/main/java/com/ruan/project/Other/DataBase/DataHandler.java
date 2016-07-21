@@ -18,7 +18,7 @@ public class DataHandler {
      * @param deviceModel       设备的类型
      * @return
      */
-    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel , String IP , String Mac , int Port) {
+    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel , String IP , String Mac , int Port , String online) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("userID", userID);
@@ -30,6 +30,7 @@ public class DataHandler {
         contentValues.put("deviceMac", Mac);
         contentValues.put("deviceIP", IP);
         contentValues.put("devicePORT", Port);
+        contentValues.put("deviceOnline" , online);
 
         return contentValues;
     }

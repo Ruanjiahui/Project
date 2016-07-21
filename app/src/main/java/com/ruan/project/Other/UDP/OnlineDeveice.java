@@ -11,6 +11,9 @@ import com.example.ruan.udp_sdk.UDPInterface;
 public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
 
 
+    private com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac = null;
+
+
     /**
      * 实例化对象
      */
@@ -18,16 +21,11 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
         super();
     }
 
-    /**
-     * 调用该方法可以检测该设备是否在线
-     *
-     * @param IP   设备的IP
-     * @param PORT 设备的端口
-     * @param msg  传输的数据包
-     */
-    public void Online(String IP, int PORT, String msg) {
+
+    public void Check(int position, String IP, int PORT, String msg, com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac) {
+        this.handlerMac = handlerMac;
         uSend(IP, PORT, msg.getBytes());
-        uReviced(1, this);
+        uReviced(position, this);
     }
 
     /**
@@ -43,7 +41,8 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
      */
     @Override
     public void Handler(int position, Object[] objects) {
-
+        //判断链表里面是不是存在相同的mac地址，不存在则添加，存在则不操作
+        handlerMac.getMac(position, objects);
     }
 
     /**
@@ -54,6 +53,6 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
      */
     @Override
     public void Error(int position, int error) {
-
+        handlerMac.Error(position, error);
     }
 }

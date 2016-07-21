@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
-import com.ruan.project.Interface.ItemClick;
+import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.ViewHolder;
 import com.ruan.project.R;
@@ -100,6 +100,7 @@ public class SideListViewAdapter extends BaseAdapter {
             viewHolder.Logo = (ImageView) convertView.findViewById(R.id.Logo);
             viewHolder.Title = (TextView) convertView.findViewById(R.id.Title);
             viewHolder.Subtitle = (TextView) convertView.findViewById(R.id.Subtitle);
+            viewHolder.RightTitle = (TextView) convertView.findViewById(R.id.RightTitle);
 
             convertView.setTag(viewHolder);
         } else
@@ -108,19 +109,20 @@ public class SideListViewAdapter extends BaseAdapter {
         viewHolder.Title.setText(item.getTitle());
         viewHolder.Subtitle.setText(item.getSubtitle());
         viewHolder.Logo.setImageDrawable(item.getLogo());
+        viewHolder.RightTitle.setText(item.getRightTitle());
 
         //子控件注册点击事件
         if (itemClick != null) {
             viewHolder.sideDelete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClick.OnClick(position , 1);
+                    itemClick.OnClick(position, 1);
                 }
             });
             viewHolder.sideEdit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    itemClick.OnClick(position , 0);
+                    itemClick.OnClick(position, 0);
                 }
             });
         }
@@ -130,6 +132,7 @@ public class SideListViewAdapter extends BaseAdapter {
 
     /**
      * 外部调用的接口  子控件的点击事件
+     *
      * @param itemClick
      */
     public void setItemClick(ItemClick itemClick) {
@@ -138,9 +141,10 @@ public class SideListViewAdapter extends BaseAdapter {
 
     /**
      * 外部调用的接口   更新数据
+     *
      * @param list
      */
-    public void RefreshData(ArrayList<Object> list){
+    public void RefreshData(ArrayList<Object> list) {
         this.list = list;
         this.notifyDataSetChanged();
     }

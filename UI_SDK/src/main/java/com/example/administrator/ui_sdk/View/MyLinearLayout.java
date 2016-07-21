@@ -113,7 +113,7 @@ public class MyLinearLayout extends LinearLayout {
         topView = getChildAt(0);
         dragContentView = getChildAt(1);
 
-        listview = (ListView) dragContentView;
+//        listview = (SideListView) dragContentView;
         progress = (ProgressBar) topView.findViewById(R.id.progress);
         text = (TextView) topView.findViewById(R.id.text);
         image = (ImageView) topView.findViewById(R.id.image);
@@ -250,8 +250,8 @@ public class MyLinearLayout extends LinearLayout {
             } else {
                 STATE = 3;
                 dragHelper.smoothSlideViewTo(dragContentView, 0, topheight + 20);
-
-                myOnClickInterface.dropdownflush();
+                //刷新的接口
+//                myOnClickInterface.dropdownflush();
             }
             postInvalidate();
             resetView();

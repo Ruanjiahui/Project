@@ -14,6 +14,7 @@ public class ViewHolder {
     public TextView sideDelete = null;
     public ImageView Logo = null;
     public TextView Title = null;
+    public TextView RightTitle = null;
     public TextView Subtitle = null;
 
 

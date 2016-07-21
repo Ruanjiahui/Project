@@ -9,5 +9,10 @@ public interface TimerHandler {
 
     public void timerHandler(Message msg);
 
-    public Message timerRun();
+    /**
+     * 调用标示
+     * @param position
+     * @return
+     */
+    public Message timerRun(int position);
 }

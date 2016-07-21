@@ -145,6 +145,8 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceIP", "varchar(50)");
         establish.put("devicePORT", "varchar(10)");
         establish.put("deviceMac", "varchar(50)");
+        establish.put("deviceOnline", "varchar(10)");
+
 
         return establish;
     }

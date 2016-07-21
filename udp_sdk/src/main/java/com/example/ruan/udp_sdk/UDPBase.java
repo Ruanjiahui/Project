@@ -70,7 +70,7 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
         thread = new Thread(new UDPReviced(position , this, handler));
         thread.start();
         timer = new Timer();
-        timer.schedule(new MyTimerTask(this), 30000, 30000);
+        timer.schedule(new MyTimerTask(this), 5000, 5000);
     }
 
 

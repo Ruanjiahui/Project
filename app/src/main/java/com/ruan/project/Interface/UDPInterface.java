@@ -15,16 +15,17 @@ public interface UDPInterface {
          * //2 储存接收的地址
          * //3 储存接收的端口
          *
+         * @param position  标示
          * @param objects 这个Object数组里面包含一些列的设备信息
          */
-        public void getMac(Object[] objects);
+        public void getMac(int position , Object[] objects);
 
 
         /**
          * 超时
          * @param position
          */
-        public void Error(int position);
+        public void Error(int position , int error);
     }
 
     public interface HandlerInfo {

@@ -123,7 +123,7 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
      * @param objects 这个Object数组里面包含一些列的设备信息
      */
     @Override
-    public void getMac(Object[] objects) {
+    public void getMac(int position , Object[] objects) {
         //创建一个Object对象数组
         //0 储存接收的数据
         //1 储存接收数据的长度
@@ -149,7 +149,7 @@ public class Device extends BaseActivity implements AdapterView.OnItemClickListe
      * @param position
      */
     @Override
-    public void Error(int position) {
+    public void Error(int position , int error) {
     }
 
 //    private void ListViewData() {

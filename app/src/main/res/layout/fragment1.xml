@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <!--<RelativeLayout-->
-        <!--android:id="@+id/fragment1Top"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:background="@mipmap/logo"></RelativeLayout>-->
+    <!--android:id="@+id/fragment1Top"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@mipmap/logo"></RelativeLayout>-->
 
     <include
         android:id="@+id/fragment1Top"
@@ -17,13 +17,32 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"></include>
 
-    <com.example.administrator.ui_sdk.View.SideListView
-        android:id="@+id/slideListView"
+    <com.ruan.project.View.RreshLinearLayout
+        android:id="@+id/myLinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="@color/WhiteSmoke"
-        android:dividerHeight="1dp"
-        android:listSelector="@drawable/itemsector"
-        android:background="@color/White"></com.example.administrator.ui_sdk.View.SideListView>
+        android:orientation="vertical">
+
+        <!--<TextView-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="123"/>-->
+
+        <!--<include-->
+        <!--android:id="@+id/fragment1Top"-->
+        <!--layout="@layout/listview_top"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"></include>-->
+
+        <com.example.administrator.ui_sdk.View.SideListView
+            android:id="@+id/slideListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/White"
+            android:divider="@color/WhiteSmoke"
+            android:dividerHeight="1dp"
+            android:listSelector="@drawable/itemsector" />
+
+    </com.ruan.project.View.RreshLinearLayout>
 
 </LinearLayout>
