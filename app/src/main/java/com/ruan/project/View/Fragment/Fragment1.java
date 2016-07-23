@@ -5,12 +5,14 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
 import com.example.administrator.data_sdk.CommonIntent;
@@ -18,7 +20,7 @@ import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.RreshLinearLayout;
-import com.example.administrator.ui_sdk.View.SideListView;
+import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.example.ruan.udp_sdk.UDP;
 import com.ruan.project.Controllar.CheckOnline;
 import com.ruan.project.Controllar.FragmentDatabase;
@@ -40,10 +42,10 @@ import java.util.Map;
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface , DataHandler {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface, DataHandler {
 
     private View view = null;
-    private SideListView sideListView;
+    private RefreshSideListView sideListView;
     private ArrayList<Object> list = null;
     private SideListViewAdapter adapter = null;
     private Context context = null;
@@ -77,7 +79,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         //获取数据库数据
         getDatabaseData();
 
-        sideListView = (SideListView) view.findViewById(R.id.slideListView);
+        sideListView = (RefreshSideListView) view.findViewById(R.id.slideListView);
         fragment1Top = view.findViewById(R.id.fragment1Top);
         base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
         base_top_text1 = (TextView) view.findViewById(R.id.base_top_text1);
@@ -151,8 +153,10 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (position > 0)
-            CommonIntent.IntentActivity(context, DeviceControl.class, map.get(0).get("deviceID"));
+        if (position > 0 && map.get(position - 1).get("deviceOnline").equals("2"))
+            CommonIntent.IntentActivity(context, DeviceControl.class, map.get(position - 1).get("deviceID"));
+        else
+            Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -199,7 +203,6 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onResume() {
         super.onResume();
-
         ReData();
     }
 
@@ -214,14 +217,21 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     @Override
     public void RreshData() {
-        //通过udp单播进行设备检测是否在线
-        //如果有连接wifi则使用udp判断设备是否在线
         if (HttpURL.STATE == 1)
-            new CheckOnline(context , this).UDPCheck();
+            new CheckOnline(context, this).UDPCheck();
         //通过云端进行设备检测是否在线
         //如果wifi没有连接则使用外网判断设备是否在线
         if (HttpURL.STATE == 2)
-            new CheckOnline(context , this).HTTPCheck();
+            new CheckOnline(context, this).HTTPCheck();
+        //只有当手机连接wifi情况下每次刷新才进行判断是不是在同一局域网里面
+//        if (SystemTool.isNetState(context) == 1)
+//            //扫描局域网的设备
+//            //刚进来也要判断设备是不是在同一局域网里面
+//            new UdpOpera(context).UDPDeviceScan(this);
+//        else {
+//            HttpURL.STATE = SystemTool.isNetState(context);
+//            CheckOnline();
+//        }
     }
 
     /**
@@ -232,4 +242,43 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         ReData();
         sideListView.setVisiableTopView();
     }
+
+//    private void CheckOnline() {
+//        if (HttpURL.STATE == 1)
+//            new CheckOnline(context, this).UDPCheck();
+//        //通过云端进行设备检测是否在线
+//        //如果wifi没有连接则使用外网判断设备是否在线
+//        if (HttpURL.STATE == 2)
+//            new CheckOnline(context, this).HTTPCheck();
+//    }
+
+//    /**
+//     * 这个方法获取Mac值
+//     * //0 储存接收的数据
+//     * //1 储存接收数据的长度
+//     * //2 储存接收的地址
+//     * //3 储存接收的端口
+//     *
+//     * @param position 标示
+//     * @param objects  这个Object数组里面包含一些列的设备信息
+//     */
+//    @Override
+//    public void getMac(int position, Object[] objects) {
+//        HttpURL.STATE = 1;
+//        CheckOnline();
+//    }
+//
+//    /**
+//     * 超时
+//     *
+//     * @param position
+//     * @param error
+//     */
+//    @Override
+//    public void Error(int position, int error) {
+//        if (SystemTool.isNetState(context) != 0)
+//            //如果手机可以连接网络的情况下说明只能用外网
+//            HttpURL.STATE = 2;
+//        CheckOnline();
+//    }
 }

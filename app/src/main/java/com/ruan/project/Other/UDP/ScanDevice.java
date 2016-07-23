@@ -8,6 +8,7 @@ import com.example.ruan.udp_sdk.UDP;
 import com.ruan.project.Interface.UDPInterface;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * Created by Administrator on 2016/7/18.
@@ -23,9 +24,9 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
     /**
      * 实例化对象
      */
-    public ScanDevice(ArrayList<String> mac) {
+    public ScanDevice() {
         super();
-        this.mac = mac;
+        this.mac = new ArrayList<>();
     }
 
 
@@ -43,9 +44,11 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
      * @return
      */
     private boolean isEmpty(byte[] buffer, int length) {
-        for (int i = 0; i < mac.size(); i++) {
-            if (new String(buffer, 0, length).equals(mac.get(i))) {
-                return false;
+        if (mac.size() != 0) {
+            for (int i = 0; i < mac.size(); i++) {
+                if (new String(buffer, 0, length).equals(mac.get(i))) {
+                    return false;
+                }
             }
         }
         return true;

@@ -8,6 +8,7 @@ import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -34,7 +35,7 @@ public class RreshLinearLayout extends LinearLayout {
     private int scroll = 0;
 
     private boolean isScroll = false;
-    private boolean isShow = false;
+    public static boolean isShow = false;
 
     private int dropHeight = 0;
     private int StopHeight = 0;
@@ -43,7 +44,7 @@ public class RreshLinearLayout extends LinearLayout {
     private int Min = 0;
     private View TopView = null;
 
-    private SideListView sideListView = null;
+    private RefreshSideListView sideListView = null;
 
     private Context context = null;
 
@@ -76,7 +77,7 @@ public class RreshLinearLayout extends LinearLayout {
         super.onFinishInflate();
 
         View v = LayoutInflater.from(context).inflate(R.layout.listview_top, null);
-        sideListView = (SideListView) this.getChildAt(0);
+        sideListView = (RefreshSideListView) this.getChildAt(0);
         sideListView.addHeaderView(v);
         TopView = v;
 //
@@ -159,6 +160,7 @@ public class RreshLinearLayout extends LinearLayout {
             }
             //保存当前下拉高度
             sideListView.setPadding(0, (scroll), 0, 0);
+            postInvalidate();
         }
         return super.onTouchEvent(ev);
     }
@@ -181,10 +183,12 @@ public class RreshLinearLayout extends LinearLayout {
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     private void AnimationUp(int scoll) {
-        BitmapRotate((int) ((1.8 * scoll)), "下拉即可刷新");
+        BitmapRotate((int) ((180 / (Max / 2 - DensityUtil.dip2px(context , 10)) * scoll)), "下拉即可刷新");
     }
 
     private void BitmapRotate(int degress, String msg) {
+        if (degress > 180)
+            degress = 180;
         image.setVisibility(VISIBLE);
         progress.setVisibility(GONE);
         text.setText(msg);
@@ -215,9 +219,8 @@ public class RreshLinearLayout extends LinearLayout {
     private void freshData() {
         image.setVisibility(GONE);
         progress.setVisibility(VISIBLE);
-
+        isShow = true;
         StopHeight = dropHeight;
-        isShow = false;
 
         if (reshInterface != null)
             reshInterface.RreshData();

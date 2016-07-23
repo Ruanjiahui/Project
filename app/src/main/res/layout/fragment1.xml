@@ -34,7 +34,7 @@
         <!--android:layout_width="match_parent"-->
         <!--android:layout_height="50dp"></include>-->
 
-        <com.example.administrator.ui_sdk.View.SideListView
+        <com.example.administrator.ui_sdk.View.RefreshSideListView
             android:id="@+id/slideListView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

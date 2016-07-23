@@ -17,7 +17,7 @@ import java.util.Timer;
 /**
  * Created by Administrator on 2016/7/16.
  */
-public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPInterface.UDPSend , TimerHandler{
+public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPInterface.UDPSend, TimerHandler {
 
 
     private DatagramSocket datagramSocket = null;
@@ -64,10 +64,10 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
      * 这个方法是接收信息
      */
     @Override
-    protected void Revice(int position , UDPInterface.UDPHandler handler) {
+    protected void Revice(int position, UDPInterface.UDPHandler handler) {
         this.position = position;
         this.handler = handler;
-        thread = new Thread(new UDPReviced(position , this, handler));
+        thread = new Thread(new UDPReviced(position, this, handler));
         thread.start();
         timer = new Timer();
         timer.schedule(new MyTimerTask(this), 5000, 5000);
@@ -105,7 +105,8 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
             objects[1] = indatagramPacket.getLength();
             objects[2] = indatagramPacket.getAddress().getHostName();
             objects[3] = indatagramPacket.getPort();
-            timer.cancel();
+            if (timer != null)
+                timer.cancel();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -130,7 +131,7 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
         thread.interrupt();
         timer.cancel();
         //超时
-        handler.Error(position , 0);
+        handler.Error(position, 0);
     }
 
     @Override

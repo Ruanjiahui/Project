@@ -9,6 +9,9 @@ public class HttpURL {
     //请求判断设备是都在线
     public static String CheckOnline = IP + "dataManipulation/deviceState";
 
+    //通过外网控制设备
+    public static String ControlDevice = IP + "dataManipulation/forwardData";
+
     //这个标志当前网络状态
     // 0   当前没有网络状态
     // 1   当前是wifi状态

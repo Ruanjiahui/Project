@@ -13,6 +13,7 @@ import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.http_sdk.HTTP;
 import com.ruan.project.Interface.DataHandler;
 import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.MainActivity;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpData;
 import com.ruan.project.Other.HTTP.HttpURL;
@@ -95,6 +96,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void Error(int position, int error) {
+        Log.e("Ruan", "" + error);
         ContentValues contentValues = new ContentValues();
         //2代表在线1代表不在线
         contentValues.put("deviceOnline", "1");
@@ -147,9 +149,9 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     }
 
     private void ReData() {
-        if (fragmentManager != null)
+        if (fragmentManager != null && MainActivity.isRefresh)
             intentFragment(new Fragment1());
-        else
+        else if (dataHandler != null)
             dataHandler.ReStartData();
     }
 }
