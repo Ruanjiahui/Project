@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.RreshLinearLayout;
@@ -31,6 +32,7 @@ import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
+import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.Device;
 import com.ruan.project.View.Activity.DeviceControl;
@@ -70,10 +72,6 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
         list = new ArrayList<>();
 
-        //初始化数据库
-        FragmentDatabase.DataBaseHandler(context);
-
-
         //这里是获取用户设备表的数据，所以首先获取本地数据库的数据同时向服务器获取查询是否有更新数据，如果有更新数据则获取最新的数据
         //如果没有最新的数据则不进行任何的操作，如果本地没有数据库获取没有任何数据的话，就直接获取服务器上面的数据，之后插入本地数据库
         //获取数据库数据
@@ -88,6 +86,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
 
         adapter = new SideListViewAdapter(context, list);
+
         fragment1Top.setBackgroundColor(context.getResources().getColor(R.color.Blue));
         base_top_title.setPadding(0, DensityUtil.dip2px(context, 20), 0, 0);
         base_top_text1.setPadding(0, DensityUtil.dip2px(context, 20), 0, 0);
@@ -187,7 +186,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     private void getDatabaseData() {
         map = FragmentDatabase.getDeviceData(context);
-        if (map != null)
+        if (map != null && map.size() > 0)
             for (int i = 0; i < map.size(); i++) {
                 if (map.get(i).get("deviceOnline").equals("1"))
                     online = "离线";
@@ -217,11 +216,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     @Override
     public void RreshData() {
-        if (HttpURL.STATE == 1)
+        HttpURL.STATE = SystemTool.isNetState(context);
+        if (HttpURL.STATE == NetWork.WIFI)
             new CheckOnline(context, this).UDPCheck();
         //通过云端进行设备检测是否在线
         //如果wifi没有连接则使用外网判断设备是否在线
-        if (HttpURL.STATE == 2)
+        if (HttpURL.STATE == NetWork.INTNET)
             new CheckOnline(context, this).HTTPCheck();
         //只有当手机连接wifi情况下每次刷新才进行判断是不是在同一局域网里面
 //        if (SystemTool.isNetState(context) == 1)

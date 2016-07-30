@@ -6,11 +6,6 @@ import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.http_sdk.HTTP;
 import com.example.ruan.udp_sdk.UDP;
 import com.example.ruan.udp_sdk.UDPInterface;
-import com.ruan.project.Other.HTTP.HttpData;
-import com.ruan.project.Other.HTTP.HttpURL;
-
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Created by Administrator on 2016/7/21.
@@ -32,9 +27,10 @@ public class ControlDevice extends UDP implements UDPInterface.UDPHandler {
      *
      * @param position 标识
      * @param control  传输的数据
+     * @param count    发送的次数
      */
-    public void UDPControl(int position, String control, com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac) {
-        this.uSend(IP, PORT, control.getBytes());
+    public void UDPControl(int position, String control, com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac, int count) {
+        this.uSend(IP, PORT, control.getBytes(), count);
         this.uReviced(position, this);
         this.handlerMac = handlerMac;
     }
@@ -45,8 +41,18 @@ public class ControlDevice extends UDP implements UDPInterface.UDPHandler {
      * @param URL        网址
      * @param dataSource 传输的数据
      */
-    public void HTTPControl(String URL, String dataSource, HttpInterface.HttpHandler httpHandler , int position) {
+    public void HTTPControl(String URL, String dataSource, HttpInterface.HttpHandler httpHandler, int position) {
         new HTTP(httpHandler, URL, dataSource, position);
+    }
+
+    /**
+     * 通过云端控制设备
+     *
+     * @param URL        网址
+     * @param httpHandler 处理接口
+     */
+    public void HTTPControl(String URL, HttpInterface.HttpHandler httpHandler, int position) {
+        new HTTP(httpHandler, URL);
     }
 
     /**

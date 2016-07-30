@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -26,6 +28,7 @@ import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.R;
 import com.ruan.project.View.MyPopWindow;
 
@@ -160,10 +163,15 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 subtitle = editSubTitle.getText().toString();
                 sceneName = editScene.getText().toString();
 
-                if (tableName.equals("new"))
+                if (tableName.equals("new")) {
+//                    CommonIntent.IntentActivity(context , AirkissNetWork.class);
                     //扫描局域网的设备
-                    new UdpOpera(this).UDPDeviceScan(this);
-                else if(tableName.equals("edit"))
+                    if (SystemTool.isNetState(context) == NetWork.WIFI)
+                        new UdpOpera(this).UDPDeviceScan(this);
+//                        CommonIntent.IntentActivity(context , AirkissNetWork.class);
+                    else
+                        Toast.makeText(context , "请链接wifi" ,Toast.LENGTH_SHORT).show();
+                }else if(tableName.equals("edit"))
                     //插入数据
                     Exists(Integer.parseInt(list.get(0).get("devicePORT")), list.get(0).get("deviceIP"), list.get(0).get("deviceMac") , list.get(0).get("deviceOnline"));
                 break;
@@ -255,6 +263,13 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         popWindow.disShow();
     }
 
+
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        //扫描局域网的设备
+//        new UdpOpera(this).UDPDeviceScan(this);
+//    }
 
     /**
      * 这个方法获取Mac值

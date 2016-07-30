@@ -22,7 +22,7 @@ import java.util.Timer;
 /**
  * Created by Administrator on 2016/7/19.
  */
-public class UdpOpera implements TimerHandler, UDPHandler {
+public class UdpOpera implements UDPHandler {
 
     //扫描设备的定时器
     private Timer timer = null;
@@ -35,7 +35,7 @@ public class UdpOpera implements TimerHandler, UDPHandler {
     private ArrayList<String> mac = null;
     private Context context = null;
     //广播的发送的端口
-    private int PORT = 9999;
+    private int PORT = 8888;
     //扫描设备广播发送的数据包
     private String data = "B-Link"; // 8711   IOT
     //广播发送间隔的时间
@@ -62,29 +62,30 @@ public class UdpOpera implements TimerHandler, UDPHandler {
 //            mac.add(mapMac.get(i).get("deviceMac"));
         this.handlerMac = handlerMac;
         //计时器，广播没一秒发送一次，总共发送10次
-        timer = new Timer();
-        timer.schedule(new MyTimerTask(this, 0), 0, time);
+        new ScanDevice().Scanner(PORT, data, handlerMac, 5);
+//        timer = new Timer();
+//        timer.schedule(new MyTimerTask(this, 0), 0, time);
     }
 
-    @Override
-    public void timerHandler(Message msg) {
-        switch (msg.arg1) {
-            case 0:
-                new ScanDevice().Scanner(PORT, data, handlerMac);
-                count++;
-                if (count == 10) {
-                    timer.cancel();
-                }
-                break;
-        }
-    }
-
-    @Override
-    public Message timerRun(int position) {
-        Message msg = new Message();
-        msg.arg1 = position;
-        return msg;
-    }
+//    @Override
+//    public void timerHandler(Message msg) {
+//        switch (msg.arg1) {
+//            case 0:
+//                new ScanDevice().Scanner(PORT, data, handlerMac);
+//                count++;
+//                if (count == 10) {
+//                    timer.cancel();
+//                }
+//                break;
+//        }
+//    }
+//
+//    @Override
+//    public Message timerRun(int position) {
+//        Message msg = new Message();
+//        msg.arg1 = position;
+//        return msg;
+//    }
 
 
     /**
@@ -93,12 +94,13 @@ public class UdpOpera implements TimerHandler, UDPHandler {
      * @param IP          单播的IP
      * @param PORT        单播的端口
      * @param handlerInfo 单播处理接收数据的接口
+     * @param count       单播的次数
      */
-    public void UDPDeviceInfo(String IP, int PORT, byte[] buffer, UDPInterface.HandlerInfo handlerInfo) {
+    public void UDPDeviceInfo(String IP, int PORT, byte[] buffer, UDPInterface.HandlerInfo handlerInfo, int count) {
         this.handlerInfo = handlerInfo;
         UDP udp = new UDP();
         //单播发送数据包
-        udp.uSend(IP, PORT, buffer);
+        udp.uSend(IP, PORT, buffer, count);
         //监听设备返回的信息
         udp.uReviced(1, this);
     }
@@ -134,23 +136,4 @@ public class UdpOpera implements TimerHandler, UDPHandler {
     public void Error(int position, int error) {
 
     }
-
-    /**
-     * 内网检测设备是否在线
-     *
-     * @param handlerMac
-     */
-    private ArrayList<Map<String, String>> mapMac = null;
-
-    public ArrayList<Map<String, String>> CheckOnline(UDPInterface.HandlerMac handlerMac) {
-        mapMac = FragmentDatabase.getUserDeviceData(context);
-        for (int i = 0; i < mapMac.size(); i++) {
-            new OnlineDeveice().Check(i, "172.24.192.1", 9999, mapMac.get(i).get("deviceMac"), handlerMac);
-            new OnlineDeveice().Check(i, "172.24.192.1", 9999, mapMac.get(i).get("deviceMac"), handlerMac);
-            //计时器，广播没一秒发送一次，总共发送5次
-        }
-        return mapMac;
-    }
-
-
 }

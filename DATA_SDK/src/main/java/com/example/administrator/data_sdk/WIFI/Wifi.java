@@ -6,7 +6,6 @@ import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
 import android.util.Log;
 
-import com.example.administrator.data_sdk.WIFI.WifiFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +23,7 @@ public class Wifi {
     public Wifi(Context context) {
         this.context = context;
         list = new ArrayList<>();
-        wifiManager = WifiFactory.getInstance(context);
+        wifiManager = WifiFactory.getIntance(context);
     }
 
     public void Open() {
@@ -139,18 +138,4 @@ public class Wifi {
         return null;
     }
 
-    /**
-     * 将整数值进行右移位操作（>>）
-     * 右移24位，右移时高位补0，得到的数字即为第一段IP
-     * 右移16位，右移时高位补0，得到的数字即为第二段IP
-     * 右移8位，右移时高位补0，得到的数字即为第三段IP
-     * 最后一段的为第四段IP
-     *
-     * @param i
-     * @return String
-     */
-    public String intToIp(int i) {
-        return ((i >> 24) & 0xFF) + "." + ((i >> 16) & 0xFF) + "."
-                + ((i >> 8) & 0xFF) + "." + (i & 0xFF);
-    }
 }

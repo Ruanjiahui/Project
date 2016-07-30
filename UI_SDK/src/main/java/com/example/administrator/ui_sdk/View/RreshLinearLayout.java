@@ -160,7 +160,7 @@ public class RreshLinearLayout extends LinearLayout {
             }
             //保存当前下拉高度
             sideListView.setPadding(0, (scroll), 0, 0);
-            postInvalidate();
+//            postInvalidate();
         }
         return super.onTouchEvent(ev);
     }

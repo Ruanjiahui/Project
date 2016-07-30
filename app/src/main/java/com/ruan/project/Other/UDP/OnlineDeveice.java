@@ -22,10 +22,10 @@ public class OnlineDeveice extends UDP implements UDPInterface.UDPHandler {
     }
 
 
-    public void Check(int position, String IP, int PORT, String msg, com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac) {
+    public void Check(int position, String IP, int PORT, String msg, com.ruan.project.Interface.UDPInterface.HandlerMac handlerMac , int count) {
         this.handlerMac = handlerMac;
-        uSend(IP, PORT, msg.getBytes());
         uReviced(position, this);
+        uSend(IP, PORT, msg.getBytes() , count);
     }
 
     /**

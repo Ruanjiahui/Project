@@ -30,10 +30,10 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
     }
 
 
-    public void Scanner(int PORT, String msg, UDPInterface.HandlerMac handlerMac) {
+    public void Scanner(int PORT, String msg, UDPInterface.HandlerMac handlerMac , int count) {
         this.handlerMac = handlerMac;
-        uSend(ScanIP, PORT, msg.getBytes());
         uReviced(1, this);
+        uSend(ScanIP, PORT, msg.getBytes() , count);
     }
 
     /**
@@ -69,10 +69,11 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
     public void Handler(int position, Object[] objects) {
         //判断链表里面是不是存在相同的mac地址，不存在则添加，存在则不操作
         byte[] buffer = (byte[]) objects[0];
-        int lenght = (int) objects[1];
+        objects[1] = 17;
+        int lenght = (int)objects[1];
         if (isEmpty(buffer, lenght)) {
             if (SystemTool.isMac(new String(buffer, 0, lenght))) {
-                handlerMac.getMac(position , objects);
+                handlerMac.getMac(position, objects);
                 mac.add(new String(buffer, 0, lenght));
             }
             return;
@@ -87,6 +88,6 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
      */
     @Override
     public void Error(int position, int error) {
-        handlerMac.Error(position , error);
+        handlerMac.Error(position, error);
     }
 }

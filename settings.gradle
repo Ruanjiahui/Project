@@ -1,1 +1,1 @@
-include ':app' , ':DATA_SDK' , ':UI_SDK' , 'udp_sdk' , 'HTTP_SDK'
+include ':app', ':DATA_SDK', ':UI_SDK', 'udp_sdk', 'HTTP_SDK'

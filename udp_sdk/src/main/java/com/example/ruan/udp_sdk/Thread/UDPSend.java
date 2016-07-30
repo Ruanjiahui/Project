@@ -8,15 +8,17 @@ import com.example.ruan.udp_sdk.UDPInterface;
 public class UDPSend implements Runnable {
     private UDPInterface.UDPSend uSend = null;
     private byte[] buffer = null;
+    private int count = 0;
 
     /**
      * 这个方法是发送UDP调用的方法
      *
      * @param uSend 发送信息的接口
      */
-    public UDPSend(UDPInterface.UDPSend uSend , byte[] buffer) {
+    public UDPSend(UDPInterface.UDPSend uSend, byte[] buffer, int count) {
         this.uSend = uSend;
         this.buffer = buffer;
+        this.count = count;
     }
 
     /**
@@ -26,6 +28,15 @@ public class UDPSend implements Runnable {
      */
     @Override
     public void run() {
-        uSend.Send(buffer);
+        while (count > 0) {
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //每隔0.1发送一个
+            uSend.Send(buffer);
+            count--;
+        }
     }
 }

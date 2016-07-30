@@ -394,7 +394,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * @param v
      * @param visiable
      */
-    public void setVisiable(View v, boolean visiable) {
+    private void setVisiable(View v, boolean visiable) {
         if (visiable)
             v.setVisibility(View.VISIBLE);
         else

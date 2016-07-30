@@ -1,5 +1,7 @@
 package com.example.administrator.http_sdk;
 
+import android.util.Log;
+
 import com.example.administrator.Abstract.HttpRequest;
 
 import java.io.IOException;

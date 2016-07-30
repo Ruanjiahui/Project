@@ -2,23 +2,44 @@ package com.ruan.project.Other.System;
 
 /**
  * Created by Administrator on 2016/7/21.
+ * <p/>
+ * 监听网络发生改变的广播
  */
 
 import android.content.BroadcastReceiver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
+import com.ruan.project.Controllar.CheckOnline;
+import com.ruan.project.Controllar.FragmentDatabase;
 import com.ruan.project.Controllar.UdpOpera;
 import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
+import com.ruan.project.R;
+import com.ruan.project.View.Fragment.Fragment1;
 
-public class WifiReceiver extends BroadcastReceiver implements UDPInterface.HandlerMac {
+import java.util.ArrayList;
+import java.util.Map;
+
+public class WifiReceiver extends BroadcastReceiver {
 
     private Context context = null;
+    private FragmentManager fragmentManager = null;
+
+    public WifiReceiver(FragmentManager fragmentManager) {
+        this.fragmentManager = fragmentManager;
+    }
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -32,15 +53,16 @@ public class WifiReceiver extends BroadcastReceiver implements UDPInterface.Hand
             if (info.getState().equals(NetworkInfo.State.DISCONNECTED)) {
 //                System.out.println("wifi网络连接断开");
                 //接着wifi断开就是用外网
-                HttpURL.STATE = 2;
+                HttpURL.STATE = SystemTool.isNetState(context);
+                CheckOnline();
                 //判断是否连接上wifi网络
             } else if (info.getState().equals(NetworkInfo.State.CONNECTED)) {
+                //连接上wifi
+                HttpURL.STATE = SystemTool.isNetState(context);
                 //扫描局域网的设备
                 //重写判断一下设备有没有在该局域网中
-                new UdpOpera(context).UDPDeviceScan(this);
+                CheckOnline();
 
-                //连接上wifi
-                HttpURL.STATE = 1;
                 WifiManager wifiManager = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
                 WifiInfo wifiInfo = wifiManager.getConnectionInfo();
 
@@ -61,32 +83,16 @@ public class WifiReceiver extends BroadcastReceiver implements UDPInterface.Hand
     }
 
     /**
-     * 这个方法获取Mac值
-     * //0 储存接收的数据
-     * //1 储存接收数据的长度
-     * //2 储存接收的地址
-     * //3 储存接收的端口
-     *
-     * @param position 标示
-     * @param objects  这个Object数组里面包含一些列的设备信息
+     * 网络发生改变的时候重写判断设备是否在线
      */
-    @Override
-    public void getMac(int position, Object[] objects) {
-        //连接上wifi
-        HttpURL.STATE = 1;
-    }
-
-    /**
-     * 超时
-     *
-     * @param position
-     * @param error
-     */
-    @Override
-    public void Error(int position, int error) {
-        //如果扫描超时则说明了不在同一个局域网里面
-        if (SystemTool.isNetState(context) != 0)
-            //如果手机可以连接网络的情况下说明只能用外网
-            HttpURL.STATE = 2;
+    private void CheckOnline() {
+        if (FragmentDatabase.getUserDeviceData(context) != null && FragmentDatabase.getUserDeviceData(context).size() != 0) {
+            if (HttpURL.STATE == NetWork.WIFI)
+                new CheckOnline(context, fragmentManager).UDPCheck();
+            //通过云端进行设备检测是否在线
+            //如果wifi没有连接则使用外网判断设备是否在线
+            if (HttpURL.STATE == NetWork.INTNET)
+                new CheckOnline(context, fragmentManager).HTTPCheck();
+        }
     }
 }

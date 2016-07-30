@@ -31,6 +31,7 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
     private Timer timer = null;
     private UDPInterface.UDPHandler handler = null;
     private int position = 0;
+    private MyTimerTask myTimerTask = null;
 
 
     /**
@@ -50,15 +51,19 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
     /**
      * 这个方法是发送信息
      *
-     * @param IP   IP地址
-     * @param PORT 传输端口号
+     * @param IP     发送的IP
+     * @param PORT   发送的端口
+     * @param buffer 发送的数据
+     * @param count  发送的次数
      */
     @Override
-    protected void Send(String IP, int PORT, byte[] buffer) {
+    protected void Send(String IP, int PORT, byte[] buffer, int count) {
         this.IP = IP;
         this.PORT = PORT;
-        new Thread(new UDPSend(this, buffer)).start();
+        //每隔0.1发送一个
+        new Thread(new UDPSend(this, buffer, count)).start();
     }
+
 
     /**
      * 这个方法是接收信息
@@ -70,7 +75,9 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
         thread = new Thread(new UDPReviced(position, this, handler));
         thread.start();
         timer = new Timer();
-        timer.schedule(new MyTimerTask(this), 5000, 5000);
+        myTimerTask = new MyTimerTask(this);
+        timer.schedule(myTimerTask, 10000, 5000);
+
     }
 
 
@@ -105,8 +112,10 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
             objects[1] = indatagramPacket.getLength();
             objects[2] = indatagramPacket.getAddress().getHostName();
             objects[3] = indatagramPacket.getPort();
-            if (timer != null)
+            if (timer != null) {
                 timer.cancel();
+                timer = null;
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

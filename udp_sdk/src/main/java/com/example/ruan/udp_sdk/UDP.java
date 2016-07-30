@@ -35,8 +35,8 @@ public class UDP {
      * @param PORT          发送的远程端口
      * @param buffer
      */
-    public void uSend(String IP, int PORT , byte[] buffer) {
-        udpBase.Send(IP, PORT, buffer);
+    public void uSend(String IP, int PORT , byte[] buffer , int count) {
+        udpBase.Send(IP, PORT, buffer , count);
     }
 
     /**

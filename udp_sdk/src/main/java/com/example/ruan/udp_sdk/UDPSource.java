@@ -16,10 +16,12 @@ public abstract class UDPSource{
 
     /**
      * 这个方法是发送信息
-     * @param IP            IP地址
-     * @param PORT          传输端口号
+     * @param IP            发送的IP
+     * @param PORT          发送的端口
+     * @param buffer        发送的数据
+     * @param count         发送的次数
      */
-    protected abstract void Send(String IP , int PORT , byte[] buffer);
+    protected abstract void Send(String IP , int PORT , byte[] buffer , int count);
 
 
     /**
