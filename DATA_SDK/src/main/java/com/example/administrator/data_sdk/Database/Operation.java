@@ -105,6 +105,44 @@ public class Operation {
                     }
                 }
                 String sql = "select distinct(" + colums[0] + ")" + content + " from " + Table_Name;
+                Log.e("Ruan", sql);
+                return sqLiteDatabase.rawQuery(sql, new String[]{});
+            } else {
+                return sqLiteDatabase.query(Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit);
+            }
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * 查询去重数据库
+     *
+     * @param context
+     * @param db
+     * @param Table_Name
+     * @param colums        获取数据的列名称
+     * @param selection     where后面的内容
+     * @param selectionArgs where后面内容的参数
+     * @param groupBy       GROUP BY后面的字符串
+     * @param having        HAVING后面的字符串
+     * @param orderBy       ORDER BY后面的字符串
+     * @param limit         返回的数量
+     * @param distinct      是否去重
+     * @return
+     */
+    protected Cursor distinctQuery(Context context, String db, String Table_Name, String[] colums, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit, boolean distinct, String distinctType) {
+        databaseHelper = CreateTable.getInstance(context, db);
+        sqLiteDatabase = databaseHelper.getReadableDatabase();
+        try {
+            if (distinct) {
+                String content = "";
+                if (colums != null) {
+                    for (int i = 0; i < colums.length; i++) {
+                        content += "," + colums[i];
+                    }
+                }
+                String sql = "select distinct(" + distinctType + ")" + content + " from " + Table_Name;
                 return sqLiteDatabase.rawQuery(sql, new String[]{});
             } else {
                 return sqLiteDatabase.query(Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit);

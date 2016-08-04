@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:fitsSystemWindows="true">
 
     <!--<RelativeLayout-->
     <!--android:id="@+id/fragment1Top"-->
@@ -11,22 +10,72 @@
     <!--android:layout_height="wrap_content"-->
     <!--android:background="@mipmap/logo"></RelativeLayout>-->
 
-    <include
+    <!--<include-->
+    <!--android:id="@+id/fragment1Top"-->
+    <!--layout="@layout/base_top"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="70dp"></include>-->
+
+    <RelativeLayout
         android:id="@+id/fragment1Top"
-        layout="@layout/base_top"
         android:layout_width="match_parent"
-        android:layout_height="70dp"></include>
+        android:layout_height="wrap_content"
+        android:background="@mipmap/bg_top">
+
+        <ImageView
+            android:id="@+id/fragment1Logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:src="@mipmap/index_top_logo" />
+
+
+        <LinearLayout
+            android:id="@+id/fragment1Linear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="20dp"
+            android:layout_marginRight="30dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/fragment1City"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="深圳"
+                android:textColor="@color/White"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/fragment1weather"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:gravity="center"
+                android:text="打台风"
+                android:textColor="@color/White"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+
+    </RelativeLayout>
+
 
     <com.example.administrator.ui_sdk.View.RreshLinearLayout
         android:id="@+id/myLinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/fragment1Top"
         android:orientation="vertical">
 
         <!--<TextView-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="123"/>-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="123"/>-->
 
         <!--<include-->
         <!--android:id="@+id/fragment1Top"-->
@@ -39,12 +88,49 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/White"
-            android:clipToPadding="false"
             android:clipChildren="false"
+            android:clipToPadding="false"
             android:divider="@color/WhiteSmoke"
             android:dividerHeight="1dp"
             android:listSelector="@drawable/itemsector" />
 
     </com.example.administrator.ui_sdk.View.RreshLinearLayout>
 
-</LinearLayout>
+
+    <com.example.administrator.ui_sdk.View.MyImageView
+        android:id="@+id/MainFind"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/menu" />
+
+    <com.example.administrator.ui_sdk.View.MyImageView
+        android:id="@+id/MainAdd"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@mipmap/plus" />
+
+    <!--<ImageView-->
+    <!--android:id="@+id/fragment1Find"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:src="@mipmap/ic_launcher" />-->
+
+
+    <!--<RelativeLayout-->
+    <!--android:id="@+id/fragment1Background"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:alpha="0.7"-->
+    <!--android:visibility="gone"-->
+    <!--android:background="@color/Black" />-->
+
+    <!--&lt;!&ndash; 点击弹出下面的布局&ndash;&gt;-->
+    <!--<include-->
+    <!--android:id="@+id/bottomMain"-->
+    <!--layout="@layout/bottom_main"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentBottom="true" />-->
+
+
+</RelativeLayout>

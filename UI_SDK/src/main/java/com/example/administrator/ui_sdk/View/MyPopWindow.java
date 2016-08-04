@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.PopupWindow;
 
 import com.example.administrator.ui_sdk.ListView_Object;
@@ -24,10 +25,10 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
 
     private View conentView;
 
-    private MyListView listView = null;
+    private ListView listView = null;
     private MyOnClickInterface onClickInterface = null;
 
-    public MyPopWindow(Activity activity, ArrayList<ListView_Object> list, int width) {
+    public MyPopWindow(Activity activity, ArrayList<Object> list, int width) {
         LayoutInflater inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         conentView = inflater.inflate(R.layout.popwindow, null);
@@ -52,7 +53,7 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
         // 设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimationPreview);
 
-        listView = (MyListView) conentView.findViewById(R.id.poplistview);
+        listView = (ListView) conentView.findViewById(R.id.poplistview);
         listView.setAdapter(new MyBaseAdapter(activity, list, 1));
         listView.setOnItemClickListener(this);
     }

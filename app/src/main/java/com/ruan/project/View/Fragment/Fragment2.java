@@ -1,9 +1,11 @@
 package com.ruan.project.View.Fragment;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,13 +19,16 @@ import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.example.administrator.ui_sdk.ItemClick;
 import com.example.administrator.ui_sdk.View.SideListView;
+import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Moudle.Item;
+import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.Edit;
+import com.ruan.project.View.Activity.SceneList;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -44,6 +49,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
     private TextView base_top_title = null;
     private SideListView sideListView = null;
     private SideListViewAdapter adapter = null;
+    private ArrayList<Object> ListObj = null;
+    private DatabaseOpera databaseOpera = null;
+    private Scene scene = null;
 
     private ArrayList<Object> list = null;
 
@@ -54,6 +62,8 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
         context = getActivity();
 
         view = inflater.inflate(R.layout.fragment2, container, false);
+
+        databaseOpera = new DatabaseOpera(context);
 
         sideListView = (SideListView) view.findViewById(R.id.slideListView1);
         fragment2Top = view.findViewById(R.id.fragment2Top);
@@ -67,10 +77,9 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
         base_top_title.setText("场景");
         base_top_title.setTextColor(getResources().getColor(R.color.White));
         base_top_relative.setVisibility(View.GONE);
-        base_top_text1.setText("新建场景");
+        base_top_text1.setText("添加场景");
         base_top_text1.setTextColor(getResources().getColor(R.color.White));
 
-        list = new ArrayList<>();
 
         base_top_text1.setOnClickListener(this);
         sideListView.setOnItemClickListener(this);
@@ -92,32 +101,29 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
         }
     }
 
-    private ArrayList<Map<String, String>> map = null;
-
     @Override
     public void onStart() {
         super.onStart();
 
-        //首先清空列表的数据
-        list.clear();
-        //从数据库中获取列表的数据
-        map = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
-        for (int i = 0; i < map.size(); i++)
-            list.add(getItem(map.get(i).get("sceneName")));
-        //判断适配器是不是空值，如果是空值则新建否则直接刷新数据即可
-        if (adapter == null) {
-            adapter = new SideListViewAdapter(context, list);
-            sideListView.setAdapter(adapter);
-        } else {
-            adapter.RefreshData(list);
-        }
-        adapter.setItemClick(this);
+        ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class , false);
 
+        if (ListObj != null && ListObj.size() != 0) {
+            list = new FragmentControl(context).getFragment2List(ListObj);
+            //判断适配器是不是空值，如果是空值则新建否则直接刷新数据即可
+            if (adapter == null) {
+                adapter = new SideListViewAdapter(context, list);
+                sideListView.setAdapter(adapter);
+            } else {
+                adapter.RefreshData(list);
+            }
+            adapter.setItemClick(this);
+        }
     }
 
-    private Object getItem(String title) {
+    private Object getItem(String title, Drawable drawable) {
         Item item = new Item();
-        item.setTitle(title);
+        item.setHomeText(title);
+        item.setHomeImage(drawable);
         return item;
     }
 
@@ -130,17 +136,18 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
     @Override
     public void OnClick(int position, int View) {
         sideListView.ShowNormal();
+        scene = (Scene) ListObj.get(position);
         switch (View) {
             case 0:
-                CommonIntent.IntentActivity(context, Edit.class, map.get(position).get("sceneID"), "scene");
+                CommonIntent.IntentActivity(context, Edit.class, scene.getSceneID(), "scene");
                 break;
             case 1:
                 //删除界面的item并且同时删除本地数据的数据和服务器上面的数据
                 list.remove(position);
                 adapter.RefreshData(list);
                 //删除本地数据库的数据
-                new DatabaseOpera(context).DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, "sceneID = ?", new String[]{map.get(position).get("sceneID")});
-                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("sceneID", null), "sceneID = ?", new String[]{map.get(position).get("sceneID")});
+                new DatabaseOpera(context).DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, "sceneID = ?", new String[]{scene.getSceneID()});
+                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("sceneID", null), "sceneID = ?", new String[]{scene.getSceneID()});
 //                new DatabaseOpera(context).DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "sceneID = ?", new String[]{map.get(position).get("sceneID")});
                 //删除服务器的数据库的数据
                 break;
@@ -162,6 +169,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        scene = (Scene) ListObj.get(position);
+        CommonIntent.IntentActivity(context , SceneList.class , scene.getSceneName() , scene.getSceneID());
     }
 }

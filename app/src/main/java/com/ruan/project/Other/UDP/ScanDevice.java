@@ -15,7 +15,6 @@ import java.util.Arrays;
  */
 public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInterface.UDPHandler {
 
-    private static String ScanIP = "255.255.255.255";
     //创建一定的内存有专门存储Mac数值的链表
     private ArrayList<String> mac = null;
     private UDPInterface.HandlerMac handlerMac = null;
@@ -33,7 +32,7 @@ public class ScanDevice extends UDP implements com.example.ruan.udp_sdk.UDPInter
     public void Scanner(int PORT, String msg, UDPInterface.HandlerMac handlerMac , int count) {
         this.handlerMac = handlerMac;
         uReviced(1, this);
-        uSend(ScanIP, PORT, msg.getBytes() , count);
+        uSend(UDPConfig.IP, PORT, msg.getBytes() , count);
     }
 
     /**

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/base_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -19,9 +19,33 @@
     <!-- 下面这个就是整个Activity的内容的主布局-->
     <LinearLayout
         android:id="@+id/contentView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/titlebar"
         android:orientation="vertical"
         android:visibility="visible"></LinearLayout>
 
-</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/base_Relative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.7"
+        android:background="@color/Black"
+        android:visibility="gone" />
+
+
+    <LinearLayout
+        android:id="@+id/base_menu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--<include-->
+            <!--android:id="@+id/base_bottomMain"-->
+            <!--layout="@layout/bottom_main"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent" />-->
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,7 +1,9 @@
 package com.ruan.project.View.Activity;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,10 +14,13 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
+import com.example.administrator.data_sdk.Database.LoadClass;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
@@ -23,7 +28,10 @@ import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Controllar.UdpOpera;
 import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Item;
+import com.ruan.project.Moudle.Scene;
+import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
@@ -35,6 +43,7 @@ import com.ruan.project.View.MyPopWindow;
 import java.util.ArrayList;
 import java.util.Map;
 
+import javax.security.auth.login.LoginException;
 
 
 /**
@@ -55,10 +64,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private TextView editScene = null;
 
     private String FLAG = "";
-    //记录设备信息
-    private ArrayList<Map<String, String>> list = null;
     //记录场景信息
-    private ArrayList<Map<String, String>> scene = null;
     private String title, subtitle, sceneName;
     private String tableName = null;
 
@@ -67,9 +73,14 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
 
     private String databaseName = "";
 
-
     private String deviceID = "";
     private String sceneID = "";
+
+    private DatabaseOpera databaseOpera = null;
+    private ArrayList<Object> sceneListObj = null;
+    private ArrayList<Object> deviceListObj = null;
+    private Scene scene = null;
+    private UserDevice userDevice = null;
 
     /**
      * Start()
@@ -81,10 +92,16 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         FLAG = bundle.getString("data");
         tableName = bundle.getString("flag");
 
+
         context = this;
         activity = (Activity) context;
 
         view = LayoutInflater.from(context).inflate(R.layout.edit, null);
+
+        databaseOpera = new DatabaseOpera(context);
+        //配置适配器的数据
+        map = new ArrayList<>();
+
 
         if (tableName.equals("edit")) {
             databaseName = DatabaseTableName.UserDeviceName;
@@ -92,12 +109,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
             databaseName = DatabaseTableName.DeviceTableName;
         }
 
-        //判断数据是否存在，存在则获取场景表的数据
-        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName))
-            scene = new DatabaseOpera(context).DataQuery(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
-        //判断数据库是否存在，存在则获取设备表的数据库、   通过设备的唯一ID获取到设备的信息 提供给用户是否修改备注和名称
-        if (new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, databaseName))
-            list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, databaseName, "deviceID = ?", new String[]{FLAG});
+        sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
+        deviceListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, databaseName, "deviceID", FLAG, UserDevice.class, true);
 
 
         setTopColor(R.color.Blue);
@@ -115,28 +128,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         editScene = (TextView) view.findViewById(R.id.editScene);
 
 
-        //获取到数据
-        if (list != null) {
-            deviceID = list.get(0).get("deviceID");
-            editTitle.setText(list.get(0).get("deviceName"));
-            sceneID = list.get(0).get("sceneID");
-            if (list.get(0).get("deviceModel") != null)
-                editSubTitle.setText(list.get(0).get("deviceModel"));
-            else
-                editSubTitle.setText(list.get(0).get("deviceRemarks"));
-        }
-
-        //配置适配器的数据
-        map = new ArrayList<>();
-        //判断当场景数据不为空的时候进行处理
-        if (scene != null) {
-            for (int i = 0; i < scene.size(); i++) {
-                //当用户设备表的场景ID等于场景表的ID时候就说明这个设备就是属于这个场景的
-                if (scene.get(i).get("sceneID").equals(sceneID))
-                    editScene.setText(scene.get(i).get("sceneName"));
-                map.add(getItem(scene.get(i).get("sceneName")));
-            }
-        }
+        //设置初始化界面
+        setInit();
 
 
         setContent(view);
@@ -145,13 +138,39 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         editTitle.addTextChangedListener(this);
         editBut.setOnClickListener(this);
         editDrop.setOnClickListener(this);
+        editLogo.setOnClickListener(this);
     }
 
-    private Object getItem(String title) {
+    private Object getItem(String title, Drawable drawable) {
         Item item = new Item();
-        item.setListText(title);
-        item.setHeight(DensityUtil.dip2px(context, 30));
+        item.setHomeText(title);
+        item.setHomeImage(drawable);
         return item;
+    }
+
+    private void setInit() {
+        //获取到数据
+        if (deviceListObj != null && deviceListObj.size() != 0) {
+            userDevice = (UserDevice) deviceListObj.get(0);
+            deviceID = userDevice.getDeviceID();
+            editTitle.setText(userDevice.getDeviceName());
+            sceneID = userDevice.getSceneID();
+            if (userDevice.getDeviceModel() != null)
+                editSubTitle.setText(userDevice.getDeviceModel());
+            else
+                editSubTitle.setText(userDevice.getDeviceRemarks());
+        }
+
+        //判断当场景数据不为空的时候进行处理
+        if (sceneListObj != null && sceneListObj.size() != 0) {
+            for (int i = 0; i < sceneListObj.size(); i++) {
+                scene = (Scene) sceneListObj.get(i);
+                //当用户设备表的场景ID等于场景表的ID时候就说明这个设备就是属于这个场景的
+                if (scene.getSceneID().equals(sceneID))
+                    editScene.setText(scene.getSceneName());
+                map.add(getItem(scene.getSceneName(), getResources().getDrawable(R.mipmap.cooker)));
+            }
+        }
     }
 
     @Override
@@ -163,23 +182,32 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 subtitle = editSubTitle.getText().toString();
                 sceneName = editScene.getText().toString();
 
+                userDevice.setDeviceName(title);
+                userDevice.setDeviceRemarks(subtitle);
+
+                //配置完网络这个是否使用设备编辑，这个时候应当扫描周边设备获取在线设备
                 if (tableName.equals("new")) {
-//                    CommonIntent.IntentActivity(context , AirkissNetWork.class);
-                    //扫描局域网的设备
                     if (SystemTool.isNetState(context) == NetWork.WIFI)
+                        //扫描局域网的设备
                         new UdpOpera(this).UDPDeviceScan(this);
-//                        CommonIntent.IntentActivity(context , AirkissNetWork.class);
                     else
-                        Toast.makeText(context , "请链接wifi" ,Toast.LENGTH_SHORT).show();
-                }else if(tableName.equals("edit"))
-                    //插入数据
-                    Exists(Integer.parseInt(list.get(0).get("devicePORT")), list.get(0).get("deviceIP"), list.get(0).get("deviceMac") , list.get(0).get("deviceOnline"));
+                        Toast.makeText(context, "请链接wifi", Toast.LENGTH_SHORT).show();
+                } else if (tableName.equals("edit")) {
+                    Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+                }
                 break;
             case R.id.editDrop:
                 //创建PopWindow的组件
-                popWindow = new MyPopWindow(activity, map, BaseActivity.width / 3 * 2);
-                popWindow.showPopupWindow(editLogo, BaseActivity.width / 3, BaseActivity.height / 3);
+                popWindow = new MyPopWindow(activity, map, BaseActivity.width / 2, BaseActivity.height / 2);
+                popWindow.showPopupWindow(editLogo, MyPopWindow.UP, BaseActivity.width / 4, BaseActivity.height / 4);
+                popWindow.setPopBackground(R.color.White);
+                popWindow.setPopBackground(R.drawable.popcircle);
+                popWindow.setPopListBackground(R.color.White);
+                popWindow.setPopListSector(R.drawable.itemsector);
                 popWindow.setOnPopWinItemClick(this);
+                break;
+            case R.id.editLogo:
+                CommonIntent.IntentActivity(context, picPick.class);
                 break;
         }
     }
@@ -258,18 +286,12 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
      */
     @Override
     public void OnPopItemClick(AdapterView<?> parent, View view, int position, long id) {
-        editScene.setText(scene.get(position).get("sceneName"));
-        sceneID = scene.get(position).get("sceneID");
+        scene = (Scene) sceneListObj.get(position);
+        editScene.setText(scene.getSceneName());
+        sceneID = scene.getSceneID();
+        userDevice.setSceneID(sceneID);
         popWindow.disShow();
     }
-
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        //扫描局域网的设备
-//        new UdpOpera(this).UDPDeviceScan(this);
-//    }
 
     /**
      * 这个方法获取Mac值
@@ -278,31 +300,31 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
      * //2 储存接收的地址
      * //3 储存接收的端口
      *
-     * @param  position
-     * @param objects 这个Object数组里面包含一些列的设备信息
+     * @param position
+     * @param objects  这个Object数组里面包含一些列的设备信息
      */
     @Override
-    public void getMac(int position , Object[] objects) {
+    public void getMac(int position, Object[] objects) {
         //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
         String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
         String IP = (String) objects[2];
         int PORT = (int) objects[3];
-//        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues(mac, IP, PORT));
-        //通过获取到设备的mac和IP端口之后可以对设备进行单播获取该设备的更多的设备信息
-//        new UdpOpera(context).UDPDeviceInfo(IP, PORT, "123".getBytes(), this);
-        Exists(PORT, IP, mac , "2");
-//        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
-//        if (!"".equals(sceneID) && sceneID != null)
-//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
-//
-//        Applications.getInstance().removeOneActivity(activity);
+        userDevice.setDevicePORT(PORT + "");
+        userDevice.setDeviceIP(IP);
+        userDevice.setDeviceMac(mac);
+        userDevice.setDeviceOnline("2");
+        Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
     }
 
-    private void Exists(int PORT, String IP, String mac , String online) {
-        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, DataHandler.getContentValues("123456", sceneID, list, title, subtitle, IP, mac, PORT , online), true, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"}, "deviceID = ? and userID = ?", new String[]{deviceID, "123456"});
-        if (!"".equals(sceneID) && sceneID != null)
-            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
-
+    /**
+     * 退出页面将设置好的参数保存到数据库
+     */
+    private void Exists(UserDevice userDevice, String db, String Table_Name) {
+        userDevice.setUserID("123456");
+        ContentValues contentValues = DataHandler.getContentValues(context, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"}, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"});
+//        if (!"".equals(sceneID) && sceneID != null)
+//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
         Applications.getInstance().removeOneActivity(activity);
     }
 
@@ -314,9 +336,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private boolean visiable = false;
 
     @Override
-    public void Error(int position , int error) {
+    public void Error(int position, int error) {
         if (!visiable) {
-            Toast.makeText(context, "连接超时", Toast.LENGTH_SHORT);
+            Toast.makeText(context, "连接超时,请重写设置", Toast.LENGTH_SHORT);
             visiable = true;
         }
     }

@@ -3,6 +3,7 @@ package com.ruan.project.Other.DataBase;
 import android.content.ContentValues;
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 
@@ -97,16 +98,17 @@ public class DatabaseOpera {
 
     /**
      * 插数据的时候可以接受ContentValues
-     * @param db                数据库的名称
-     * @param table_name        数据库的表名称
-     * @param contentValues     数据库插数据的对象
-     * @param update            是否更新            true(自动判断更新获取插数据)false只是插数据
-     * @param key               更新数据的set后面的变量
-     * @param values            更新数据的数据
-     * @param whereclause       where后面的变量
-     * @param whereargs         where后面的数据
+     *
+     * @param db            数据库的名称
+     * @param table_name    数据库的表名称
+     * @param contentValues 数据库插数据的对象
+     * @param update        是否更新            true(自动判断更新获取插数据)false只是插数据
+     * @param key           更新数据的set后面的变量
+     * @param values        更新数据的数据
+     * @param whereclause   where后面的变量
+     * @param whereargs     where后面的数据
      */
-    public void DataInert(String db, String table_name, ContentValues contentValues, boolean update, String key, String[] values , String whereclause, String[] whereargs) {
+    public void DataInert(String db, String table_name, ContentValues contentValues, boolean update, String key, String[] values, String whereclause, String[] whereargs) {
         if (update) {
             if (key != null || !"".equals(key)) {
                 getDatabaseData.Insert2Update(context, db, table_name, key, values, contentValues, whereclause, whereargs);
@@ -122,54 +124,108 @@ public class DatabaseOpera {
      * @param db         数据库的名称
      * @param table_name 数据库的表的名称
      */
+    @Deprecated
     public ArrayList<Map<String, String>> DataQuerys(String db, String table_name) {
         return getDatabaseData.distinctQueryArray(context, db, table_name, new String[]{"deviceTypeID", "deviceType"}, "", null, "", "", "", "", true);
     }
 
+
+    /**
+     * 获取设备的全部类别数据(带有去重方法)
+     *
+     * @param db           数据库的名称
+     * @param table_name   表名称
+     * @param loadClass    封装的类
+     * @param colums       获取的数目（如果为空则默认获取一项）
+     * @param distinctType 去重的标识
+     * @return
+     */
+    public ArrayList<Object> DataQuerys(String db, String table_name, Class loadClass, String[] colums, String distinctType, boolean SuperClass) {
+        return getDatabaseData.distinctQueryArray(context, db, table_name, colums, "", null, "", "", "", "", true, distinctType, loadClass, SuperClass);
+    }
+
     /**
      * 获取同一类别的全部型号数据
      *
-     * @param db           数据库名称
-     * @param table_name   数据库表的名称
-     * @param key          查询的key
-     * @param values       查询的values
+     * @param db         数据库名称
+     * @param table_name 数据库表的名称
+     * @param key        查询的key
+     * @param values     查询的values
      * @return
      */
+    @Deprecated
     public ArrayList<Map<String, String>> DataQuerys(String db, String table_name, String key, String values) {
         return getDatabaseData.QueryArray(context, db, table_name, null, key + " = ?", new String[]{values}, "", "", "", "");
     }
 
+
     /**
      * 获取同一类别的全部型号数据
      *
-     * @param db           数据库名称
-     * @param table_name   数据库表的名称
-     * @param whereclause          查询的key
-     * @param whereargs       查询的values
+     * @param db         数据库名称
+     * @param table_name 数据库表的名称
+     * @param key        查询的key
+     * @param values     查询的values
      * @return
      */
+    public ArrayList<Object> DataQuerys(String db, String table_name, String key, String values, Class loadClass, boolean SuperClass) {
+        return getDatabaseData.QueryArray(context, db, table_name, null, key + " = ?", new String[]{values}, "", "", "", "", loadClass, SuperClass);
+    }
+
+    /**
+     * 获取同一类别的全部型号数据
+     *
+     * @param db          数据库名称
+     * @param table_name  数据库表的名称
+     * @param whereclause 查询的key
+     * @param whereargs   查询的values
+     * @return
+     */
+    @Deprecated
     public ArrayList<Map<String, String>> DataQuerys(String db, String table_name, String whereclause, String[] whereargs) {
         return getDatabaseData.QueryArray(context, db, table_name, null, whereclause, whereargs, "", "", "", "");
     }
 
-    /**
-     * 获取同一类别的全部型号数据
+
+    /***
+     * 获取同一个表的全部数据
+     *
      * @param db            数据库名称
-     * @param table_name    数据库表的名称
+     * @param Table_Name    表名称
+     * @param colums        列名称
+     * @param selection     where后面的是字符串
+     * @param selectionArgs where后面的变量
+     * @param groupBy
+     * @param having
+     * @param orderBy
+     * @param limit
+     * @param loadclass     封装成的对象名称(类名)
      * @return
      */
-    public ArrayList<Map<String , String>> DataQuery(String db , String table_name){
-        return getDatabaseData.QueryArray(context , db , table_name , null , "" , null , "" , "" , "" , "");
+    public ArrayList<Object> DataQuerys(String db, String Table_Name, String[] colums, String selection, String[] selectionArgs, String groupBy, String having, String orderBy, String limit, Class loadclass, boolean SuperClass) {
+        return getDatabaseData.QueryArray(context, db, Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit, loadclass, SuperClass);
+    }
+
+    /**
+     * 获取同一类别的全部型号数据
+     *
+     * @param db         数据库名称
+     * @param table_name 数据库表的名称
+     * @return
+     */
+    public ArrayList<Map<String, String>> DataQuery(String db, String table_name) {
+        return getDatabaseData.QueryArray(context, db, table_name, null, "", null, "", "", "", "");
     }
 
     /**
      * 删除数据库指定的数据，如果后面两个参数为空则说明删除整个表
+     *
      * @param db
      * @param table_name
      * @param whereclause
      * @param whereargs
      */
-    public void DataDelete(String db , String table_name , String whereclause, String[] whereargs){
-        getDatabaseData.Delete(context , db , table_name , whereclause , whereargs);
+    public void DataDelete(String db, String table_name, String whereclause, String[] whereargs) {
+        getDatabaseData.Delete(context, db, table_name, whereclause, whereargs);
     }
 }

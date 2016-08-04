@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/popLinear"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/popcircle">
 
     <ListView
-        android:id="@+id/poplistview"
+        android:id="@+id/popWinlistview"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:background="@color/Blue"
-        android:listSelector="@color/White"></ListView>
+        android:listSelector="@drawable/popselector"
+        android:background="@color/GreySmoke"
+        android:layout_margin="3dp"></ListView>
     <!--<Button-->
     <!--android:layout_width="fill_parent"-->
     <!--android:layout_height="wrap_content"-->

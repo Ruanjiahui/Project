@@ -5,16 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-
+import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.ViewHolder;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
+
 
 /**
  * Created by Soft on 2016/7/9.
@@ -92,34 +91,30 @@ public class SideListViewAdapter extends BaseAdapter {
         if (convertView == null) {
 
             convertView = LayoutInflater.from(context).inflate(R.layout.sideitem, null);
-
-            viewHolder = new ViewHolder();
-
-            viewHolder.sideDelete = (TextView) convertView.findViewById(R.id.delete);
-            viewHolder.sideEdit = (TextView) convertView.findViewById(R.id.edit);
-            viewHolder.Logo = (ImageView) convertView.findViewById(R.id.Logo);
-            viewHolder.Title = (TextView) convertView.findViewById(R.id.Title);
-            viewHolder.Subtitle = (TextView) convertView.findViewById(R.id.Subtitle);
-            viewHolder.RightTitle = (TextView) convertView.findViewById(R.id.RightTitle);
-
+            viewHolder = new ViewHolder(convertView, "SideView");
             convertView.setTag(viewHolder);
         } else
             viewHolder = (ViewHolder) convertView.getTag();
 
-        viewHolder.Title.setText(item.getTitle());
-        viewHolder.Subtitle.setText(item.getSubtitle());
-        viewHolder.Logo.setImageDrawable(item.getLogo());
-        viewHolder.RightTitle.setText(item.getRightTitle());
+        viewHolder.homeImage.setImageDrawable(item.getHomeImage());
+        viewHolder.homeRight.setText(item.getHomeRight());
+        viewHolder.homeRight1.setText(item.getHomeRight1());
+        viewHolder.homeRightImage.setImageDrawable(item.getHomeRightImage());
+        viewHolder.homeSubText.setText(item.getHomeSubText());
+        viewHolder.homeText.setText(item.getHomeText());
+        if (item.getHomeRelative() != 0)
+            DensityUtil.setHeight(viewHolder.homeRelative, DensityUtil.dip2px(context, item.getHomeRelative()));
+
 
         //子控件注册点击事件
         if (itemClick != null) {
-            viewHolder.sideDelete.setOnClickListener(new View.OnClickListener() {
+            viewHolder.delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemClick.OnClick(position, 1);
                 }
             });
-            viewHolder.sideEdit.setOnClickListener(new View.OnClickListener() {
+            viewHolder.edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     itemClick.OnClick(position, 0);

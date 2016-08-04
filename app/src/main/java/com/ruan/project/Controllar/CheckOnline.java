@@ -9,9 +9,11 @@ import android.util.Log;
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.http_sdk.HTTP;
+import com.google.gson.Gson;
 import com.ruan.project.Interface.DataHandler;
 import com.ruan.project.Interface.UDPInterface;
 import com.ruan.project.MainActivity;
+import com.ruan.project.Moudle.CheckMac;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
@@ -22,7 +24,6 @@ import com.ruan.project.R;
 import com.ruan.project.View.Fragment.Fragment1;
 
 import java.util.ArrayList;
-import java.util.Map;
 
 /**
  * Created by Administrator on 2016/7/21.
@@ -33,11 +34,14 @@ import java.util.Map;
  */
 public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpHandler {
 
-    private ArrayList<UserDevice> map = null;
+    //    private ArrayList<UserDevice> map = null;
     private Context context = null;
     private DataHandler dataHandler = null;
     private FragmentManager fragmentManager = null;
     private UserDevice userDevice = null;
+
+
+    private ArrayList<Object> ListObj = null;
 
     private String Online = "deviceOnline";
     private String Mac = "deviceMac";
@@ -48,15 +52,17 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     public CheckOnline(Context context, FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
         this.context = context;
-        userDevice = new UserDevice();
-        map = userDevice.getMoudle(FragmentDatabase.getUserDeviceData(context));
+        ListObj = FragmentControl.getUserDeviceData(context);
+//        userDevice = new UserDevice();
+//        map = userDevice.getMoudle();
     }
 
     public CheckOnline(Context context, DataHandler dataHandler) {
         this.context = context;
         this.dataHandler = dataHandler;
-        userDevice = new UserDevice();
-        map = userDevice.getMoudle(FragmentDatabase.getUserDeviceData(context));
+        ListObj = FragmentControl.getUserDeviceData(context);
+//        userDevice = new UserDevice();
+//        map = userDevice.getMoudle(FragmentControl.getUserDeviceData(context));
     }
 
     /**
@@ -71,7 +77,8 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     public void HTTPCheck() {
 //        map = FragmentDatabase.getUserDeviceData(context);
-        new HTTP(this, HttpURL.CheckOnline, FormatData.getHttpPOSTUserDevice(map), 0);
+        if (ListObj != null && ListObj.size() != 0)
+            new HTTP(this, HttpURL.CheckOnline, FormatData.getHttpPOSTUserDevice(ListObj), 0);
     }
 
 
@@ -81,8 +88,9 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      * @param handlerMac
      */
     public void UDPCheck(UDPInterface.HandlerMac handlerMac) {
-        for (int i = 0; i < map.size(); i++) {
-            new OnlineDeveice().Check(i, map.get(i).getDeviceIP(), Integer.parseInt(map.get(i).getDevicePORT()), map.get(i).getDeviceMac(), handlerMac, 1);
+        for (int i = 0; i < ListObj.size(); i++) {
+            UserDevice userDevice = (UserDevice) ListObj.get(i);
+            new OnlineDeveice().Check(i, userDevice.getDeviceIP(), Integer.parseInt(userDevice.getDevicePORT()), userDevice.getDeviceMac(), handlerMac, 1);
             //计时器，广播没一秒发送一次，总共发送1次
         }
     }
@@ -99,13 +107,14 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void getMac(int position, Object[] objects) {
-        for (int i = 0; i < map.size(); i++) {
+        for (int i = 0; i < ListObj.size(); i++) {
             if (position == i && objects[0] != null) {
+                UserDevice userDevice = (UserDevice) ListObj.get(i);
                 ContentValues contentValues = new ContentValues();
                 //2代表在线1代表不在线
                 contentValues.put(Online, On);
                 //判断在线之后将在线状态修改到数据库
-                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{map.get(position).getDeviceMac()});
+                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{userDevice.getDeviceMac()});
             }
         }
         ReData();
@@ -119,7 +128,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void Error(int position, int error) {
-        new CheckOnline(context, fragmentManager).HTTPCheck();
+//        new CheckOnline(context, fragmentManager).HTTPCheck();
 //        ContentValues contentValues = new ContentValues();
 //        //2代表在线1代表不在线
 //        contentValues.put("deviceOnline", "1");
@@ -137,7 +146,8 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     @Override
     public void handler(int position, String result) {
         if (result != null) {
-            ArrayList<String> list = jsonMac.getMacArrays(result);
+            Gson gson = new Gson();
+            CheckMac checkMac = gson.fromJson(result, CheckMac.class);
 
             //首先将所有设备登录状态设置为不在线
             ContentValues contentValues = new ContentValues();
@@ -146,12 +156,12 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
             new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "", null);
 
             //如果返回数据里面有该设备就设置为在线状态
-            for (int i = 0; i < list.size(); i++) {
+            for (int i = 0; i < checkMac.getList().size(); i++) {
                 contentValues = new ContentValues();
                 //2代表在线1代表不在线
                 contentValues.put(Online, On);
                 //判断在线之后将在线状态修改到数据库
-                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{list.get(i)});
+                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{checkMac.getList().get(i)});
             }
             ReData();
         }

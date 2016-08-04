@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,11 @@ import android.widget.ListView;
 import android.widget.PopupWindow;
 
 
+import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Other.Adapter.LGAdapter;
+import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -28,14 +32,17 @@ import java.util.ArrayList;
 public class MyPopWindow extends PopupWindow implements OnItemClickListener {
 
     private View conentView;
+    public static int UP = 0;
+    public static int BOTTOM = 1;
 
     private ListView listView = null;
     private PopWinOnClick popWinOnClick = null;
+    private LinearLayout popLinear = null;
 
-    public MyPopWindow(Activity activity, ArrayList<Object> list, int width) {
+    public MyPopWindow(Activity activity, ArrayList<Object> list, int width, int height) {
         LayoutInflater inflater = (LayoutInflater) activity
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        conentView = inflater.inflate(R.layout.popwindow, null);
+        conentView = inflater.inflate(R.layout.popwin, null);
         int h = activity.getWindowManager().getDefaultDisplay().getHeight();
         int w = activity.getWindowManager().getDefaultDisplay().getWidth();
         // 设置SelectPicPopupWindow的View
@@ -43,7 +50,10 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
         // 设置SelectPicPopupWindow弹出窗体的宽
         this.setWidth(width);
         // 设置SelectPicPopupWindow弹出窗体的高
-        this.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        if (height == 0)
+            this.setHeight(BaseActivity.height / 2);
+        else
+            this.setHeight(height);
         // 设置SelectPicPopupWindow弹出窗体可点击
         this.setFocusable(true);
         this.setOutsideTouchable(true);
@@ -57,31 +67,62 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
         // 设置SelectPicPopupWindow弹出窗体动画效果
         this.setAnimationStyle(R.style.AnimationPreview);
 
-        listView = (ListView) conentView.findViewById(R.id.poplistview);
-        listView.setAdapter(new LGAdapter(activity, list , "ListView"));
+        listView = (ListView) conentView.findViewById(R.id.popWinlistview);
+        popLinear = (LinearLayout) conentView.findViewById(R.id.popLinear);
+        listView.setAdapter(new SideListViewAdapter(activity, list));
         listView.setOnItemClickListener(this);
+    }
+
+    /**
+     * 设置弹出框的背景颜色
+     *
+     * @param resid
+     */
+    public void setPopBackground(int resid) {
+        popLinear.setBackgroundResource(resid);
+    }
+
+    /**
+     * 设置弹出框listview点击事件的背景颜色
+     *
+     * @param resid
+     */
+    public void setPopListSector(int resid) {
+        listView.setSelector(resid);
+    }
+
+    /**
+     * 设置listview的背景颜色
+     *
+     * @param resid
+     */
+    public void setPopListBackground(int resid) {
+        listView.setBackgroundResource(resid);
     }
 
     /**
      * 显示popupWindow
      *
-     * @param parent    这个是点击组件
+     * @param parent 这个是点击组件
      */
     @TargetApi(Build.VERSION_CODES.KITKAT)
-    public void showPopupWindow(View parent , int width , int height) {
+    public void showPopupWindow(View parent, int location, int width, int height) {
         if (!this.isShowing()) {
             // 以下拉方式显示popupwindow
-//            parent.getLayoutParams().width / 2
-            this.showAsDropDown(parent, width, height , Gravity.CENTER);
+            if (location == BOTTOM)
+                this.showAsDropDown(parent);
+            if (location == UP) {
+                this.showAtLocation(parent, Gravity.NO_GRAVITY, width, height);
+            }
         } else {
             this.dismiss();
         }
     }
 
     /**
-     *  关闭popwin
+     * 关闭popwin
      */
-    public void disShow(){
+    public void disShow() {
         if (this.isShowing())
             this.dismiss();
     }
@@ -97,6 +138,6 @@ public class MyPopWindow extends PopupWindow implements OnItemClickListener {
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        popWinOnClick.OnPopItemClick(parent , view , position , id);
+        popWinOnClick.OnPopItemClick(parent, view, position, id);
     }
 }

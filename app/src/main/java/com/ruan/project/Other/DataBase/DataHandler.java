@@ -1,6 +1,12 @@
 package com.ruan.project.Other.DataBase;
 
 import android.content.ContentValues;
+import android.content.Context;
+
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
+import com.example.administrator.data_sdk.Database.LoadClass;
+import com.example.administrator.data_sdk.Database.LoadResouce;
+import com.ruan.project.Moudle.UserDevice;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -12,13 +18,14 @@ public class DataHandler {
 
     /**
      * 整理插入数据库的数据  插入用户设备表的数据
-     * @param userID            用户ID
-     * @param list              设备的数据
-     * @param deviceName        设备的名称
-     * @param deviceModel       设备的类型
+     *
+     * @param userID      用户ID
+     * @param list        设备的数据
+     * @param deviceName  设备的名称
+     * @param deviceModel 设备的类型
      * @return
      */
-    public static ContentValues getContentValues(String userID, String sceneID , ArrayList<Map<String, String>> list, String deviceName, String deviceModel , String IP , String Mac , int Port , String online) {
+    public static ContentValues getContentValues(String userID, String sceneID, ArrayList<Map<String, String>> list, String deviceName, String deviceModel, String IP, String Mac, int Port, String online) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("userID", userID);
@@ -30,18 +37,34 @@ public class DataHandler {
         contentValues.put("deviceMac", Mac);
         contentValues.put("deviceIP", IP);
         contentValues.put("devicePORT", Port);
-        contentValues.put("deviceOnline" , online);
+        contentValues.put("deviceOnline", online);
 
         return contentValues;
     }
 
     /**
+     * 整理插入数据库的数据  插入用户设备表的数据
+     *
+     * @param context
+     * @param object
+     * @param db
+     * @param Table_Name
+     * @return
+     */
+    public static ContentValues getContentValues(Context context, Object object, String db, String Table_Name) {
+        return new LoadResouce().ObjectToContentValues(object.getClass(), object, new GetDatabaseData().getTableField(context, db, Table_Name));
+
+    }
+
+
+    /**
      * 封装数据库的数据
+     *
      * @param key
      * @param values
      * @return
      */
-    public static ContentValues getContentValues(String key , String values){
+    public static ContentValues getContentValues(String key, String values) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put(key, values);
@@ -51,11 +74,12 @@ public class DataHandler {
 
     /**
      * 封装数据库的数据
+     *
      * @param sceneID
      * @param sceneName
      * @return
      */
-    public static ContentValues getSceneContentValues(String sceneID , String sceneName){
+    public static ContentValues getSceneContentValues(String sceneID, String sceneName) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("sceneID", sceneID);
@@ -66,12 +90,13 @@ public class DataHandler {
 
     /**
      * 封装数据库的数据
+     *
      * @param Mac
      * @param IP
      * @param PORT
      * @return
      */
-    public static ContentValues getContentValues(String Mac , String IP , int PORT){
+    public static ContentValues getContentValues(String Mac, String IP, int PORT) {
         ContentValues contentValues = new ContentValues();
 
         contentValues.put("deviceID", Mac);

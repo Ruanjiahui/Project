@@ -209,7 +209,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
      * @param left_msg
      * @param right_msg
      */
-    public void DialogState(String Content_msg, ArrayList<ListView_Object> map, int maker, String left_msg, String right_msg) {
+    public void DialogState(String Content_msg, ArrayList<Object> map, int maker, String left_msg, String right_msg) {
         dialog_listview.setVisibility(View.VISIBLE);
         setMessage(Content_msg);
         dialog_listview.setAdapter(new MyBaseAdapter(context, map, maker));
@@ -232,7 +232,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
      *
      * @param map
      */
-    public void DialogState(ArrayList<ListView_Object> map, int maker) {
+    public void DialogState(ArrayList<Object> map, int maker) {
         dialog1.setVisibility(View.GONE);
         dialog4.setVisibility(View.VISIBLE);
         dialog4_gridview.setAdapter(new MyBaseAdapter(context, map, maker));

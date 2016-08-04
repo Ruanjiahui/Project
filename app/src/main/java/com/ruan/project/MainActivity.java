@@ -9,20 +9,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
-import com.ruan.project.Controllar.FragmentDatabase;
+import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Other.System.WifiReceiver;
 import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.Fragment.Fragment2;
 import com.ruan.project.View.Fragment.Fragment3;
 import com.ruan.project.View.Fragment.Fragment4;
 
-
-
 public class MainActivity extends NavActivity {
     private View view = null;
     private Context context = null;
     private WifiReceiver wifiReceiver = null;
     public static boolean isRefresh = true;
+
 
     /**
      * 这个是四个导航的点击事件
@@ -67,13 +66,14 @@ public class MainActivity extends NavActivity {
         setTileBar(0);
         setNavColor(R.color.White);
 
+        //初始化数据库
+        FragmentControl.DataBaseHandler(context);
+
         intentFragment(new Fragment1());
 
         setNavContent(view);
 
 
-        //初始化数据库
-        FragmentDatabase.DataBaseHandler(context);
         //数据库没有数据库的时候不进行扫描工作
 //        if (FragmentDatabase.getUserDeviceData(context) != null && FragmentDatabase.getUserDeviceData(context).size() != 0) {
 //            Log.e("Ruan" , "error");
@@ -81,7 +81,7 @@ public class MainActivity extends NavActivity {
 //            CheckOnline();
 //        }
         //注册网络发生改变的广播
-        wifiReceiver = new WifiReceiver(getSupportFragmentManager());
+        wifiReceiver = new WifiReceiver(getSupportFragmentManager(), false);
         IntentFilter filter = new IntentFilter();
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE");
         filter.addAction("android.net.wifi.RSSI_CHANGED");
@@ -89,6 +89,24 @@ public class MainActivity extends NavActivity {
         filter.addAction("android.net.wifi.WIFI_STATE_CHANGED");
         //注册广播接收器
         registerReceiver(wifiReceiver, filter);
+
+        setNavTxt(getResources().getColor(R.color.Blue), getResources().getColor(R.color.Grey));
+        int[] Pic = new int[]{R.mipmap.homelink1, R.mipmap.homefind1, R.mipmap.homeshop1, R.mipmap.homeme1};
+        int[] Pic1 = new int[]{R.mipmap.homelink, R.mipmap.homefind, R.mipmap.homeshop, R.mipmap.homeme};
+        setNavPic(Pic, Pic1);
+
+        setNav1("首页");
+        setNav2("分类");
+        setNav3("商城");
+        setNav4("我的");
+
+    }
+
+    @Override
+    public void NacClick(View v) {
+        switch (v.getId()) {
+
+        }
     }
 
     /**

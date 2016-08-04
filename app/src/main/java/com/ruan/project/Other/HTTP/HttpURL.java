@@ -12,6 +12,9 @@ public class HttpURL {
     //通过外网控制设备
     public static String ControlDevice = IP + "dataManipulation/forwardData";
 
+    //获取天气的链接
+    public static String WethereURL = "http://apis.baidu.com/heweather/weather/free";
+
     //这个标志当前网络状态
     // 0   当前没有网络状态
     // 1   当前是wifi状态

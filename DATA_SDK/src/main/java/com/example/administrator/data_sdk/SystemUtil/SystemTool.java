@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Administrator on 2016/3/15.
@@ -150,7 +151,7 @@ public class SystemTool {
      * @param context
      * @return
      */
-    public static List<HashMap<String, String>> LocalImage(Context context) {
+    public static ArrayList<Map<Object, Object>> LocalImage(Context context) {
         // 指定要查询的uri资源
         Uri uri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         // 获取ContentResolver
@@ -168,12 +169,12 @@ public class SystemTool {
         // 查询sd卡上的图片
         Cursor cursor = contentResolver.query(uri, projection, selection,
                 selectionArgs, sortOrder);
-        List<HashMap<String, String>> imageList = new ArrayList<HashMap<String, String>>();
+        ArrayList<Map<Object, Object>> imageList = new ArrayList<>();
         if (cursor != null) {
-            HashMap<String, String> imageMap = null;
+            Map<Object, Object> imageMap = null;
             cursor.moveToFirst();
             while (cursor.moveToNext()) {
-                imageMap = new HashMap<String, String>();
+                imageMap = new HashMap<>();
                 // 获得图片的id
                 imageMap.put("imageID", cursor.getString(cursor
                         .getColumnIndex(MediaStore.Images.Media._ID)));

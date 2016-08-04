@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
@@ -96,6 +97,7 @@ public class DensityUtil {
         params.height = height;
         view.setLayoutParams(params);
     }
+
     public static void setLinearSize(View view, int width, int height) {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         params.width = width;
@@ -103,10 +105,46 @@ public class DensityUtil {
         view.setLayoutParams(params);
     }
 
+
+    public static void setFrameSize(View view, int width, int height) {
+        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
+        params.width = width;
+        params.height = height;
+        view.setLayoutParams(params);
+    }
+
+
+    public static void setRelayoutSize(View view, int width, int height, int Top, int Left, int Bottom, int Right) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.width = width;
+        params.height = height;
+        params.setMargins(Left, Top, Right, Bottom);
+        view.setLayoutParams(params);
+    }
+
+
+    public static void setRelayoutSize(View view, int width, int height, int Top, int Left, int Bottom, int Right, int[] rules) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.width = width;
+        params.height = height;
+        params.setMargins(Left, Top, Right, Bottom);
+        for (int rule : rules)
+            params.addRule(rule);
+        view.setLayoutParams(params);
+    }
+
     public static void setRelatSize(View view, int width, int height) {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         params.width = width;
         params.height = height;
+        view.setLayoutParams(params);
+    }
+
+    public static void setRelatSize(View view, int width, int height, int rule) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.width = width;
+        params.height = height;
+        params.addRule(rule);
         view.setLayoutParams(params);
     }
 

@@ -11,7 +11,7 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class SocketSwitch extends Switch {
+public class SocketSwitch  {
 
     private String type = null;
     private int status = 0;

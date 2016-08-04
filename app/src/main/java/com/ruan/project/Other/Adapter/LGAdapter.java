@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.ItemClick;
+import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.ViewHolder;
 import com.ruan.project.R;
@@ -22,15 +23,12 @@ import java.util.ArrayList;
 /**
  * Created by Soft on 2016/7/9.
  */
-public class LGAdapter extends BaseAdapter implements View.OnClickListener {
+public class LGAdapter extends BaseAdapter {
 
     private Context context = null;
     private ArrayList<Object> list = null;
     private ViewHolder viewHolder = null;
     private String state = null;
-
-    //子控件点击事件的接口
-    private ItemClick itemClick = null;
 
     public LGAdapter(Context context, ArrayList<Object> list, String state) {
         this.context = context;
@@ -96,22 +94,12 @@ public class LGAdapter extends BaseAdapter implements View.OnClickListener {
 
         if (convertView == null) {
 
-            viewHolder = new ViewHolder();
             if ("ListView".equals(state)) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.listitem, null);
-
-                viewHolder.listImage = (ImageView) convertView.findViewById(R.id.listImage);
-                viewHolder.listright = (ImageView) convertView.findViewById(R.id.listright);
-                viewHolder.listText = (TextView) convertView.findViewById(R.id.listText);
-                viewHolder.listSubText = (TextView) convertView.findViewById(R.id.listSubText);
-                viewHolder.listRelative = (RelativeLayout) convertView.findViewById(R.id.listRelative);
-                viewHolder.listRightText = (TextView) convertView.findViewById(R.id.listRightText);
+                viewHolder = new ViewHolder(convertView, state);
             } else if ("GridView".equals(state)) {
                 convertView = LayoutInflater.from(context).inflate(R.layout.girditem, null);
-
-                viewHolder.gridImage = (ImageView) convertView.findViewById(R.id.gridImage);
-                viewHolder.gridText = (TextView) convertView.findViewById(R.id.gridText);
-                viewHolder.gridLinear = (LinearLayout) convertView.findViewById(R.id.gridLinear);
+                viewHolder = new ViewHolder(convertView, state);
             }
 
             convertView.setTag(viewHolder);
@@ -140,23 +128,11 @@ public class LGAdapter extends BaseAdapter implements View.OnClickListener {
             if (item.getHeight() != 0)
                 DensityUtil.setHeight(viewHolder.gridLinear, item.getHeight());
 
+            DensityUtil.setLinearSize(viewHolder.gridCenterImage, BaseActivity.width / 3, BaseActivity.width / 3);
+            viewHolder.gridCenterImage.setBackground(item.getGridCenterImage());
+
         }
-        //子控件注册点击事件
-//        if (itemClick != null) {
-//            viewHolder.sideDelete.setOnClickListener(this);
-//            viewHolder.sideEdit.setOnClickListener(this);
-//        }
-
         return convertView;
-    }
-
-    /**
-     * 外部调用的接口  子控件的点击事件
-     *
-     * @param itemClick
-     */
-    public void setItemClick(ItemClick itemClick) {
-        this.itemClick = itemClick;
     }
 
     /**
@@ -167,24 +143,5 @@ public class LGAdapter extends BaseAdapter implements View.OnClickListener {
     public void RefreshData(ArrayList<Object> list) {
         this.list = list;
         this.notifyDataSetChanged();
-    }
-
-    /**
-     * Called when a view has been clicked.
-     *
-     * @param v The view that was clicked.
-     */
-    @Override
-    public void onClick(View v) {
-//        switch (v.getId()) {
-//            //删除的点击事件
-//            case R.id.delete:
-//                itemClick.OnClick(1);
-//                break;
-//            //编辑的点击事件
-//            case R.id.edit:
-//                itemClick.OnClick(0);
-//                break;
-//        }
     }
 }

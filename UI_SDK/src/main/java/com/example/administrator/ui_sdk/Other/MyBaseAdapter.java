@@ -57,13 +57,13 @@ public class MyBaseAdapter extends BaseAdapter {
     private ImageView item_image = null;
 
     private View.OnClickListener onClickListener = null;
-    private ArrayList<ListView_Object> alist = null;
+    private ArrayList<Object> alist = null;
     private ListView_Object object = null;
     private MyOnClickInterface myOnClickInterface = null;
     private int maker = 0;
     private ViewHolder viewHolder = null;
 
-    public MyBaseAdapter(Context context, ArrayList<ListView_Object> alist, int maker) {
+    public MyBaseAdapter(Context context, ArrayList<Object> alist, int maker) {
         this.context = context;
         this.alist = alist;
         this.maker = maker;
@@ -84,15 +84,15 @@ public class MyBaseAdapter extends BaseAdapter {
         return 0;
     }
 
-    @Override
-    public int getItemViewType(int position) {
-        if (alist.get(position).getPrompt()) {
-            return 0;
-        } else {
-            return 1;
-        }
+//    @Override
+//    public int getItemViewType(int position) {
+//        if (alist.get(position).getPrompt()) {
+//            return 0;
+//        } else {
+//            return 1;
+//        }
 //        return super.getItemViewType(position);
-    }
+//    }
 
     @Override
     public int getViewTypeCount() {
@@ -101,7 +101,7 @@ public class MyBaseAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        object = alist.get(position);
+        object = (ListView_Object) alist.get(position);
         viewHolder = null;
         if (convertView == null) {
 //            Log.e("hello", position + ":" + object.getContent());
@@ -328,7 +328,7 @@ public class MyBaseAdapter extends BaseAdapter {
      *
      * @param alist
      */
-    public void ChangeData(ArrayList<ListView_Object> alist) {
+    public void ChangeData(ArrayList<Object> alist) {
         this.alist = alist;
         this.notifyDataSetChanged();
     }

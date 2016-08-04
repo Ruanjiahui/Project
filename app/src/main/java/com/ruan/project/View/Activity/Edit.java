@@ -5,10 +5,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
@@ -35,6 +37,8 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
     private RadioButton radioButton, radioButton1 = null;
     private LinearLayout personPick = null;
     private NumberPicker numberPicker1, numberPicker2, numberPicker3 = null;
+    private RelativeLayout personRelative;
+    private ImageView personLogo;
     private TextView OldText = null;
     private String birthday = "";
     private String hint = "";
@@ -69,8 +73,12 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
         content = bundle.getString("data");
         FLAG = bundle.getString("flag");
 
+
         view = LayoutInflater.from(context).inflate(R.layout.personedit, null);
 
+
+        personRelative = (RelativeLayout) view.findViewById(R.id.personRelative);
+        personLogo = (ImageView) view.findViewById(R.id.personLogo);
         personEdit = (EditText) view.findViewById(R.id.personEdit);
         personRadio = (RadioGroup) view.findViewById(R.id.personRadio);
         radioButton = (RadioButton) view.findViewById(R.id.radioButton);
@@ -85,25 +93,30 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
         setLeftTitleColor(R.color.White);
         setRightTitleColor(R.color.White);
         setTopColor(R.color.Blue);
+        setRightTitle("保存");
         setTopTitleColor(R.color.White);
 
         switch (FLAG) {
             case "name":
+                setTitle("姓名");
                 personEdit.setVisibility(View.VISIBLE);
                 hint = "请输入你的姓名";
                 setHint();
                 break;
             case "height":
+                setTitle("身高");
                 personEdit.setVisibility(View.VISIBLE);
                 hint = "请输入你的身高";
                 setHint();
                 break;
             case "weight":
+                setTitle("体重");
                 personEdit.setVisibility(View.VISIBLE);
                 hint = "请输入你的体重";
                 setHint();
                 break;
             case "birthday":
+                setTitle("生日");
                 personPick.setVisibility(View.VISIBLE);
                 if (content != null && !"".equals(content) && content.length() != 0) {
                     int[] a = getbirthday(content);
@@ -115,6 +128,7 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                 NumberPicker();
                 break;
             case "sex":
+                setTitle("性别");
                 personRadio.setVisibility(View.VISIBLE);
                 if ("男".equals(content)) {
                     radioButton.setChecked(true);
@@ -124,6 +138,8 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                 break;
             //场景新建
             case "scene":
+                setTitle("场景");
+                personRelative.setVisibility(View.VISIBLE);
                 personEdit.setVisibility(View.VISIBLE);
                 hint = "请输入场景名称";
                 Map<String, String> map = new GetDatabaseData().Query(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, new String[]{"max(sceneID)"}, "", null, "", "", "", "");

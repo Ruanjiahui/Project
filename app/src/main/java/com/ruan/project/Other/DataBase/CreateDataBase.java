@@ -161,6 +161,7 @@ public class CreateDataBase implements Database.Check {
 
         establish.put("sceneName", "varchar(50)");
         establish.put("sceneID", "varchar(50)");
+        establish.put("scenePic", "varchar(50)");
 
         return establish;
     }

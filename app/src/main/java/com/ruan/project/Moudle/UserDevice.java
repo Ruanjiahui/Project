@@ -9,18 +9,15 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class UserDevice implements Parcelable {
+public class UserDevice extends Device implements Parcelable {
 
-    private String userID = null;
-    private String sceneID = null;
-    private String deviceName = null;
-    private String deviceID = null;
-    private String deviceMac = null;
-    private String devicePic = null;
-    private String deviceOnline = null;
-    private String devicePORT = null;
-    private String deviceIP = null;
-    private String deviceRemarks = null;
+    protected String userID = null;
+    protected String sceneID = null;
+    protected String deviceMac = null;
+    protected String deviceOnline = null;
+    protected String devicePORT = null;
+    protected String deviceIP = null;
+    protected String deviceRemarks = null;
 
     public UserDevice() {
     }
@@ -36,6 +33,10 @@ public class UserDevice implements Parcelable {
         devicePORT = in.readString();
         deviceIP = in.readString();
         deviceRemarks = in.readString();
+        deviceModel= in.readString();
+        deviceType= in.readString();
+        deviceTypeID= in.readString();
+
     }
 
     public static final Creator<UserDevice> CREATOR = new Creator<UserDevice>() {
@@ -174,6 +175,9 @@ public class UserDevice implements Parcelable {
         dest.writeString(devicePORT);
         dest.writeString(deviceIP);
         dest.writeString(deviceRemarks);
+        dest.writeString(deviceModel);
+        dest.writeString(deviceType);
+        dest.writeString(deviceTypeID);
     }
 
     private ArrayList<UserDevice> list = null;
@@ -185,21 +189,23 @@ public class UserDevice implements Parcelable {
      * @return
      */
     public ArrayList<UserDevice> getMoudle(ArrayList<Map<String, String>> map) {
-        list = new ArrayList<>();
+        if (map.size() != 0) {
+            list = new ArrayList<>();
 
-        for (int i = 0; i < map.size(); i++) {
-            UserDevice userDevice = new UserDevice();
-            userDevice.setUserID(map.get(i).get("userID"));
-            userDevice.setSceneID(map.get(i).get("sceneID"));
-            userDevice.setDeviceRemarks(map.get(i).get("deviceRemarks"));
-            userDevice.setDevicePORT(map.get(i).get("devicePORT"));
-            userDevice.setDeviceID(map.get(i).get("deviceID"));
-            userDevice.setDeviceIP(map.get(i).get("deviceIP"));
-            userDevice.setDeviceMac(map.get(i).get("deviceMac"));
-            userDevice.setDeviceName(map.get(i).get("deviceName"));
-            userDevice.setDevicePic(map.get(i).get("devicePic"));
-            userDevice.setDeviceOnline(map.get(i).get("deviceOnline"));
-            list.add(userDevice);
+            for (int i = 0; i < map.size(); i++) {
+                UserDevice userDevice = new UserDevice();
+                userDevice.setUserID(map.get(i).get("userID"));
+                userDevice.setSceneID(map.get(i).get("sceneID"));
+                userDevice.setDeviceRemarks(map.get(i).get("deviceRemarks"));
+                userDevice.setDevicePORT(map.get(i).get("devicePORT"));
+                userDevice.setDeviceID(map.get(i).get("deviceID"));
+                userDevice.setDeviceIP(map.get(i).get("deviceIP"));
+                userDevice.setDeviceMac(map.get(i).get("deviceMac"));
+                userDevice.setDeviceName(map.get(i).get("deviceName"));
+                userDevice.setDevicePic(map.get(i).get("devicePic"));
+                userDevice.setDeviceOnline(map.get(i).get("deviceOnline"));
+                list.add(userDevice);
+            }
         }
         return list;
     }

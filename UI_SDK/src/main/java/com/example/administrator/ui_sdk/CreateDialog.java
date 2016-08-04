@@ -13,7 +13,7 @@ import java.util.ArrayList;
 public class CreateDialog {
 
     public static int dialog_height = 0;
-    public static MyDialog ListViewDialog(Context context, ArrayList<ListView_Object> list, int height, int count) {
+    public static MyDialog ListViewDialog(Context context, ArrayList<Object> list, int height, int count) {
         MyDialog dialog = new MyDialog(context, R.style.mydialog);
         dialog.setWidth(BaseActivity.width / 3 * 2);
         dialog.setHeight(height * count);

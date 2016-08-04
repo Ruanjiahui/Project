@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Environment;
 import android.support.v4.content.ContextCompat;
 
 import java.io.InputStream;
@@ -29,21 +30,23 @@ public class ImageTransformation {
 
     /**
      * 这个是bitmap转Drawable
+     *
      * @param context
      * @param bitmap
      * @return
      */
-    public static Drawable Bitmap2Drawable(Context context , Bitmap bitmap){
-        return new BitmapDrawable(context.getResources() , bitmap);
+    public static Drawable Bitmap2Drawable(Context context, Bitmap bitmap) {
+        return new BitmapDrawable(context.getResources(), bitmap);
     }
 
     /**
      * 这个是Bitmap转Drawable
+     *
      * @param bitmap
      * @return
      */
     @Deprecated
-    public static Drawable Bitmap2Drawable( Bitmap bitmap){
+    public static Drawable Bitmap2Drawable(Bitmap bitmap) {
         return new BitmapDrawable(bitmap);
     }
 
@@ -95,5 +98,18 @@ public class ImageTransformation {
     public static Bitmap InputStream2Bitmap(InputStream inputStream) {
         BitmapFactory.Options options = new BitmapFactory.Options();
         return BitmapFactory.decodeStream(inputStream, null, options);
+    }
+
+    /**
+     * 路径转化成图片
+     *
+     * @param context
+     * @param url
+     * @return
+     */
+    public static Drawable URL2Drawable(Context context, String url) {
+        String path = url; //获得SDCard目录
+        Bitmap bmpDefaultPic = BitmapFactory.decodeFile(path, null);
+        return Bitmap2Drawable(context, bmpDefaultPic);
     }
 }

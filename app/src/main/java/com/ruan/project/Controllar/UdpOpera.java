@@ -13,6 +13,7 @@ import com.ruan.project.Other.MyTimerTask;
 import com.ruan.project.Other.UDP.OnlineDeveice;
 import com.ruan.project.Other.UDP.ScanDevice;
 import com.example.ruan.udp_sdk.UDPInterface.UDPHandler;
+import com.ruan.project.Other.UDP.UDPConfig;
 import com.ruan.project.TimerHandler;
 
 import java.util.ArrayList;
@@ -24,24 +25,9 @@ import java.util.Timer;
  */
 public class UdpOpera implements UDPHandler {
 
-    //扫描设备的定时器
-    private Timer timer = null;
-    private UDPInterface.HandlerMac handlerMac = null;
     private UDPInterface.HandlerInfo handlerInfo = null;
-    //统计扫描设备记录循环发送次数
-    private int count = 0;
     //统计检测设备是否在线
-    private int checkCount = 0;
-    private ArrayList<String> mac = null;
     private Context context = null;
-    //广播的发送的端口
-    private int PORT = 8888;
-    //扫描设备广播发送的数据包
-    private String data = "B-Link"; // 8711   IOT
-    //广播发送间隔的时间
-    private int time = 1000;
-
-    private String IP = "";
 
     public UdpOpera(Context context) {
         this.context = context;
@@ -53,40 +39,9 @@ public class UdpOpera implements UDPHandler {
      * @param handlerMac
      */
     public void UDPDeviceScan(UDPInterface.HandlerMac handlerMac) {
-//        mac = new ArrayList<>();
-        //获取所有的设备ID
-        //从数据库中获取设备的ID
-//        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
-//        ArrayList<Map<String, String>> mapMac = new GetDatabaseData().QueryArray(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, new String[]{"deviceMac"}, "", null, "", "", "", "");
-//        for (int i = 0; i < mapMac.size(); i++)
-//            mac.add(mapMac.get(i).get("deviceMac"));
-        this.handlerMac = handlerMac;
-        //计时器，广播没一秒发送一次，总共发送10次
-        new ScanDevice().Scanner(PORT, data, handlerMac, 5);
-//        timer = new Timer();
-//        timer.schedule(new MyTimerTask(this, 0), 0, time);
+        //计时器，广播没一秒发送一次，总共发送5次
+        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, handlerMac, UDPConfig.count);
     }
-
-//    @Override
-//    public void timerHandler(Message msg) {
-//        switch (msg.arg1) {
-//            case 0:
-//                new ScanDevice().Scanner(PORT, data, handlerMac);
-//                count++;
-//                if (count == 10) {
-//                    timer.cancel();
-//                }
-//                break;
-//        }
-//    }
-//
-//    @Override
-//    public Message timerRun(int position) {
-//        Message msg = new Message();
-//        msg.arg1 = position;
-//        return msg;
-//    }
-
 
     /**
      * 获取设备的信息

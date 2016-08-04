@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -116,7 +117,7 @@ public abstract class NavActivity extends BaseActivity {
             }
 
             nav_nav.addView(NavView);
-        }else{
+        } else {
             nav_nav.setVisibility(View.GONE);
         }
     }
@@ -126,16 +127,70 @@ public abstract class NavActivity extends BaseActivity {
         if (v == nav1) {
             setOnScrollClick(0);
             setNavClick(0);
-        }if (v == nav2) {
+            return;
+        }
+        if (v == nav2) {
             setOnScrollClick(1);
             setNavClick(1);
-        }if (v == nav3) {
+            return;
+        }
+        if (v == nav3) {
             setOnScrollClick(2);
             setNavClick(2);
-        }if (v == nav4) {
+            return;
+        }
+        if (v == nav4) {
             setOnScrollClick(3);
             setNavClick(3);
+            return;
         }
+        NacClick(v);
+    }
+
+    public void NacClick(View v) {
+    }
+
+    private int selectTxt = 0, unselectTxt = 0;
+    private int[] selectPic, unselectPic;
+    private Drawable[] DselectPic, DunselectPic;
+
+    /**
+     * 设置点击选中和不选中的颜色
+     *
+     * @param selectTxt
+     * @param unselectTxt
+     */
+    public void setNavTxt(int selectTxt, int unselectTxt) {
+        this.selectTxt = selectTxt;
+        this.unselectTxt = unselectTxt;
+        unsetSelect();
+        setSelect(0);
+    }
+
+    /**
+     * 设置点击选中和不选中的图片
+     *
+     * @param selectPic
+     * @param unselectPic
+     */
+    public void setNavPic(int[] selectPic, int[] unselectPic) {
+        this.selectPic = selectPic;
+        this.unselectPic = unselectPic;
+        unsetSelect();
+        setSelect(0);
+    }
+
+    /**
+     * 设置点击选中和不选中的图片
+     *
+     * @param selectPic
+     * @param unselectPic
+     */
+    public void setNavPic(Drawable[] selectPic, Drawable[] unselectPic) {
+        this.DselectPic = selectPic;
+        this.DunselectPic = unselectPic;
+        unsetSelect();
+        setSelect(0);
     }
 
 
@@ -182,6 +237,7 @@ public abstract class NavActivity extends BaseActivity {
         setNav3Color(TNav3Unselect);
         setNav4Image(DNav4Unselect);
         setNav4Color(TNav4Unselect);
+
     }
 
 
@@ -541,10 +597,13 @@ public abstract class NavActivity extends BaseActivity {
 
     /**
      * 当页面出现页面切换时界面的改变
+     *
      * @param position
      */
-    public void setOnScrollClick(int position){
-        switch (position){
+    public void setOnScrollClick(int position) {
+        unsetSelect();
+        setSelect(position);
+        switch (position) {
             case 0:
                 setNav1Click();
                 break;
@@ -557,6 +616,65 @@ public abstract class NavActivity extends BaseActivity {
             case 3:
                 setNav4Click();
                 break;
+        }
+    }
+
+    private void setSelect(int position) {
+        switch (position) {
+            case 0:
+                if (selectPic != null)
+                    DNav1Select = getResources().getDrawable(selectPic[0]);
+                if (DselectPic != null)
+                    DNav1Select = DselectPic[0];
+                if (selectTxt != 0)
+                    TNav1Select = selectTxt;
+                break;
+            case 1:
+                if (selectPic != null)
+                    DNav2Select = getResources().getDrawable(selectPic[1]);
+                if (DselectPic != null)
+                    DNav2Select = DselectPic[1];
+                if (selectTxt != 0)
+                    TNav2Select = selectTxt;
+                break;
+            case 2:
+                if (selectPic != null)
+                    DNav3Select = getResources().getDrawable(selectPic[2]);
+                if (DselectPic != null)
+                    DNav3Select = DselectPic[2];
+                if (selectTxt != 0)
+                    TNav3Select = selectTxt;
+                break;
+            case 3:
+                if (selectPic != null)
+                    DNav4Select = getResources().getDrawable(selectPic[3]);
+                if (DselectPic != null)
+                    DNav4Select = DunselectPic[3];
+                if (selectTxt != 0)
+                    TNav4Select = selectTxt;
+                break;
+        }
+    }
+
+    private void unsetSelect() {
+        if (unselectPic != null) {
+            DNav1Unselect = getResources().getDrawable(unselectPic[0]);
+            DNav2Unselect = getResources().getDrawable(unselectPic[1]);
+            DNav3Unselect = getResources().getDrawable(unselectPic[2]);
+            DNav4Unselect = getResources().getDrawable(unselectPic[3]);
+        }
+        if (DunselectPic != null) {
+            DNav1Unselect = DunselectPic[0];
+            DNav2Unselect = DunselectPic[1];
+            DNav3Unselect = DunselectPic[2];
+            DNav4Unselect = DunselectPic[3];
+        }
+
+        if (unselectTxt != 0) {
+            TNav1Unselect = unselectTxt;
+            TNav2Unselect = unselectTxt;
+            TNav3Unselect = unselectTxt;
+            TNav4Unselect = unselectTxt;
         }
     }
 

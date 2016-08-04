@@ -11,8 +11,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,6 +23,8 @@ import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.R;
 import com.example.administrator.ui_sdk.View.SystemManager;
+
+import java.util.ArrayList;
 
 
 /**
@@ -29,6 +34,12 @@ import com.example.administrator.ui_sdk.View.SystemManager;
  * 标题的所有属性基本都实现只要直接调用接口就可以使用了
  */
 public abstract class BaseActivity extends FragmentActivity implements View.OnClickListener {
+
+
+    public final static int TOP = 0;
+    public final static int LEFT = 1;
+    public final static int BOTTOM = 2;
+    public final static int RIGHT = 3;
 
     public Context context = null;
     public Activity activity = null;
@@ -43,7 +54,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     //内容的布局
     public LinearLayout contentView = null;
     //BaseActivity的整个布局
-    private LinearLayout base_main = null;
+    private RelativeLayout base_main = null;
 
 
     private RelativeLayout base_top_relative = null;
@@ -52,6 +63,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     private TextView base_top_title = null;
     private TextView base_top_text1 = null;
     private ImageView base_top_image1 = null;
+
+    private ListView bottomListView = null;
+    private RelativeLayout base_Relative = null;
+    private LinearLayout base_menu = null;
 
     private View TopView = null;
 
@@ -132,6 +147,93 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     }
 
     /**
+     * 这个是设置底部菜单的布局
+     *
+     * @param resid
+     * @return
+     */
+    public View setBottomMain(int resid) {
+
+        if (resid != 0) {
+            //如果传入的ID等于系统默认的ID就是意味着这个是系统默认的布局
+            View view = null;
+            if (resid == R.layout.bottom_main) {
+                view = LayoutInflater.from(context).inflate(R.layout.bottom_main, null);
+                bottomListView = (ListView) view.findViewById(R.id.bottomListView);
+            } else {
+                view = LayoutInflater.from(context).inflate(resid, null);
+            }
+            base_menu.setVisibility(View.GONE);
+            base_menu.addView(view);
+            setShow(base_menu , BOTTOM , width , height / 2);
+            return base_menu;
+        }
+        return null;
+    }
+
+    /**
+     * 提供外部设置的位置和大小的接口
+     *
+     * @param view
+     * @param location
+     * @param width
+     * @param height
+     */
+    public void setShow(View view, int location, int width, int height) {
+        switch (location) {
+            case TOP:
+                setBottomLocation(view, width, height, new int[]{RelativeLayout.ALIGN_PARENT_TOP});
+                break;
+            case LEFT:
+                setBottomLocation(view, width, height, new int[]{RelativeLayout.ALIGN_PARENT_LEFT});
+                break;
+            case BOTTOM:
+                setBottomLocation(view, width, height, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
+                break;
+            case RIGHT:
+                setBottomLocation(view, width, height, new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
+                break;
+        }
+    }
+
+    /**
+     * 设置底部的位置和大小
+     *
+     * @param view
+     * @param width
+     * @param height
+     * @param location
+     */
+    private void setBottomLocation(View view, int width, int height, int[] location) {
+        DensityUtil.setRelayoutSize(view, width, height, 0, 0, 0, 0, location);
+    }
+
+    /**
+     * 设置系统的动画
+     */
+    public void setSystemStyle(){
+        setShowStyle(R.anim.bottom_in , R.anim.bottom_out);
+    }
+
+    /**
+     * 给底部菜单设置显示的样式
+     *
+     * @param resid_In
+     * @param resid_Out
+     */
+    public void setShowStyle(int resid_In , int resid_Out) {
+        if (resid_In != 0 && resid_Out != 0) {
+            //将底部菜单设置为可视状态
+            base_Relative.setVisibility(View.VISIBLE);
+            base_menu.setVisibility(View.VISIBLE);
+//            Animation animationBack = AnimationUtils.loadAnimation(context, resid);
+            Animation animation = AnimationUtils.loadAnimation(context, resid_Out);
+            base_menu.startAnimation(animation);
+        }
+    }
+
+
+    /**
      * 开放设置屏幕的开始
      *
      * @param visiable
@@ -181,7 +283,10 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         //获取标题和主布局内容的ID
         titlebar = (LinearLayout) findViewById(R.id.titlebar);
         contentView = (LinearLayout) findViewById(R.id.contentView);
-        base_main = (LinearLayout) findViewById(R.id.base_main);
+        base_main = (RelativeLayout) findViewById(R.id.base_main);
+        base_menu = (LinearLayout) findViewById(R.id.base_menu);
+        base_Relative = (RelativeLayout) findViewById(R.id.base_Relative);
+
 
         //设置默认主内容布局的颜色
 //        setContentColor(R.color.White);
@@ -404,7 +509,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     /**
      * 这个是右边文字的点击事件
      */
-    public void setRightTextClick(View v){
+    public void setRightTextClick(View v) {
 
     }
 
@@ -421,7 +526,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        if (v == base_top_text1){
+        if (v == base_top_text1) {
             setRightTextClick(base_top_text1);
         }
         Click(v);

@@ -3,49 +3,129 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <!--<RelativeLayout-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:orientation="horizontal">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/Logo"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:padding="5dp" />-->
+
+
+    <!--<LinearLayout-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_toRightOf="@id/Logo"-->
+    <!--android:orientation="vertical"-->
+    <!--android:padding="5dp">-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/Title"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textColor="@color/Black"-->
+    <!--android:textSize="18sp" />-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/Subtitle"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:textColor="@color/GreyDeep"-->
+    <!--android:textSize="13sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<TextView-->
+    <!--android:id="@+id/RightTitle"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_alignParentRight="true"-->
+    <!--android:layout_centerVertical="true"-->
+    <!--android:layout_marginRight="5dp"-->
+    <!--android:textColor="@color/Grey"-->
+    <!--android:textSize="14sp" />-->
+
+    <!--</RelativeLayout>-->
+
+
     <RelativeLayout
+        android:id="@+id/homeRelative"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="50dp">
+
 
         <ImageView
-            android:id="@+id/Logo"
+            android:id="@+id/homeImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
             android:padding="5dp" />
 
 
         <LinearLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@id/Logo"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/homeImage"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/Title"
+                android:id="@+id/homeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/Black"
-                android:textSize="18sp" />
+                android:gravity="center_vertical"
+                android:text="111"
+                android:textColor="@color/Grey"
+                android:textSize="15sp" />
 
             <TextView
-                android:id="@+id/Subtitle"
+                android:id="@+id/homeSubText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:text="2222"
                 android:textColor="@color/GreyDeep"
-                android:textSize="13sp" />
+                android:textSize="12sp"
+                android:visibility="visible" />
         </LinearLayout>
 
+        <ImageView
+            android:id="@+id/homeRightImage"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="8dp"
+            android:src="@mipmap/ic_launcher" />
+
         <TextView
-            android:id="@+id/RightTitle"
+            android:id="@+id/homeRight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
             android:layout_marginRight="5dp"
+            android:layout_marginTop="8dp"
+            android:layout_toLeftOf="@id/homeRightImage"
+            android:gravity="center_vertical"
+            android:text="111"
             android:textColor="@color/Grey"
-            android:textSize="14sp" />
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/homeRight1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginBottom="5dp"
+            android:layout_marginRight="10dp"
+            android:gravity="center_vertical"
+            android:text="12345"
+            android:textColor="@color/Grey"
+            android:textSize="13sp" />
 
     </RelativeLayout>
 

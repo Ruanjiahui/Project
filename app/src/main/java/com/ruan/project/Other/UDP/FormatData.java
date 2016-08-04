@@ -76,11 +76,11 @@ public class FormatData {
      * @param map
      * @return
      */
-    public static String getHttpPOSTUserDevice(ArrayList<UserDevice> map) {
+    public static String getHttpPOSTUserDevice(ArrayList<Object> map) {
         String data = "appKey=123&appSecret=456&MAC=";
-
         for (int i = 0; i < map.size(); i++) {
-            data += map.get(i).getDeviceMac();
+            UserDevice userDevice = (UserDevice) map.get(i);
+            data += userDevice.getDeviceMac();
             if (i < map.size() - 1)
                 data += ",";
         }

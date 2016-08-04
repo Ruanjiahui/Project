@@ -4,6 +4,20 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <RelativeLayout
+        android:id="@+id/personRelative"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/personLogo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_centerInParent="true"
+            android:src="@mipmap/cooker" />
+    </RelativeLayout>
+
     <EditText
         android:id="@+id/personEdit"
         android:layout_width="match_parent"

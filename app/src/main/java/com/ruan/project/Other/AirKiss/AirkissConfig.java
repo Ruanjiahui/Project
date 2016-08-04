@@ -2,6 +2,7 @@ package com.ruan.project.Other.AirKiss;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.tencent.mm.plugin.exdevice.jni.C2JavaExDevice;
 import com.tencent.mm.plugin.exdevice.jni.Java2CExDevice;
@@ -30,9 +31,13 @@ public class AirkissConfig {
         this.wifiPassword = wifiPassword;
         this.airKissCallBack = airKissCallBack;
 
+        try {
+            Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 60000L, 5000, 80);
+            C2JavaExDevice.getInstance().setHandler(this.handler);
+        }catch (Exception e){
+            airKissCallBack.Error(-1);
+        }
 
-        Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 60000L, 5000, 80);
-        C2JavaExDevice.getInstance().setHandler(this.handler);
     }
 
     /**

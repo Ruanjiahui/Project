@@ -1,6 +1,13 @@
 package com.ruan.project.Moudle;
 
 import android.graphics.drawable.Drawable;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.ruan.project.R;
+
+import butterknife.BindView;
 
 /**
  * Created by Soft on 2016/7/9.
@@ -17,6 +24,7 @@ public class Item {
 
     private Drawable gridImage = null;
     private String gridText = null;
+    private Drawable gridCenterImage = null;
 
     private Drawable listright = null;
     private Drawable listImage = null;
@@ -25,6 +33,80 @@ public class Item {
     private String listRightText = null;
     private String FLAG = null;
 
+
+
+    private Drawable homeImage = null;
+    private String homeText = null;
+    private String homeSubText = null;
+    private Drawable homeRightImage = null;
+    private String homeRight = null;
+    private String homeRight1 = null;
+    private int homeRelative = 0;
+
+
+    public Drawable getGridCenterImage() {
+        return gridCenterImage;
+    }
+
+    public void setGridCenterImage(Drawable gridCenterImage) {
+        this.gridCenterImage = gridCenterImage;
+    }
+
+    public Drawable getHomeImage() {
+        return homeImage;
+    }
+
+    public void setHomeImage(Drawable homeImage) {
+        this.homeImage = homeImage;
+    }
+
+    public String getHomeText() {
+        return homeText;
+    }
+
+    public void setHomeText(String homeText) {
+        this.homeText = homeText;
+    }
+
+    public String getHomeSubText() {
+        return homeSubText;
+    }
+
+    public void setHomeSubText(String homeSubText) {
+        this.homeSubText = homeSubText;
+    }
+
+    public Drawable getHomeRightImage() {
+        return homeRightImage;
+    }
+
+    public void setHomeRightImage(Drawable homeRightImage) {
+        this.homeRightImage = homeRightImage;
+    }
+
+    public String getHomeRight() {
+        return homeRight;
+    }
+
+    public void setHomeRight(String homeRight) {
+        this.homeRight = homeRight;
+    }
+
+    public String getHomeRight1() {
+        return homeRight1;
+    }
+
+    public void setHomeRight1(String homeRight1) {
+        this.homeRight1 = homeRight1;
+    }
+
+    public int getHomeRelative() {
+        return homeRelative;
+    }
+
+    public void setHomeRelative(int homeRelative) {
+        this.homeRelative = homeRelative;
+    }
 
     public String getRightTitle() {
         return RightTitle;

@@ -2,10 +2,16 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ruan.project">
 
-
+    <!-- 连接网络的权限-->
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- 获取wifi状态的权限-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <!-- 获取网络状态的权限-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <!-- 读取手机内存的权限-->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- 写入手机内存的权限-->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -20,7 +26,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".View.Activity.Device" />
+        <activity android:name=".View.Activity.DeviceType" />
         <activity android:name=".View.Activity.DeviceList" />
         <activity android:name=".View.Activity.Suggest" />
         <activity android:name=".View.Activity.DeviceEdit" />
@@ -31,16 +37,19 @@
         <activity android:name=".View.Activity.Login" />
         <activity android:name=".View.Activity.DeviceControl" />
         <activity android:name=".View.Activity.AirkissNetWork" />
+        <activity android:name=".View.Activity.NetWorkSetting" />
+        <activity android:name=".View.Activity.SceneList" />
+        <activity android:name=".View.Activity.picPick" />
 
 
         <!-- 注册广播 -->
         <!--<receiver android:name=".Other.System.WifiReceiver">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-                <!--<action android:name="android.net.wifi.RSSI_CHANGED" />-->
-                <!--<action android:name="android.net.wifi.STATE_CHANGE" />-->
-                <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
-            <!--</intent-filter>-->
+        <!--<intent-filter>-->
+        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
+        <!--<action android:name="android.net.wifi.RSSI_CHANGED" />-->
+        <!--<action android:name="android.net.wifi.STATE_CHANGE" />-->
+        <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
+        <!--</intent-filter>-->
         <!--</receiver>-->
 
     </application>
