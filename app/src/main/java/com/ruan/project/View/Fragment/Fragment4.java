@@ -135,11 +135,11 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment4Logo:
-                if ("true".equals(user.getUserLogin()))
+//                if ("true".equals(user.getUserLogin()))
                     CommonIntent.IntentActivity(context, Person.class);
-                else
-                    CommonIntent.IntentActivity(context, Login.class);
-                break;
+//                else
+//                    CommonIntent.IntentActivity(context, Login.class);
+//                break;
         }
     }
 }

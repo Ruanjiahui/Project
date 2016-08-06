@@ -127,8 +127,8 @@ public class LGAdapter extends BaseAdapter {
             viewHolder.gridImage.setImageDrawable(item.getGridImage());
             if (item.getHeight() != 0)
                 DensityUtil.setHeight(viewHolder.gridLinear, item.getHeight());
-
-            DensityUtil.setLinearSize(viewHolder.gridCenterImage, BaseActivity.width / 3, BaseActivity.width / 3);
+            if (item.getGridCenterImage() != null)
+                DensityUtil.setLinearSize(viewHolder.gridCenterImage, BaseActivity.width / 3, BaseActivity.width / 3);
             viewHolder.gridCenterImage.setBackground(item.getGridCenterImage());
 
         }

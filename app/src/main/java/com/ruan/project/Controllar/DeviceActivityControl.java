@@ -34,7 +34,7 @@ public class DeviceActivityControl {
         ArrayList<Object> list = new ArrayList<>();
         for (int i = 0; i < ListObj.size(); i++) {
             device = (Device) ListObj.get(i);
-            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceType(), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), device.getDeviceTypeID()));
+            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceType(), ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60), device.getDeviceTypeID()));
         }
         return list;
     }
@@ -50,7 +50,7 @@ public class DeviceActivityControl {
         ArrayList<Object> list = new ArrayList<>();
         for (int i = 0; i < ListObj.size(); i++) {
             device = (Device) ListObj.get(i);
-            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceType(), device.getDeviceModel(), ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60)));
+            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceType(), device.getDeviceModel(), ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60)));
         }
         return list;
     }
@@ -98,7 +98,7 @@ public class DeviceActivityControl {
         Item item = new Item();
 
         item.setListImage(drawable);
-//        item.setListright(right);
+        item.setListright(right);
         item.setListText(text);
         item.setHeight(height);
         item.setFLAG(FLAG);
@@ -121,7 +121,7 @@ public class DeviceActivityControl {
         Item item = new Item();
 
         item.setListImage(drawable);
-//        item.setListright(right);
+        item.setListright(right);
         item.setListText(text);
         item.setHeight(height);
         item.setListSubText(subtitle);

@@ -137,8 +137,10 @@ public class UDPBase extends UDPSource implements UDPInterface.UDPReviced, UDPIn
 
     @Override
     public void timerHandler(Message msg) {
-        thread.interrupt();
-        timer.cancel();
+        if (thread != null)
+            thread.interrupt();
+        if (timer != null)
+            timer.cancel();
         //超时
         handler.Error(position, 0);
     }

@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/GreySmoke">
 
     <!--<RelativeLayout-->
     <!--android:id="@+id/fragment1Top"-->
@@ -20,7 +21,8 @@
         android:id="@+id/fragment1Top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@mipmap/bg_top">
+        android:background="@mipmap/bg_top"
+        >
 
         <ImageView
             android:id="@+id/fragment1Logo"
@@ -65,12 +67,13 @@
     </RelativeLayout>
 
 
-    <com.example.administrator.ui_sdk.View.RreshLinearLayout
+    <com.example.administrator.ui_sdk.View.PullToRefreshView
         android:id="@+id/myLinear"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment1Top"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:layout_marginBottom="2dp">
 
         <!--<TextView-->
         <!--android:layout_width="match_parent"-->
@@ -94,7 +97,7 @@
             android:dividerHeight="1dp"
             android:listSelector="@drawable/itemsector" />
 
-    </com.example.administrator.ui_sdk.View.RreshLinearLayout>
+    </com.example.administrator.ui_sdk.View.PullToRefreshView>
 
 
     <com.example.administrator.ui_sdk.View.MyImageView
@@ -116,21 +119,21 @@
     <!--android:src="@mipmap/ic_launcher" />-->
 
 
-    <!--<RelativeLayout-->
-    <!--android:id="@+id/fragment1Background"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="fill_parent"-->
-    <!--android:alpha="0.7"-->
-    <!--android:visibility="gone"-->
-    <!--android:background="@color/Black" />-->
+    <RelativeLayout
+        android:id="@+id/fragment1Background"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:alpha="0.7"
+        android:background="@color/Black"
+        android:visibility="gone" />
 
-    <!--&lt;!&ndash; 点击弹出下面的布局&ndash;&gt;-->
-    <!--<include-->
-    <!--android:id="@+id/bottomMain"-->
-    <!--layout="@layout/bottom_main"-->
-    <!--android:layout_width="fill_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:layout_alignParentBottom="true" />-->
+    <!-- 点击弹出下面的布局-->
+    <include
+        android:id="@+id/bottomMain"
+        layout="@layout/bottom_main"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
 
 
 </RelativeLayout>

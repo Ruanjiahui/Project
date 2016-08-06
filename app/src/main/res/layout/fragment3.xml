@@ -12,14 +12,4 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"></include>
 
-
-    <ListView
-        android:id="@+id/fragment3List"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:dividerHeight="1dp"
-        android:layout_marginTop="20dp"
-        android:divider="@color/GreySmoke"/>
-
-
 </LinearLayout>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
     <RelativeLayout
+        android:id="@+id/editTop"
         android:layout_width="match_parent"
         android:layout_height="200dp">
 
@@ -21,6 +21,7 @@
         android:id="@+id/editTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@id/editTop"
         android:background="@drawable/whitedit"
         android:hint="请输入标题"
         android:padding="10dp"
@@ -31,6 +32,7 @@
         android:id="@+id/editSubTitle"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@id/editTitle"
         android:layout_marginTop="1dp"
         android:background="@drawable/whitedit"
         android:hint="请输入副标题"
@@ -39,8 +41,10 @@
         android:textSize="15sp" />
 
     <RelativeLayout
+        android:id="@+id/editDropRelative"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@id/editSubTitle"
         android:orientation="horizontal">
 
         <TextView
@@ -50,28 +54,47 @@
             android:layout_centerVertical="true"
             android:layout_marginTop="1dp"
             android:background="@drawable/whitedit"
-            android:text="请输入场景或者选择场景"
             android:padding="10dp"
+            android:text="选择场景"
             android:textColor="@color/Grey"
             android:textSize="15sp" />
 
         <ImageView
             android:id="@+id/editDrop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher" />
+            android:src="@mipmap/drop" />
     </RelativeLayout>
 
     <Button
         android:id="@+id/editBut"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_below="@id/editDropRelative"
         android:layout_marginTop="50dp"
         android:background="@drawable/button_selector_blue"
         android:text="@string/center"
         android:textColor="@color/White"
         android:textSize="15sp" />
 
-</LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/deviceEditBackground"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:alpha="0.7"
+        android:background="@color/Black"
+        android:visibility="gone" />
+
+    <!-- 点击弹出下面的布局-->
+    <include
+        android:id="@+id/bottomMain"
+        layout="@layout/bottom_main"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true" />
+
+</RelativeLayout>

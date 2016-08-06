@@ -3,9 +3,12 @@ package com.example.administrator.data_sdk.SystemUtil;
 import android.util.Log;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Formatter;
+import java.util.Locale;
 
 /**
  * Created by Administrator on 2016/3/15.
@@ -42,6 +45,7 @@ public class TimeTool {
 
     /**
      * 通过两个时间计算出生日
+     *
      * @param oldYear
      * @param oldMonth
      * @param oldDay
@@ -188,7 +192,8 @@ public class TimeTool {
      * @return
      */
     public static int getTimeHour() {
-        return mHour = getTime().get(Calendar.HOUR);
+        DecimalFormat df = new DecimalFormat("00");
+        return Integer.parseInt(df.format(getTime().get(Calendar.HOUR)));
     }
 
     /**
@@ -196,8 +201,22 @@ public class TimeTool {
      *
      * @return
      */
-    public static int getTimeMinuts() {
-        return mHour = getTime().get(Calendar.MINUTE);
+    public static String getTimeMinuts() {
+        return String.valueOf(getTime().get(Calendar.MINUTE));
+    }
+
+    /**
+     * 获取系统时间24小时制的时
+     *
+     * @return
+     */
+    public static String getTime24Hour() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        //等于0则说明是上午  1为下午
+        if (calendar.get(Calendar.AM_PM) == 0)
+            return String.valueOf(getTime().get(Calendar.HOUR));
+        return String.valueOf(getTime().get(Calendar.HOUR) + 12);
     }
 
     /**

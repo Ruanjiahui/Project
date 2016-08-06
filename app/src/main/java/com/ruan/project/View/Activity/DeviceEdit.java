@@ -10,11 +10,14 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,8 @@ import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.example.administrator.ui_sdk.View.RefreshSideListView;
+import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Controllar.UdpOpera;
 import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Interface.UDPInterface;
@@ -32,6 +37,7 @@ import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Moudle.UserDevice;
+import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
@@ -49,7 +55,7 @@ import javax.security.auth.login.LoginException;
 /**
  * Created by Soft on 2016/7/11.
  */
-public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnClick, UDPInterface.HandlerMac {
+public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterface.HandlerMac, Animation.AnimationListener, AdapterView.OnItemClickListener {
 
     private View view = null;
 
@@ -65,15 +71,11 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
 
     private String FLAG = "";
     //记录场景信息
-    private String title, subtitle, sceneName;
+    private String title, subtitle;
     private String tableName = null;
-
-    private ArrayList<Object> map = null;
-    private MyPopWindow popWindow = null;
 
     private String databaseName = "";
 
-    private String deviceID = "";
     private String sceneID = "";
 
     private DatabaseOpera databaseOpera = null;
@@ -81,6 +83,18 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     private ArrayList<Object> deviceListObj = null;
     private Scene scene = null;
     private UserDevice userDevice = null;
+
+    private RelativeLayout deviceEditBackground;
+    private View bottomMain = null;
+    private RefreshSideListView bottomListView = null;
+    private TextView bottomText = null;
+    private SideListViewAdapter sideListViewAdapter = null;
+    private boolean isVisiable = false;
+
+    private ArrayList<Object> list = null;
+    private Animation StopanimationBottom = null;
+    private Animation StopanimationBack = null;
+
 
     /**
      * Start()
@@ -99,8 +113,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         view = LayoutInflater.from(context).inflate(R.layout.edit, null);
 
         databaseOpera = new DatabaseOpera(context);
-        //配置适配器的数据
-        map = new ArrayList<>();
 
 
         if (tableName.equals("edit")) {
@@ -109,8 +121,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
             databaseName = DatabaseTableName.DeviceTableName;
         }
 
-        sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
-        deviceListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, databaseName, "deviceID", FLAG, UserDevice.class, true);
+        list = new ArrayList<>();
 
 
         setTopColor(R.color.Blue);
@@ -120,39 +131,37 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         setLeftTitleColor(R.color.White);
         setTopTitleColor(R.color.White);
 
+        deviceEditBackground = (RelativeLayout) view.findViewById(R.id.deviceEditBackground);
         editLogo = (ImageView) view.findViewById(R.id.editLogo);
         editTitle = (EditText) view.findViewById(R.id.editTitle);
         editSubTitle = (EditText) view.findViewById(R.id.editSubTitle);
         editBut = (Button) view.findViewById(R.id.editBut);
         editDrop = (ImageView) view.findViewById(R.id.editDrop);
         editScene = (TextView) view.findViewById(R.id.editScene);
+        bottomMain = view.findViewById(R.id.bottomMain);
+        bottomListView = (RefreshSideListView) view.findViewById(R.id.bottomListView);
+        bottomText = (TextView) view.findViewById(R.id.bottomText);
 
 
-        //设置初始化界面
-        setInit();
-
+        bottomMain.setVisibility(View.GONE);
 
         setContent(view);
 
+        bottomMain.bringToFront();
         //监听editTitle输入事件
+        deviceEditBackground.setOnClickListener(this);
         editTitle.addTextChangedListener(this);
         editBut.setOnClickListener(this);
         editDrop.setOnClickListener(this);
         editLogo.setOnClickListener(this);
-    }
 
-    private Object getItem(String title, Drawable drawable) {
-        Item item = new Item();
-        item.setHomeText(title);
-        item.setHomeImage(drawable);
-        return item;
+        DensityUtil.setRelHeight(bottomMain, BaseActivity.height / 2, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
     }
 
     private void setInit() {
         //获取到数据
         if (deviceListObj != null && deviceListObj.size() != 0) {
             userDevice = (UserDevice) deviceListObj.get(0);
-            deviceID = userDevice.getDeviceID();
             editTitle.setText(userDevice.getDeviceName());
             sceneID = userDevice.getSceneID();
             if (userDevice.getDeviceModel() != null)
@@ -168,10 +177,38 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 //当用户设备表的场景ID等于场景表的ID时候就说明这个设备就是属于这个场景的
                 if (scene.getSceneID().equals(sceneID))
                     editScene.setText(scene.getSceneName());
-                map.add(getItem(scene.getSceneName(), getResources().getDrawable(R.mipmap.cooker)));
             }
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        getDatabaseData("deviceID = ?", new String[]{FLAG});
+        getBottomList();
+        //设置初始化界面
+        setInit();
+    }
+
+
+    private ArrayList<Object> getBottomList() {
+        sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
+        if (sceneListObj != null && sceneListObj.size() != 0)
+            list = new FragmentControl(context).getFragment2List(sceneListObj);
+        return list;
+    }
+
+    /**
+     * 获取数据的数据
+     *
+     * @param wherearg
+     * @param whereargs
+     */
+    private void getDatabaseData(String wherearg, String[] whereargs) {
+        deviceListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, databaseName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
+    }
+
 
     @Override
     public void Click(View v) {
@@ -180,10 +217,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 //将设备添加到用户设备表
                 title = editTitle.getText().toString();
                 subtitle = editSubTitle.getText().toString();
-                sceneName = editScene.getText().toString();
-
                 userDevice.setDeviceName(title);
                 userDevice.setDeviceRemarks(subtitle);
+                userDevice.setSceneID(sceneID);
 
                 //配置完网络这个是否使用设备编辑，这个时候应当扫描周边设备获取在线设备
                 if (tableName.equals("new")) {
@@ -197,17 +233,25 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
                 }
                 break;
             case R.id.editDrop:
-                //创建PopWindow的组件
-                popWindow = new MyPopWindow(activity, map, BaseActivity.width / 2, BaseActivity.height / 2);
-                popWindow.showPopupWindow(editLogo, MyPopWindow.UP, BaseActivity.width / 4, BaseActivity.height / 4);
-                popWindow.setPopBackground(R.color.White);
-                popWindow.setPopBackground(R.drawable.popcircle);
-                popWindow.setPopListBackground(R.color.White);
-                popWindow.setPopListSector(R.drawable.itemsector);
-                popWindow.setOnPopWinItemClick(this);
+                bottomText.setText("场景");
+                if (sideListViewAdapter == null) {
+                    sideListViewAdapter = new SideListViewAdapter(context, list);
+                    bottomListView.setAdapter(sideListViewAdapter);
+                } else
+                    sideListViewAdapter.RefreshData(list);
+                if (!isVisiable) {
+                    editBut.setVisibility(View.GONE);
+                    startAnimation();
+                } else
+                    stopAnimation();
+                bottomListView.setOnItemClickListener(this);
                 break;
             case R.id.editLogo:
                 CommonIntent.IntentActivity(context, picPick.class);
+                break;
+            case R.id.deviceEditBackground:
+                if (isVisiable)
+                    stopAnimation();
                 break;
         }
     }
@@ -277,23 +321,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
     }
 
     /**
-     * 弹出窗口的点击事件
-     *
-     * @param parent   弹出窗口的所有组件
-     * @param view
-     * @param position 弹出窗口listview的个数
-     * @param id
-     */
-    @Override
-    public void OnPopItemClick(AdapterView<?> parent, View view, int position, long id) {
-        scene = (Scene) sceneListObj.get(position);
-        editScene.setText(scene.getSceneName());
-        sceneID = scene.getSceneID();
-        userDevice.setSceneID(sceneID);
-        popWindow.disShow();
-    }
-
-    /**
      * 这个方法获取Mac值
      * //0 储存接收的数据
      * //1 储存接收数据的长度
@@ -323,8 +350,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
         userDevice.setUserID("123456");
         ContentValues contentValues = DataHandler.getContentValues(context, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"}, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"});
-//        if (!"".equals(sceneID) && sceneID != null)
-//            new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID, sceneName), true, "sceneID = ?", new String[]{sceneID}, "sceneID = ?", new String[]{sceneID});
         Applications.getInstance().removeOneActivity(activity);
     }
 
@@ -341,5 +366,88 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, PopWinOnCli
             Toast.makeText(context, "连接超时,请重写设置", Toast.LENGTH_SHORT);
             visiable = true;
         }
+    }
+
+
+    /**
+     * 开始动画的操作
+     */
+    private void startAnimation() {
+        bottomMain.setVisibility(View.VISIBLE);
+        deviceEditBackground.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.bottom_out);
+        Animation banAnimation = AnimationUtils.loadAnimation(context, R.anim.backgroudout);
+        bottomMain.startAnimation(animation);
+        deviceEditBackground.startAnimation(banAnimation);
+        isVisiable = true;
+    }
+
+    /**
+     * 停止动画的操作
+     */
+    private void stopAnimation() {
+        StopanimationBottom = AnimationUtils.loadAnimation(context, R.anim.bottom_in);
+        StopanimationBack = AnimationUtils.loadAnimation(context, R.anim.backgroudin);
+        bottomMain.startAnimation(StopanimationBottom);
+        deviceEditBackground.startAnimation(StopanimationBack);
+        StopanimationBottom.setAnimationListener(this);
+        isVisiable = false;
+    }
+
+    /**
+     * <p>Notifies the start of the animation.</p>
+     *
+     * @param animation The started animation.
+     */
+    @Override
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    /**
+     * <p>Notifies the end of the animation. This callback is not invoked
+     * for animations with repeat count set to INFINITE.</p>
+     *
+     * @param animation The animation which reached its end.
+     */
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if (StopanimationBottom == animation) {
+            editBut.setVisibility(View.VISIBLE);
+            bottomMain.setVisibility(View.GONE);
+            deviceEditBackground.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * <p>Notifies the repetition of the animation.</p>
+     *
+     * @param animation The animation which was repeated.
+     */
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    /**
+     * Callback method to be invoked when an item in this AdapterView has
+     * been clicked.
+     * <p/>
+     * Implementers can call getItemAtPosition(position) if they need
+     * to access the data associated with the selected item.
+     *
+     * @param parent   The AdapterView where the click happened.
+     * @param view     The view within the AdapterView that was clicked (this
+     *                 will be a view provided by the adapter)
+     * @param position The position of the view in the adapter.
+     * @param id       The row id of the item that was clicked.
+     */
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        scene = (Scene) sceneListObj.get(position);
+        sceneID = scene.getSceneID();
+        editScene.setText(scene.getSceneName());
+        if (isVisiable)
+            stopAnimation();
     }
 }

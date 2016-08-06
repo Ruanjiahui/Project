@@ -5,12 +5,24 @@ import android.content.Context;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Toast;
 
+import com.DeviceURL;
+import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
 import com.ruan.project.Controllar.FragmentControl;
+import com.ruan.project.Moudle.TimeMoudle;
+import com.ruan.project.Other.System.ListenTime;
+import com.ruan.project.Other.System.ReceiverAction;
+import com.ruan.project.Other.System.ReceiverHandler;
+import com.ruan.project.Other.System.RegisterTime;
 import com.ruan.project.Other.System.WifiReceiver;
+import com.ruan.project.View.Activity.DeviceControl;
+import com.ruan.project.View.Control.SocketSwitchFragment;
 import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.Fragment.Fragment2;
 import com.ruan.project.View.Fragment.Fragment3;
@@ -18,9 +30,11 @@ import com.ruan.project.View.Fragment.Fragment4;
 
 public class MainActivity extends NavActivity {
     private View view = null;
-    private Context context = null;
+    private static Context context = null;
     private WifiReceiver wifiReceiver = null;
     public static boolean isRefresh = true;
+    private static ReceiverHandler receiverHandler = null;
+    public static RegisterTime registerTime = null;
 
 
     /**
@@ -66,6 +80,7 @@ public class MainActivity extends NavActivity {
         setTileBar(0);
         setNavColor(R.color.White);
 
+
         //初始化数据库
         FragmentControl.DataBaseHandler(context);
 
@@ -73,6 +88,8 @@ public class MainActivity extends NavActivity {
 
         setNavContent(view);
 
+        //首先实例化时间监听的广播
+        registerTime = new RegisterTime(this);
 
         //数据库没有数据库的时候不进行扫描工作
 //        if (FragmentDatabase.getUserDeviceData(context) != null && FragmentDatabase.getUserDeviceData(context).size() != 0) {
@@ -126,5 +143,6 @@ public class MainActivity extends NavActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(wifiReceiver);
+//        registerTime.unreisterTime();
     }
 }

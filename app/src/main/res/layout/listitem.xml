@@ -24,43 +24,43 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical"
             android:layout_toRightOf="@id/listImage"
+            android:gravity="center_vertical"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/listText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/Grey"
                 android:gravity="center_vertical"
+                android:textColor="@color/Grey"
                 android:textSize="15sp" />
 
             <TextView
                 android:id="@+id/listSubText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/GreyDeep"
                 android:gravity="center_vertical"
+                android:textColor="@color/GreyDeep"
                 android:textSize="12sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/listright"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="5dp" />
+            android:layout_marginRight="10dp" />
 
         <TextView
             android:id="@+id/listRightText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/GreyDeep"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@id/listright"
+            android:textColor="@color/GreyDeep"
             android:textSize="15sp" />
 
     </RelativeLayout>

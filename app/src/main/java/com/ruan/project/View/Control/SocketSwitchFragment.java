@@ -1,5 +1,9 @@
 package com.ruan.project.View.Control;
 
+import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -8,14 +12,22 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.administrator.Interface.HttpInterface;
+import com.example.administrator.data_sdk.CommonIntent;
 import com.ruan.project.Controllar.CallBack;
 import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.MainActivity;
 import com.ruan.project.Moudle.SocketSwitch;
+import com.ruan.project.Moudle.TimeMoudle;
 import com.ruan.project.Moudle.UserDevice;
+import com.ruan.project.Other.System.ReceiverAction;
 import com.ruan.project.Other.UDP.FormatData;
 import com.ruan.project.R;
+import com.ruan.project.View.MyTimeDialog;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,14 +38,30 @@ import org.json.JSONObject;
  */
 public class SocketSwitchFragment extends Fragment implements UDPInterface.HandlerMac, HttpInterface.HttpHandler, View.OnClickListener {
 
-    private Button button;
-    private Button button2;
-    private Button button3;
-    private Button button4;
-    private Button button5;
+    private ImageView button;
+    private ImageView button2;
+    private ImageView button3;
+    private ImageView button4;
+    private ImageView button5;
+
+    private ImageView switchCell2;
+    private TextView switchTime2;
+    private ImageView switchCell3;
+    private TextView switchTime3;
+    private ImageView switchCell4;
+    private TextView switchTime4;
+    private ImageView switchCell5;
+    private TextView switchTime5;
+
+    public final static int FLAG1 = 001;
+    public final static int FLAG2 = 002;
+    public final static int FLAG3 = 003;
+    public final static int FLAG4 = 004;
 
 
     private View view = null;
+    private Context context = null;
+    private Activity activity = null;
     private SocketSwitch socketSwitch = null;
     private CallBack callBack = null;
     //设备的ip
@@ -75,11 +103,22 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
 
         view = inflater.inflate(R.layout.socketswitch, container, false);
 
-        button = (Button) view.findViewById(R.id.button);
-        button2 = (Button) view.findViewById(R.id.button2);
-        button3 = (Button) view.findViewById(R.id.button3);
-        button4 = (Button) view.findViewById(R.id.button4);
-        button5 = (Button) view.findViewById(R.id.button5);
+        context = getActivity();
+        activity = (Activity) context;
+
+        switchCell2 = (ImageView) view.findViewById(R.id.switchCell2);
+        switchTime2 = (TextView) view.findViewById(R.id.switchTime2);
+        switchCell3 = (ImageView) view.findViewById(R.id.switchCell3);
+        switchTime3 = (TextView) view.findViewById(R.id.switchTime3);
+        switchCell4 = (ImageView) view.findViewById(R.id.switchCell4);
+        switchTime4 = (TextView) view.findViewById(R.id.switchTime4);
+        switchCell5 = (ImageView) view.findViewById(R.id.switchCell5);
+        switchTime5 = (TextView) view.findViewById(R.id.switchTime5);
+        button = (ImageView) view.findViewById(R.id.button);
+        button2 = (ImageView) view.findViewById(R.id.button2);
+        button3 = (ImageView) view.findViewById(R.id.button3);
+        button4 = (ImageView) view.findViewById(R.id.button4);
+        button5 = (ImageView) view.findViewById(R.id.button5);
 
         //获取Activuity传输的数据
         userDevice = getArguments().getParcelable("data");
@@ -98,11 +137,25 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         callBack.setDeviceControl(IP, PORT, MAC, data, 999);
 
 
+        switchCell2.setOnClickListener(this);
+        switchCell3.setOnClickListener(this);
+        switchCell4.setOnClickListener(this);
+        switchCell5.setOnClickListener(this);
         button.setOnClickListener(this);
         button2.setOnClickListener(this);
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
+
+        switchTime2.setText(TimeMoudle.getSwitch1()[0] + ":" + TimeMoudle.getSwitch1()[1]);
+        switchTime3.setText(TimeMoudle.getSwitch2()[0] + ":" + TimeMoudle.getSwitch2()[1]);
+        switchTime4.setText(TimeMoudle.getSwitch3()[0] + ":" + TimeMoudle.getSwitch3()[1]);
+        switchTime5.setText(TimeMoudle.getSwitch4()[0] + ":" + TimeMoudle.getSwitch4()[1]);
+        setSwitchDrawable(switchCell2, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG1));
+        setSwitchDrawable(switchCell3, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG2));
+        setSwitchDrawable(switchCell4, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG3));
+        setSwitchDrawable(switchCell5, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG4));
+
 
         return view;
     }
@@ -140,10 +193,23 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
                 setButtonClick(button5, false);
                 data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus4()), jack);
                 break;
+            case R.id.switchCell2:
+                getMyDialog(FLAG1);
+                return;
+            case R.id.switchCell3:
+                getMyDialog(FLAG2);
+                return;
+            case R.id.switchCell4:
+                getMyDialog(FLAG3);
+                return;
+            case R.id.switchCell5:
+                getMyDialog(FLAG4);
+                return;
         }
         //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
         callBack.setDeviceControl(IP, PORT, MAC, data, jack);
     }
+
 
     private void setButtonClick(View view, boolean click) {
         view.setClickable(click);
@@ -176,11 +242,11 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      * @param but
      * @param state
      */
-    private void setButtonState(Button but, int state) {
+    private void setButtonState(ImageView but, int state) {
         if (state == 0)
-            but.setText("关");
+            but.setImageDrawable(getResources().getDrawable(R.mipmap.icon_close));
         else
-            but.setText("开");
+            but.setImageDrawable(getResources().getDrawable(R.mipmap.icon_open));
     }
 
     /**
@@ -202,7 +268,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void handler(int position, String result) {
-//        result = result.replace("\\" , "");
+        result = result.replace("\\", "");
         if (socketSwitch.getSocketSwtichReuslt(result))
             SocketHandler(position, result, 1);
     }
@@ -276,5 +342,74 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         if (status == 0)
             return 1;
         return 0;
+    }
+
+    private String[] number = null;
+    private MyTimeDialog myTimeDialog = null;
+    private boolean registerState = false;
+
+    private String[] getMyDialog(int position) {
+        number = new String[2];
+        myTimeDialog = new MyTimeDialog(context, R.style.dialog);
+        myTimeDialog.DialogClick(new MyTimeDialog.MyTimeClick() {
+            @Override
+            public void Enter(int position) {
+                number = myTimeDialog.getNumber();
+                registerState = MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, position);
+                startTime(position);
+                if (!registerState) {
+                    registerState = MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, position);
+                    switch (position) {
+                        case FLAG1:
+                            TimeMoudle.setSwitch1(number);
+                            switchTime2.setText(number[0] + ":" + number[1]);
+                            setSwitchDrawable(switchCell2, registerState);
+                            break;
+                        case FLAG2:
+                            TimeMoudle.setSwitch2(number);
+                            switchTime3.setText(number[0] + ":" + number[1]);
+                            setSwitchDrawable(switchCell3, registerState);
+                            break;
+                        case FLAG3:
+                            TimeMoudle.setSwitch3(number);
+                            switchTime4.setText(number[0] + ":" + number[1]);
+                            setSwitchDrawable(switchCell4, registerState);
+                            break;
+                        case FLAG4:
+                            TimeMoudle.setSwitch4(number);
+                            switchTime5.setText(number[0] + ":" + number[1]);
+                            setSwitchDrawable(switchCell5, registerState);
+                            break;
+                    }
+                    myTimeDialog.dismiss();
+                }
+
+            }
+
+            @Override
+            public void Cancal(int position) {
+                myTimeDialog.dismiss();
+            }
+        }, position);
+        myTimeDialog.show();
+        return number;
+    }
+
+    private void setSwitchDrawable(ImageView view, boolean isCheck) {
+        if (isCheck)
+            view.setImageDrawable(getResources().getDrawable(R.mipmap.cell2));
+        else
+            view.setImageDrawable(getResources().getDrawable(R.mipmap.cell3));
+    }
+
+    private void startTime(int position) {
+        ReceiverAction.USER_TIME = userDevice.getDeviceID();
+        if (!registerState)
+            MainActivity.registerTime.registerTime(number, ReceiverAction.USER_TIME, position);
+        else {
+            Toast.makeText(context, "定时已取消", Toast.LENGTH_SHORT).show();
+            MainActivity.registerTime.unreisterTime(ReceiverAction.USER_TIME, position);
+        }
+
     }
 }

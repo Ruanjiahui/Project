@@ -100,15 +100,15 @@ public class FragmentControl {
                 userDevice = (UserDevice) ListObj.get(i);
                 if (userDevice.getDeviceOnline().equals("1")) {
                     online = "离线";
-                    list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 30)));
+                    list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
                 } else if (userDevice.getDeviceOnline().equals("2")) {
                     online = "在线";
                     if (HttpURL.STATE == NetWork.WIFI)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 30)));
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 25)));
                     if (HttpURL.STATE == NetWork.INTNET)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 30)));
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 25)));
                     if (HttpURL.STATE == NetWork.INTNET)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 30)));
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
                 }
             }
         return list;

@@ -59,4 +59,18 @@ public class Applications extends Application {
             }
         }
     }
+
+    /**
+     * 判断该Activity有没有销毁
+     * @param activity
+     * @return
+     */
+    public boolean getActivityOnline(Activity activity){
+        for (Activity activity1 : list) {
+            if (activity1 == activity) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

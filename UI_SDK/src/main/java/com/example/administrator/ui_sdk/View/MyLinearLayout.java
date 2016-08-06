@@ -118,14 +118,14 @@ public class MyLinearLayout extends LinearLayout {
         text = (TextView) topView.findViewById(R.id.text);
         image = (ImageView) topView.findViewById(R.id.image);
 //        listview.addFooterView(footView);
-        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (listview.getFirstVisiblePosition() == 0) {
-                    scroll = true;
-                } else {
-                    scroll = false;
-                }
+//        listview.setOnScrollListener(new AbsListView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(AbsListView view, int scrollState) {
+//                if (listview.getFirstVisiblePosition() == 0) {
+//                    scroll = true;
+//                } else {
+//                    scroll = false;
+//                }
 
                 // 判断滚动到底部
 //                if (listview.getLastVisiblePosition() == (listview.getCount() - 1)) {
@@ -135,12 +135,12 @@ public class MyLinearLayout extends LinearLayout {
 //                        flag = false;
 //                    }
 //                }
-            }
+//            }
 
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-            }
-        });
+//            @Override
+//            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+//            }
+//        });
     }
 
     @Override

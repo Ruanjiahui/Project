@@ -46,10 +46,11 @@
 
     <!--</LinearLayout>-->
 
-    <ListView
+    <com.example.administrator.ui_sdk.View.RefreshSideListView
         android:id="@+id/bottomListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/bottomText" />
+        android:layout_below="@id/bottomText"
+        android:listSelector="@drawable/itemsector"/>
 
 </RelativeLayout>

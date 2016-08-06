@@ -7,6 +7,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.DeviceURL;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.ui_sdk.ItemClick;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -110,7 +111,7 @@ public class SceneList extends BaseActivity implements AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         userDevice = (UserDevice) ListObj.get(position);
         if (userDevice.getDeviceOnline().equals("2"))
-            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID());
+            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID() , String.valueOf(DeviceURL.Switch));
         else
             Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
     }

@@ -5,22 +5,28 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.DeviceURL;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.MyImageView;
+import com.example.administrator.ui_sdk.View.PullToRefreshView;
 import com.example.administrator.ui_sdk.View.RreshLinearLayout;
 import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.ruan.project.Controllar.CheckOnline;
@@ -31,6 +37,7 @@ import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Moudle.UserDevice;
+import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
@@ -47,18 +54,18 @@ import java.util.ArrayList;
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface, DataHandler, PopWinOnClick {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface, DataHandler, Animation.AnimationListener {
 
     private View view = null;
     private Activity activity = null;
-    private RefreshSideListView sideListView;
+    private RefreshSideListView slideListView;
     private ArrayList<Object> list = null;
+    private ArrayList<Object> scenelist = null;
     private SideListViewAdapter adapter = null;
     private Context context = null;
     private RelativeLayout fragment1Top = null;
     private ImageView fragment1Logo = null;
-    private RreshLinearLayout myLinear = null;
-    private MyPopWindow popWindow = null;
+    private PullToRefreshView mPullToRefreshView = null;
 
     private UserDevice userDevice = null;
     private ArrayList<Object> ListObj = null;
@@ -69,6 +76,17 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     private MyImageView MainFind = null;
     private MyImageView MainAdd = null;
+    private RelativeLayout fragment1Background;
+    private View bottomMain = null;
+    private RefreshSideListView bottomListView = null;
+    private TextView bottomText = null;
+    private SideListViewAdapter sideListViewAdapter = null;
+    private boolean isVisiable = false;
+
+    private Animation StopanimationBottom = null;
+    private Animation StopanimationBack = null;
+
+    public static final int REFRESH_DELAY = 4000;
 
 
     @Nullable
@@ -82,39 +100,69 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         databaseOpera = new DatabaseOpera(context);
         fragmentControl = new FragmentControl(context);
 
+
+        scenelist = new ArrayList<>();
+        list = new ArrayList<>();
+
         //这里是获取用户设备表的数据，所以首先获取本地数据库的数据同时向服务器获取查询是否有更新数据，如果有更新数据则获取最新的数据
         //如果没有最新的数据则不进行任何的操作，如果本地没有数据库获取没有任何数据的话，就直接获取服务器上面的数据，之后插入本地数据库
         //获取数据库数据
-        getDatabaseData("", null);
-
-
-        sideListView = (RefreshSideListView) view.findViewById(R.id.slideListView);
+        fragment1Background = (RelativeLayout) view.findViewById(R.id.fragment1Background);
+        slideListView = (RefreshSideListView) view.findViewById(R.id.slideListView);
         fragment1Top = (RelativeLayout) view.findViewById(R.id.fragment1Top);
         fragment1Logo = (ImageView) view.findViewById(R.id.fragment1Logo);
-        myLinear = (RreshLinearLayout) view.findViewById(R.id.myLinear);
+        mPullToRefreshView = (PullToRefreshView) view.findViewById(R.id.myLinear);
         MainFind = (MyImageView) view.findViewById(R.id.MainFind);
         MainAdd = (MyImageView) view.findViewById(R.id.MainAdd);
+        bottomMain = view.findViewById(R.id.bottomMain);
+        bottomListView = (RefreshSideListView) view.findViewById(R.id.bottomListView);
+        bottomText = (TextView) view.findViewById(R.id.bottomText);
 
-        adapter = new SideListViewAdapter(context, list);
+
+        bottomMain.setVisibility(View.GONE);
 
 
-        sideListView.setAdapter(adapter);
-
-        adapter.setItemClick(this);
-        sideListView.setOnItemClickListener(this);
-        sideListView.setRreshClick(this);
-        myLinear.setRreshClick(this);
-
+        slideListView.setOnItemClickListener(this);
+//        slideListView.setRreshClick(this);
+//        myLinear.setRreshClick(this);
+        fragment1Background.setOnClickListener(this);
         MainAdd.setOnClickListener(this);
         MainFind.setOnClickListener(this);
         DensityUtil.setRelayoutSize(MainFind, DensityUtil.dip2px(context, 50), DensityUtil.dip2px(context, 50), BaseActivity.height / 5 * 4, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
         DensityUtil.setRelayoutSize(MainAdd, DensityUtil.dip2px(context, 50), DensityUtil.dip2px(context, 50), BaseActivity.height / 7 * 5, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
-
+        DensityUtil.setRelHeight(bottomMain, BaseActivity.height / 2, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
         DensityUtil.setRelHeight(view, BaseActivity.height);
         DensityUtil.setRelHeight(fragment1Top, BaseActivity.height / 4);
         DensityUtil.setRelayoutSize(fragment1Logo, BaseActivity.width / 2, DensityUtil.dip2px(context, 20), DensityUtil.dip2px(context, 40), 0, 0, 0);
 
+
+        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mPullToRefreshView.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullToRefreshView.setRefreshing(false);
+                    }
+                }, REFRESH_DELAY);
+            }
+        });
+
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        getDatabaseData("", null);
+        if (adapter == null) {
+            adapter = new SideListViewAdapter(context, list);
+            slideListView.setAdapter(adapter);
+        } else {
+            adapter.RefreshData(list);
+        }
+        adapter.setItemClick(this);
     }
 
     /**
@@ -125,14 +173,23 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
+            case R.id.fragment1Background:
+                if (isVisiable)
+                    stopAnimation();
+                break;
             case R.id.MainFind:
-                list = getBottomList();
-                //创建PopWindow的组件
-                popWindow = new MyPopWindow(activity, list, BaseActivity.width / 2, 0);
-                popWindow.setPopBackground(R.drawable.popcircle);
-                popWindow.setPopListSector(R.drawable.popselector);
-                popWindow.showPopupWindow(MainFind, MyPopWindow.UP, BaseActivity.width / 4, BaseActivity.height / 4);
-                popWindow.setOnPopWinItemClick(this);
+                bottomText.setText("场景");
+                getBottomList();
+                if (sideListViewAdapter == null) {
+                    sideListViewAdapter = new SideListViewAdapter(context, scenelist);
+                    bottomListView.setAdapter(sideListViewAdapter);
+                } else
+                    sideListViewAdapter.RefreshData(scenelist);
+                if (!isVisiable)
+                    startAnimation();
+                else
+                    stopAnimation();
+                bottomListView.setOnItemClickListener(this);
                 break;
             case R.id.MainAdd:
                 CommonIntent.IntentActivity(context, DeviceType.class);
@@ -144,8 +201,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         DatabaseOpera databaseOpera = new DatabaseOpera(context);
         sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
         if (sceneListObj != null && sceneListObj.size() != 0)
-            list = new FragmentControl(context).getFragment2List(sceneListObj);
-        return list;
+            scenelist = fragmentControl.getFragment2List(sceneListObj);
+        return scenelist;
     }
 
 
@@ -164,11 +221,22 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        userDevice = (UserDevice) ListObj.get(position - 1);
-        if (position > 0 && userDevice.getDeviceOnline().equals("2"))
-            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID());
-        else
-            Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
+        switch (parent.getId()) {
+            case R.id.bottomListView:
+                scene = (Scene) sceneListObj.get(position);
+                getDatabaseData("sceneID = ?", new String[]{scene.getSceneID()});
+                adapter.RefreshData(list);
+                if (isVisiable)
+                    stopAnimation();
+                break;
+            case R.id.slideListView:
+                userDevice = (UserDevice) ListObj.get(position);
+                if (position > 0 && userDevice.getDeviceOnline().equals("2"))
+                    CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID(), String.valueOf(DeviceURL.Switch));
+                else
+                    Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
+                break;
+        }
     }
 
     /**
@@ -179,7 +247,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void OnClick(int position, int View) {
-        sideListView.ShowNormal();
+        slideListView.ShowNormal();
         userDevice = (UserDevice) ListObj.get(position);
         switch (View) {
             //编辑点击事件
@@ -198,19 +266,17 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         }
     }
 
+    /**
+     * 获取数据的数据
+     *
+     * @param wherearg
+     * @param whereargs
+     */
     private void getDatabaseData(String wherearg, String[] whereargs) {
         ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
         list = fragmentControl.setFragment1List(ListObj);
     }
 
-    /**
-     * 重写调用Fragment的时候启动这个方法
-     */
-    @Override
-    public void onResume() {
-        super.onResume();
-        ReData();
-    }
 
     /**
      * 更新数据
@@ -237,22 +303,65 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void ReStartData() {
         ReData();
-        sideListView.setVisiableTopView();
+        slideListView.setVisiableTopView();
     }
 
     /**
-     * 弹出窗口的点击事件
+     * 开始动画的操作
+     */
+    private void startAnimation() {
+        bottomMain.setVisibility(View.VISIBLE);
+        fragment1Background.setVisibility(View.VISIBLE);
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.bottom_out);
+        Animation banAnimation = AnimationUtils.loadAnimation(context, R.anim.backgroudout);
+        bottomMain.startAnimation(animation);
+        fragment1Background.startAnimation(banAnimation);
+        isVisiable = true;
+    }
+
+    /**
+     * 停止动画的操作
+     */
+    private void stopAnimation() {
+        StopanimationBottom = AnimationUtils.loadAnimation(context, R.anim.bottom_in);
+        StopanimationBack = AnimationUtils.loadAnimation(context, R.anim.backgroudin);
+        bottomMain.startAnimation(StopanimationBottom);
+        fragment1Background.startAnimation(StopanimationBack);
+        StopanimationBottom.setAnimationListener(this);
+        isVisiable = false;
+    }
+
+    /**
+     * <p>Notifies the start of the animation.</p>
      *
-     * @param parent   弹出窗口的所有组件
-     * @param view
-     * @param position 弹出窗口listview的个数
-     * @param id
+     * @param animation The started animation.
      */
     @Override
-    public void OnPopItemClick(AdapterView<?> parent, View view, int position, long id) {
-        scene = (Scene) sceneListObj.get(position);
-        getDatabaseData("sceneID = ?", new String[]{scene.getSceneID()});
-        adapter.RefreshData(list);
-        popWindow.disShow();
+    public void onAnimationStart(Animation animation) {
+
+    }
+
+    /**
+     * <p>Notifies the end of the animation. This callback is not invoked
+     * for animations with repeat count set to INFINITE.</p>
+     *
+     * @param animation The animation which reached its end.
+     */
+    @Override
+    public void onAnimationEnd(Animation animation) {
+        if (StopanimationBottom == animation) {
+            bottomMain.setVisibility(View.GONE);
+            fragment1Background.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * <p>Notifies the repetition of the animation.</p>
+     *
+     * @param animation The animation which was repeated.
+     */
+    @Override
+    public void onAnimationRepeat(Animation animation) {
+
     }
 }

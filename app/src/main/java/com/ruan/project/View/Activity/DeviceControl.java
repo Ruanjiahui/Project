@@ -1,10 +1,15 @@
 package com.ruan.project.View.Activity;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 
+import com.DeviceURL;
+import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
@@ -20,18 +25,21 @@ import java.util.Map;
  */
 public class DeviceControl extends BaseActivity {
     private ArrayList<Map<String, String>> map = null;
-
+    public static Activity activity = null;
     private String deviceID = null;
     private View view = null;
     private UserDevice userDevice = null;
+    private String flag = null;
 
     /**
      * Start()
      */
     @Override
     public void init() {
+        activity = this;
 
         deviceID = getIntent().getExtras().getString("data");
+        flag = getIntent().getExtras().getString("flag");
 
         view = LayoutInflater.from(context).inflate(R.layout.devicecontrol, null);
 
@@ -46,7 +54,13 @@ public class DeviceControl extends BaseActivity {
 
         userDevice = new UserDevice();
         userDevice.getUserDeviceMoudle(map);
-        intentFragment(SocketSwitchFragment.getInstance(userDevice));
+
+
+        switch (Integer.parseInt(flag)) {
+            case DeviceURL.Switch:
+                intentFragment(SocketSwitchFragment.getInstance(userDevice));
+                break;
+        }
         //RGB灯控制
 //        regLight = new REGlight();
 //        regLight.setRed(1.000000);
@@ -72,4 +86,10 @@ public class DeviceControl extends BaseActivity {
                 .commitAllowingStateLoss();
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Applications.getInstance().removeOneActivity(this);
+
+    }
 }

@@ -17,7 +17,6 @@ import com.ruan.project.Moudle.CheckMac;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
-import com.ruan.project.Other.JSON.jsonMac;
 import com.ruan.project.Other.UDP.FormatData;
 import com.ruan.project.Other.UDP.OnlineDeveice;
 import com.ruan.project.R;

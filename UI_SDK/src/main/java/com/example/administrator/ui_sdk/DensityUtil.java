@@ -78,6 +78,15 @@ public class DensityUtil {
         view.setLayoutParams(params);
     }
 
+
+    public static void setRelHeight(View view, int height, int[] rules) {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        params.height = height;
+        for (int rule : rules)
+            params.addRule(rule);
+        view.setLayoutParams(params);
+    }
+
     /**
      * 设置Relayou布局的高度
      *

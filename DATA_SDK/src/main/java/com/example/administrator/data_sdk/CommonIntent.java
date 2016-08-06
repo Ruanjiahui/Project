@@ -21,14 +21,15 @@ public class CommonIntent {
 
     /**
      * 页面跳珠
+     *
      * @param context
      * @param cls
      * @param str
      */
-    public static void IntentActivity(Context context, Class cls , String str) {
+    public static void IntentActivity(Context context, Class cls, String str) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putString("data" , str);
+        bundle.putString("data", str);
         intent.putExtras(bundle);
         intent.setClass(context, cls);
         context.startActivity(intent);
@@ -52,11 +53,11 @@ public class CommonIntent {
     }
 
 
-    public static void IntentActivity(Context context, Class cls , String str , String str1) {
+    public static void IntentActivity(Context context, Class cls, String str, String str1) {
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
-        bundle.putString("data" , str);
-        bundle.putString("flag" , str1);
+        bundle.putString("data", str);
+        bundle.putString("flag", str1);
         intent.putExtras(bundle);
         intent.setClass(context, cls);
         context.startActivity(intent);
@@ -131,6 +132,33 @@ public class CommonIntent {
         intent.setClass(activity, cls);
         activity.startActivityForResult(intent, resultCode);
     }
+
+
+    /**
+     * 跳转页面
+     *
+     * @param activity
+     * @param cls
+     * @param resultCode
+     */
+    public static void IntentResActivity(Activity activity, Class cls, int resultCode, int data) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putInt("data" , data);
+        intent.putExtras(bundle);
+        intent.setClass(activity, cls);
+        activity.startActivityForResult(intent, resultCode);
+    }
+
+
+    public static void SetActivity(Activity activity, String[] data, int resultCode) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putStringArray("data", data);
+        intent.putExtras(bundle);
+        activity.setResult(resultCode, intent);
+    }
+
 
     public static void SetActivity(Activity activity, Parcelable data, int resultCode) {
         Intent intent = new Intent();
