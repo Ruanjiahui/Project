@@ -8,6 +8,7 @@ import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Item;
+import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -67,16 +68,16 @@ public class DeviceActivityControl {
         for (int i = 0; i < setting.length; i++) {
             switch (i) {
                 case 0:
-                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.wifi), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), i + ""));
+                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.wifi), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60), i + ""));
                     break;
                 case 1:
-                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.scan), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), i + ""));
+                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.scan), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60), i + ""));
                     break;
                 case 2:
-                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.bluetooth), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), i + ""));
+                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.bluetooth), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60), i + ""));
                     break;
                 case 3:
-                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.airkiss), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), DensityUtil.dip2px(context, 60), i + ""));
+                    list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.airkiss), setting[i], ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60), i + ""));
                     break;
             }
         }

@@ -12,17 +12,29 @@ public abstract class FileRequest {
 
     /**
      * 这个是写字节流的抽象方法
-     * @param inputStream       文本的字节流
-     * @param path              文本的路径
-     * @param filename          文本的名称
+     *
+     * @param inputStream 文本的字节流
+     * @param path        文本的路径
+     * @param filename    文本的名称
      */
-    public abstract void WriteByte(InputStream inputStream , String path , String filename);
+    public abstract void WriteByte(InputStream inputStream, String path, String filename);
 
 
     /**
-     *  这个是读字节流的抽象方法
-     * @param path          文件的路径
-     * @param filename      文件的名称
+     * 这个是写字节流的抽象方法
+     *
+     * @param buffer   文本的字节流
+     * @param path     文本的路径
+     * @param filename 文本的名称
      */
-    public abstract String ReadByte(String path , String filename);
+    public abstract void WriteByte(byte[] buffer, String path, String filename);
+
+
+    /**
+     * 这个是读字节流的抽象方法
+     *
+     * @param path     文件的路径
+     * @param filename 文件的名称
+     */
+    public abstract String ReadByte(String path, String filename);
 }

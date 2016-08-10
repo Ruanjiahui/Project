@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -83,8 +84,8 @@ public class GetDatabaseData extends Operation {
         Cursor cursor = query(context, db, Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit);
         //如果传入对象是有父类则调用第一个
         if (SuperClass)
-            return new LoadResouce().CursorToObjects(cursor, loadclass);
-        return new LoadResouce().CursorToObject(cursor, loadclass);
+            return new LoadResouce().CursorToObjects(context , cursor, loadclass);
+        return new LoadResouce().CursorToObject(context , cursor, loadclass);
     }
 
     /**
@@ -129,8 +130,8 @@ public class GetDatabaseData extends Operation {
         Cursor cursor = distinctQuery(context, db, Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit, distinct, distinctType);
 
         if (SuperClass)
-            return new LoadResouce().CursorToObjects(cursor, loadClass);
-        return new LoadResouce().CursorToObject(cursor, loadClass);
+            return new LoadResouce().CursorToObjects(context , cursor, loadClass);
+        return new LoadResouce().CursorToObject(context , cursor, loadClass);
     }
 
     /**
@@ -258,6 +259,7 @@ public class GetDatabaseData extends Operation {
     public void Insert2Update(Context context, String db, String Table_name, String clause, String[] wherevalues, ContentValues contentValues, String whereclause, String[] whereargs) {
         //返回false则没有改用户的数据
         //true则有该条的数据
+
         if (RepeatData(context, db, Table_name, clause, wherevalues))
             //将信息更新
             Update(context, db, Table_name, contentValues, whereclause, whereargs);

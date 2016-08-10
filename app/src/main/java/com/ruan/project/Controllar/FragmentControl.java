@@ -3,6 +3,7 @@ package com.ruan.project.Controllar;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.administrator.data_sdk.Database.CreateTable;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
@@ -95,22 +96,25 @@ public class FragmentControl {
         ArrayList<Object> list = new ArrayList<>();
         UserDevice userDevice;
         String online = null;
-        if (ListObj != null && ListObj.size() > 0)
+        if (ListObj != null && ListObj.size() > 0) {
             for (int i = 0; i < ListObj.size(); i++) {
                 userDevice = (UserDevice) ListObj.get(i);
                 if (userDevice.getDeviceOnline().equals("1")) {
                     online = "离线";
                     list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
+                    continue;
                 } else if (userDevice.getDeviceOnline().equals("2")) {
                     online = "在线";
                     if (HttpURL.STATE == NetWork.WIFI)
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 25)));
                     if (HttpURL.STATE == NetWork.INTNET)
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 25)));
-                    if (HttpURL.STATE == NetWork.INTNET)
+                    if (HttpURL.STATE == NetWork.UNCONN)
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
+                    continue;
                 }
             }
+        }
         return list;
     }
 

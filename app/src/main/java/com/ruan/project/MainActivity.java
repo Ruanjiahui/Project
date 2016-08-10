@@ -55,8 +55,10 @@ public class MainActivity extends NavActivity {
                 intentFragment(new Fragment2());
                 break;
             case 2:
-                isRefresh = false;
-                intentFragment(new Fragment3());
+                if (!Fragment3.isFragment3) {
+                    isRefresh = false;
+                    intentFragment(new Fragment3());
+                }
                 break;
             case 3:
                 isRefresh = false;
@@ -143,6 +145,7 @@ public class MainActivity extends NavActivity {
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(wifiReceiver);
+        Applications.getInstance().onTerminate();
 //        registerTime.unreisterTime();
     }
 }

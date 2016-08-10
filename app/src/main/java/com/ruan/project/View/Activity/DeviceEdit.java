@@ -33,7 +33,6 @@ import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Controllar.UdpOpera;
 import com.ruan.project.Interface.PopWinOnClick;
 import com.ruan.project.Interface.UDPInterface;
-import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Moudle.UserDevice;
@@ -60,7 +59,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private View view = null;
 
     private Activity activity = null;
-    private Context context = null;
+//    private Context context = null;
 
     private ImageView editLogo = null;
     private EditText editTitle = null;
@@ -95,7 +94,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private Animation StopanimationBottom = null;
     private Animation StopanimationBack = null;
 
-
+    public static Context context = null;
     /**
      * Start()
      */
@@ -184,13 +183,11 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     @Override
     protected void onStart() {
         super.onStart();
-
         getDatabaseData("deviceID = ?", new String[]{FLAG});
         getBottomList();
         //设置初始化界面
         setInit();
     }
-
 
     private ArrayList<Object> getBottomList() {
         sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
@@ -348,7 +345,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
      */
     private void Exists(UserDevice userDevice, String db, String Table_Name) {
         userDevice.setUserID("123456");
-        ContentValues contentValues = DataHandler.getContentValues(context, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class , userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+//        Toast.makeText(context , contentValues.getAsString("deviceID") + "--"+ contentValues.getAsString("deviceMac") , Toast.LENGTH_SHORT).show();
+
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"}, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"});
         Applications.getInstance().removeOneActivity(activity);
     }

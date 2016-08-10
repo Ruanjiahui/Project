@@ -18,7 +18,6 @@ import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Controllar.DeviceActivityControl;
 import com.ruan.project.Interface.UDPInterface;
-import com.ruan.project.Moudle.Device;
 import com.ruan.project.Other.Adapter.FragmentAdapter;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Moudle.Item;

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import javax.security.auth.login.LoginException;
 
@@ -29,7 +30,6 @@ public class Operation {
     protected void insert(Context context, String db, String table, ContentValues contentValues) {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
-
         sqLiteDatabase.insert(table, null, contentValues);
     }
 

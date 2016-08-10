@@ -53,7 +53,7 @@
     <RelativeLayout
         android:id="@+id/homeRelative"
         android:layout_width="match_parent"
-        android:layout_height="50dp">
+        android:layout_height="wrap_content">
 
 
         <ImageView
@@ -80,7 +80,7 @@
                 android:gravity="center_vertical"
                 android:text="111"
                 android:textColor="@color/Grey"
-                android:textSize="15sp" />
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/homeSubText"
@@ -93,40 +93,46 @@
                 android:visibility="visible" />
         </LinearLayout>
 
-        <ImageView
-            android:id="@+id/homeRightImage"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="8dp"
-            android:src="@mipmap/ic_launcher" />
-
-        <TextView
-            android:id="@+id/homeRight"
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginRight="5dp"
-            android:layout_marginTop="8dp"
-            android:layout_toLeftOf="@id/homeRightImage"
-            android:gravity="center_vertical"
-            android:text="111"
-            android:textColor="@color/Grey"
-            android:textSize="13sp" />
+            android:layout_centerVertical="true">
 
-        <TextView
-            android:id="@+id/homeRight1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginBottom="5dp"
-            android:layout_marginRight="10dp"
-            android:gravity="center_vertical"
-            android:text="12345"
-            android:textColor="@color/Grey"
-            android:textSize="13sp" />
+            <ImageView
+                android:id="@+id/homeRightImage"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="8dp"
+                android:src="@mipmap/ic_launcher" />
 
+            <TextView
+                android:id="@+id/homeRight"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_marginTop="8dp"
+                android:layout_toLeftOf="@id/homeRightImage"
+                android:gravity="center_vertical"
+                android:text="111"
+                android:textColor="@color/Grey"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/homeRight1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_below="@id/homeRightImage"
+                android:layout_marginBottom="5dp"
+                android:layout_marginRight="10dp"
+                android:layout_marginTop="5dp"
+                android:gravity="center_vertical"
+                android:text="12345"
+                android:textColor="@color/Grey"
+                android:textSize="13sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
 

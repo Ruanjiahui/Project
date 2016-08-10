@@ -11,13 +11,13 @@ import java.util.Map;
  */
 public class UserDevice extends Device implements Parcelable {
 
-    protected String userID = null;
-    protected String sceneID = null;
-    protected String deviceMac = null;
-    protected String deviceOnline = null;
-    protected String devicePORT = null;
-    protected String deviceIP = null;
-    protected String deviceRemarks = null;
+    public String userID = null;
+    public String sceneID = null;
+    public String deviceMac = null;
+    public String deviceOnline = null;
+    public String devicePORT = null;
+    public String deviceIP = null;
+    public String deviceRemarks = null;
 
     public UserDevice() {
     }

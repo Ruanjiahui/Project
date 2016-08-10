@@ -1,8 +1,13 @@
 package com.example.administrator.data_sdk.Database;
 
 import android.content.ContentValues;
+import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
+import android.widget.Toast;
+
+import com.example.administrator.data_sdk.FileUtil.FilePath;
+import com.example.administrator.data_sdk.FileUtil.FileTool;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -14,6 +19,7 @@ import java.util.Map;
  */
 public class LoadResouce extends LoadClass {
 
+    private Context context = null;
 
     /**
      * 将数据库Cursor游标封装成对象
@@ -44,8 +50,10 @@ public class LoadResouce extends LoadClass {
                             Field field = fields[i];
                             //设置可以访问
                             field.setAccessible(true);
+//                            FileTool.saveFileByte((field.getName() + "---" + cursor.getString(cursor.getColumnIndex(columName))).getBytes() , "code.txt" , FilePath.getFilePath(context));
                             //如果数据库的字段名和类的属性名称一样就说明是同一个变量
                             if (field.getName().equals(columName)) {
+
                                 //将数据库的数据设置给类的属性
                                 field.set(object, cursor.getString(cursor.getColumnIndex(columName)));
                                 break;
@@ -131,6 +139,7 @@ public class LoadResouce extends LoadClass {
         try {
             for (String colum : colums) {
                 for (Field field : fields) {
+                    field.setAccessible(true);
                     if (colum.equals(field.getName())) {
                         contentValues.put(colum, (String) field.get(objects));
                         break;
@@ -159,6 +168,7 @@ public class LoadResouce extends LoadClass {
         try {
             for (String colum : colums) {
                 for (Field field : fields) {
+                    field.setAccessible(true);
                     if (colum.equals(field.getName())) {
                         contentValues.put(colum, (String) field.get(objects));
                         break;
@@ -233,7 +243,8 @@ public class LoadResouce extends LoadClass {
      * @param loadclass
      * @return
      */
-    public ArrayList<Object> CursorToObjects(Cursor cursor, Class loadclass) {
+    public ArrayList<Object> CursorToObjects(Context context, Cursor cursor, Class loadclass) {
+        this.context = context;
         return AnalysisCursors(cursor, loadclass);
     }
 
@@ -244,7 +255,8 @@ public class LoadResouce extends LoadClass {
      * @param loadclass
      * @return
      */
-    public ArrayList<Object> CursorToObject(Cursor cursor, Class loadclass) {
+    public ArrayList<Object> CursorToObject(Context context, Cursor cursor, Class loadclass) {
+        this.context = context;
         return AnalysisCursor(cursor, loadclass);
     }
 
@@ -256,7 +268,8 @@ public class LoadResouce extends LoadClass {
      * @param colums
      * @return
      */
-    public ContentValues ObjectToContentValues(Class loadClass, Object objects, String[] colums) {
+    public ContentValues ObjectToContentValues(Context context, Class loadClass, Object objects, String[] colums) {
+        this.context = context;
         return getContentValues(loadClass, objects, colums);
     }
 
@@ -268,7 +281,8 @@ public class LoadResouce extends LoadClass {
      * @param colums
      * @return
      */
-    public ContentValues ObjectToContentValue(Class loadClass, Object objects, String[] colums) {
+    public ContentValues ObjectToContentValue(Context context, Class loadClass, Object objects, String[] colums) {
+        this.context = context;
         return getContentValue(loadClass, objects, colums);
     }
 

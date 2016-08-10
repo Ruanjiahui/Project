@@ -21,7 +21,10 @@ import android.widget.Toast;
 
 
 import com.DeviceURL;
+import com.example.administrator.Interface.Connect;
+import com.example.administrator.Interface.Result;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -34,14 +37,15 @@ import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Interface.DataHandler;
 import com.ruan.project.Interface.PopWinOnClick;
-import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Moudle.UserDevice;
+import com.ruan.project.Moudle.Weather;
 import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
+import com.ruan.project.Other.HTTP.HttpWeather;
 import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.DeviceType;
@@ -49,12 +53,13 @@ import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
 import com.ruan.project.View.MyPopWindow;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, ItemClick.RreshInterface, DataHandler, Animation.AnimationListener {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, DataHandler, Animation.AnimationListener, PullToRefreshView.OnRefreshListener, Result.HttpString {
 
     private View view = null;
     private Activity activity = null;
@@ -66,6 +71,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private RelativeLayout fragment1Top = null;
     private ImageView fragment1Logo = null;
     private PullToRefreshView mPullToRefreshView = null;
+    private TextView fragment1weather = null;
+    private TextView fragment1City = null;
 
     private UserDevice userDevice = null;
     private ArrayList<Object> ListObj = null;
@@ -86,7 +93,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private Animation StopanimationBottom = null;
     private Animation StopanimationBack = null;
 
-    public static final int REFRESH_DELAY = 4000;
+    private Weather weather = null;
 
 
     @Nullable
@@ -117,14 +124,16 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         bottomMain = view.findViewById(R.id.bottomMain);
         bottomListView = (RefreshSideListView) view.findViewById(R.id.bottomListView);
         bottomText = (TextView) view.findViewById(R.id.bottomText);
+        fragment1weather = (TextView) view.findViewById(R.id.fragment1weather);
+        fragment1City = (TextView) view.findViewById(R.id.fragment1City);
 
 
         bottomMain.setVisibility(View.GONE);
 
 
+        fragment1City.setOnClickListener(this);
         slideListView.setOnItemClickListener(this);
-//        slideListView.setRreshClick(this);
-//        myLinear.setRreshClick(this);
+        mPullToRefreshView.setOnRefreshListener(this);
         fragment1Background.setOnClickListener(this);
         MainAdd.setOnClickListener(this);
         MainFind.setOnClickListener(this);
@@ -136,17 +145,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         DensityUtil.setRelayoutSize(fragment1Logo, BaseActivity.width / 2, DensityUtil.dip2px(context, 20), DensityUtil.dip2px(context, 40), 0, 0, 0);
 
 
-        mPullToRefreshView.setOnRefreshListener(new PullToRefreshView.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                mPullToRefreshView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        mPullToRefreshView.setRefreshing(false);
-                    }
-                }, REFRESH_DELAY);
-            }
-        });
+        //获取天气
+        new HttpWeather(HttpURL.WethereURL, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
+        weather = new Weather();
 
         return view;
     }
@@ -156,13 +157,14 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         super.onStart();
 
         getDatabaseData("", null);
+
         if (adapter == null) {
             adapter = new SideListViewAdapter(context, list);
             slideListView.setAdapter(adapter);
+            adapter.setItemClick(this);
         } else {
             adapter.RefreshData(list);
         }
-        adapter.setItemClick(this);
     }
 
     /**
@@ -193,6 +195,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 break;
             case R.id.MainAdd:
                 CommonIntent.IntentActivity(context, DeviceType.class);
+                break;
+            case R.id.fragment1City:
                 break;
         }
     }
@@ -231,7 +235,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 break;
             case R.id.slideListView:
                 userDevice = (UserDevice) ListObj.get(position);
-                if (position > 0 && userDevice.getDeviceOnline().equals("2"))
+                if (userDevice.getDeviceOnline().equals("2"))
                     CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID(), String.valueOf(DeviceURL.Switch));
                 else
                     Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
@@ -284,17 +288,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private void ReData() {
         getDatabaseData("", null);
         adapter.RefreshData(list);
-    }
-
-    @Override
-    public void RreshData() {
-        HttpURL.STATE = SystemTool.isNetState(context);
-        if (HttpURL.STATE == NetWork.WIFI)
-            new CheckOnline(context, this).UDPCheck();
-        //通过云端进行设备检测是否在线
-        //如果wifi没有连接则使用外网判断设备是否在线
-        if (HttpURL.STATE == NetWork.INTNET)
-            new CheckOnline(context, this).HTTPCheck();
+        //关闭动画
+        mPullToRefreshView.setRefreshing(false);
     }
 
     /**
@@ -303,7 +298,6 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void ReStartData() {
         ReData();
-        slideListView.setVisiableTopView();
     }
 
     /**
@@ -362,6 +356,38 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onAnimationRepeat(Animation animation) {
+
+    }
+
+    /**
+     * 这个刷新的接口
+     */
+    @Override
+    public void onRefresh() {
+        new CheckOnline(context, this).UDPCheck();
+    }
+
+    /**
+     * 处理http成功返回的接口
+     *
+     * @param code   请求标识
+     * @param result 请求返回的字节流
+     */
+    @Override
+    public void onSucceful(int code, String result) {
+        weather.setJson(result);
+        if (weather.getWeather() != null)
+            fragment1weather.setText(weather.getWeather()[0] + "~" + weather.getWeather()[1]);
+    }
+
+    /**
+     * 处理http连接出错的接口
+     *
+     * @param code  请求标识
+     * @param Error 请求出错的标识
+     */
+    @Override
+    public void onError(int code, int Error) {
 
     }
 }

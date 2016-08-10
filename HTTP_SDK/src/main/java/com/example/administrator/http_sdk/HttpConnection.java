@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.administrator.Abstract.HttpRequest;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 

@@ -19,12 +19,13 @@ public class CreateTable {
     private static String sql = "";
     private static String content = "";
 
-    public synchronized static DatabaseHelper getInstance(Context context, String db_name) {
+    public static DatabaseHelper getInstance(Context context, String db_name) {
         if (!db.equals(db_name))
             databaseHelper = null;
 
         if (databaseHelper == null) {
             databaseHelper = new DatabaseHelper(context, db_name);
+            synchronized (databaseHelper){}
         }
         return databaseHelper;
     }
@@ -33,10 +34,10 @@ public class CreateTable {
      * 创建表的方法
      *
      * @param context
-     * @param db_name    数据库名字
-     * @param Table_name 表的名字
-     * @param establish  封装数据的对象
-     * @param auto_key   自动增长的语句如果没有则为空
+     * @param db_name     数据库名字
+     * @param Table_name  表的名字
+     * @param establish   封装数据的对象
+     * @param auto_key    自动增长的语句如果没有则为空
      * @param primary_key 主键没有则为空
      */
     public static void TABLE(Context context, String db_name, String Table_name, Establish establish, String auto_key, String primary_key) {
@@ -59,10 +60,11 @@ public class CreateTable {
 
     /**
      * 将封装在establish这个对象的数据解析出来
-     * @param list          创建表的字段名
-     * @param establish     创建表的字段参数
-     * @param auto_key      创建表的自动增长
-     * @param primary_key   创建表的主键
+     *
+     * @param list        创建表的字段名
+     * @param establish   创建表的字段参数
+     * @param auto_key    创建表的自动增长
+     * @param primary_key 创建表的主键
      * @return
      */
     private static String getContent(ArrayList<String> list, Establish establish, String auto_key, String primary_key) {

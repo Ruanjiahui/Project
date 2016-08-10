@@ -6,6 +6,7 @@ import android.view.KeyEvent;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import com.example.administrator.ui_sdk.MyWebClient;
 import com.example.administrator.ui_sdk.Other.MyWebChromeClient;
 import com.example.administrator.ui_sdk.Other.MyWebJSInterface;
 import com.example.administrator.ui_sdk.Other.MyWebViewClient;
@@ -19,6 +20,7 @@ public class MyWebView extends WebView {
     private Context context = null;
     private String url = null;
     private WebSettings settings = null;
+    private MyWebClient myWebClient = null;
 
     public MyWebView(Context context) {
         super(context);
@@ -35,23 +37,34 @@ public class MyWebView extends WebView {
         this.context = context;
     }
 
-    public void setWebView(String url) {
+    public void setWebView(String url, MyWebClient myWebClient) {
         this.url = url;
+        this.myWebClient = myWebClient;
         inti();
     }
 
 
     private void inti() {
         this.setWebViewClient(new MyWebViewClient());
-        this.setWebChromeClient(new MyWebChromeClient());
+        this.setWebChromeClient(new MyWebChromeClient(myWebClient));
 
         //添加链接
         this.loadUrl(url);
         settings = this.getSettings();
         //设置webview支持javascript
         settings.setJavaScriptEnabled(true);
+        // 设置可以使用localStorage
+        settings.setDomStorageEnabled(true);
+        // 应用可以有数据库
+        settings.setDatabaseEnabled(true);
+        // 应用可以有缓存
+        settings.setAppCacheEnabled(true);
+        settings.setCacheMode(WebSettings.LOAD_DEFAULT);   // 默认使用缓存
+        settings.setAllowFileAccess(true);   // 可以读取文件缓存(manifest生效)
+
+
         //设置webview与js实现交互
-        this.addJavascriptInterface(new MyWebJSInterface(context) , "JavaScriptInterface");
+        this.addJavascriptInterface(new MyWebJSInterface(context), "JavaScriptInterface");
 
     }
 

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/GreySmoke">
+    android:background="@color/GreySmoke"
+    android:orientation="vertical">
 
 
     <include
@@ -12,4 +12,17 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"></include>
 
-</LinearLayout>
+
+    <com.example.administrator.ui_sdk.View.MyWebView
+        android:id="@+id/fragment3WebView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment3Top" />
+
+    <com.example.administrator.ui_sdk.View.CircleWaiting
+        android:id="@+id/fragment3Wait"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/fragment3Top" />
+
+</RelativeLayout>

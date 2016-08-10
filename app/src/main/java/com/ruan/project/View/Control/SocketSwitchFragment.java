@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.JSON.JSONClass;
 import com.ruan.project.Controllar.CallBack;
 import com.ruan.project.Interface.UDPInterface;
 import com.ruan.project.MainActivity;
@@ -230,9 +231,8 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void getMac(int position, Object[] objects) {
         String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
-        if (socketSwitch.getSocketSwtichReuslt(json.substring(5, json.length()))) {
-            SocketHandler(position, json.substring(5, json.length()), 0);
-        }
+        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
+        SocketHandler(position, socketSwitch.getJackArray(), 0);
     }
 
 
@@ -268,9 +268,9 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void handler(int position, String result) {
-        result = result.replace("\\", "");
-        if (socketSwitch.getSocketSwtichReuslt(result))
-            SocketHandler(position, result, 1);
+        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
+        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
+        SocketHandler(position, socketSwitch.getJackArray(), 1);
     }
 
 
@@ -355,9 +355,12 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
             @Override
             public void Enter(int position) {
                 number = myTimeDialog.getNumber();
+                //获取当前时间监听的状态
                 registerState = MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, position);
+                //开始监听时间
                 startTime(position);
                 if (!registerState) {
+                    //获取当前时间监听的状态
                     registerState = MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, position);
                     switch (position) {
                         case FLAG1:

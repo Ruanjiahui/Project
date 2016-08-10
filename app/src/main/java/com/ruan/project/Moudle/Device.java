@@ -1,16 +1,17 @@
 package com.ruan.project.Moudle;
 
 /**
- * Created by Administrator on 2016/8/1.
+ * Created by Administrator on 2016/8/8.
  */
 public class Device {
 
-    protected String deviceModel = null;
-    protected String devicePic = null;
-    protected String deviceName = null;
-    protected String deviceType = null;
-    protected String deviceTypeID = null;
-    protected String deviceID = null;
+
+    public String deviceModel = null;
+    public String devicePic = null;
+    public String deviceName = null;
+    public String deviceType = null;
+    public String deviceTypeID = null;
+    public String deviceID = null;
 
 
     public String getDeviceModel() {
@@ -60,4 +61,6 @@ public class Device {
     public void setDeviceID(String deviceID) {
         this.deviceID = deviceID;
     }
+
+
 }

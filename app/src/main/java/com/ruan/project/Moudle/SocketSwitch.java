@@ -11,7 +11,8 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class SocketSwitch  {
+public class SocketSwitch {
+//    {"type":"getsocketswtich","jackArray":[{"jack":1,"status":1},{"jack":2,"status":0},{"jack":3,"status":0},{"jack":4,"status":1}]}
 
     private String type = null;
     private int status = 0;
@@ -19,7 +20,33 @@ public class SocketSwitch  {
     private String product = null;
     private int result = 0;
     private String jackArray = null;
+    private String json = null;
+    private String msg = null;
+    private Integer code = 0;
 
+    public String getJson() {
+        return json;
+    }
+
+    public void setJson(String json) {
+        this.json = json;
+    }
+
+    public String getMsg() {
+        return msg;
+    }
+
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
+
+    public Integer getCode() {
+        return code;
+    }
+
+    public void setCode(Integer code) {
+        this.code = code;
+    }
 
     public String getJackArray() {
         return jackArray;
@@ -171,10 +198,7 @@ public class SocketSwitch  {
 
         //    {“type”:”getsocketswtich”,”jackArray”:[{”jack”:1,”status”:1}，{”jack”:2,”status”:0}，{”jack”:3,”status”:0}，{”jack”:4,”status”:1}]}
         try {
-            if (position == 1)
-                json = new JSONObject(json).getString("json");
-            JSONObject object = new JSONObject(json);
-            JSONArray array = object.getJSONArray("jackArray");
+            JSONArray array = new JSONArray(json);
 
             JSONObject obj1 = array.getJSONObject(0);
             setJack1(obj1.getInt("jack"));
@@ -192,7 +216,6 @@ public class SocketSwitch  {
             setJack4(obj4.getInt("jack"));
             setStatus4(obj4.getInt("status"));
         } catch (JSONException e) {
-//            e.printStackTrace();
             Log.e("Ruan SocketSwitch", "该数据不是json格式" + e);
         }
     }
@@ -225,24 +248,5 @@ public class SocketSwitch  {
         socketSwitch.setType("getsocketswtich");
         Gson gson = new Gson();
         return gson.toJson(socketSwitch);
-    }
-
-    /**
-     * 判断控制开关的是否成功
-     *
-     * @param json
-     * @return <>true</>成功<>false</>失败
-     */
-    public boolean getSocketSwtichReuslt(String json) {
-        try {
-            if (json != null) {
-                JSONObject obj = new JSONObject(json);
-                if (obj.getString("type").equals("setsocketswtich") && obj.getInt("result") == 0 || obj.getString("type").equals("getsocketswtich"))
-                    return true;
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return false;
     }
 }

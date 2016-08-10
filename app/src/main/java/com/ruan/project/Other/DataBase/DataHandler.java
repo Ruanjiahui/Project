@@ -51,8 +51,8 @@ public class DataHandler {
      * @param Table_Name
      * @return
      */
-    public static ContentValues getContentValues(Context context, Object object, String db, String Table_Name) {
-        return new LoadResouce().ObjectToContentValues(object.getClass(), object, new GetDatabaseData().getTableField(context, db, Table_Name));
+    public static ContentValues getContentValue(Context context, Class loadClass , Object object, String db, String Table_Name) {
+        return new LoadResouce().ObjectToContentValues(context , loadClass, object, new GetDatabaseData().getTableField(context, db, Table_Name));
 
     }
 

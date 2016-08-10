@@ -71,8 +71,8 @@ public class NetWorkSetting extends BaseActivity implements AdapterView.OnItemCl
         if (position == 3) {
             CommonIntent.IntentActivity(context, AirkissNetWork.class);
         }
-        if (position == 0) {
-            CommonIntent.IntentActivity(context, DeviceEdit.class);
-        }
+//        if (position == 0) {
+//            CommonIntent.IntentActivity(context, DeviceEdit.class);
+//        }
     }
 }

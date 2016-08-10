@@ -8,6 +8,7 @@ import com.example.administrator.data_sdk.FileUtilAbstract.FileRequest;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,6 +16,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
@@ -32,6 +34,7 @@ public class FileTool {
 
     //创建FileRequest对象
     private static FileRequest fileRequest = null;
+
     /**
      * 这个方法是创建文件
      *
@@ -48,6 +51,7 @@ public class FileTool {
 
     /**
      * 这个方法是判断文件的是否存在进行创建和删除自动备份的功能
+     *
      * @param filename
      * @param path
      */
@@ -65,7 +69,7 @@ public class FileTool {
         //为了安全默认自动备份可以手动删除
         //前面一个是初始地址，后面一个是新地址
         //这里的自动备份功能只能默认保留上一个版本其他版本则在上一个版本中删除以及覆盖
-        CopyFile(path + "/" + filename, path + "/old/" , filename);
+        CopyFile(path + "/" + filename, path + "/old/", filename);
         new File(path + "/" + filename).delete();
     }
 
@@ -88,7 +92,7 @@ public class FileTool {
             InputStream inputStream = new FileInputStream(files);
 
             fileRequest = new FileSource();
-            fileRequest.WriteByte(inputStream , path , fileName);
+            fileRequest.WriteByte(inputStream, path, fileName);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -111,6 +115,26 @@ public class FileTool {
 
         fileRequest = new FileSource();
         fileRequest.WriteByte(inputStream, path, fileName);
+
+    }
+
+
+    /**
+     * 这个是保存文件的方法
+     * 传入参数是字节数组
+     *
+     * @param buffer
+     * @param fileName
+     * @param path
+     */
+    public static void saveFileByte(byte[] buffer, String fileName, String path) {
+        //创建文件夹
+        //如果拥有则不创建，否则会自动创建
+        //如果拥有文件就直接删除该文件
+        JudgeFile(fileName, path);
+
+        fileRequest = new FileSource();
+        fileRequest.WriteByte(buffer, path, fileName);
 
     }
 
@@ -165,7 +189,7 @@ public class FileTool {
             fs = new FileInputStream(path + "/" + fileName);
             bs = new BufferedInputStream(fs);
 
-            return ImageTransformation.InputStream2Drawable(context , fs);
+            return ImageTransformation.InputStream2Drawable(context, fs);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -217,6 +241,7 @@ public class FileTool {
 
     /**
      * 这个是读取文件的内容的方法
+     *
      * @param fileName
      * @param path
      * @return
@@ -250,13 +275,13 @@ public class FileTool {
      * @param oldPath
      * @param newPath
      */
-    public static void CopyFile(String oldPath, String newPath , String newName) {
+    public static void CopyFile(String oldPath, String newPath, String newName) {
         try {
             //将原来的文件写入字节流当中
             InputStream inputStream = new FileInputStream(oldPath);
 
             fileRequest = new FileSource();
-            fileRequest.WriteByte(inputStream , newPath , newName);
+            fileRequest.WriteByte(inputStream, newPath, newName);
 
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -292,5 +317,27 @@ public class FileTool {
             }
         }
         return value;
+    }
+
+    /**
+     * inputStream转字符串
+     * @param inputStream
+     * @return
+     */
+    public static String InputStreamToString(InputStream inputStream) {
+        String result = null;
+        try {
+            //下面对获取到的输入流进行读取
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder response = new StringBuilder();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            result = response.toString();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 }

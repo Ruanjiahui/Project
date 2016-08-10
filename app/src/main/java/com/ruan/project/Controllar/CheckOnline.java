@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
@@ -17,6 +18,7 @@ import com.ruan.project.Moudle.CheckMac;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
+import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.Other.UDP.FormatData;
 import com.ruan.project.Other.UDP.OnlineDeveice;
 import com.ruan.project.R;
@@ -46,6 +48,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     private String Mac = "deviceMac";
     private String On = "2";
     private String UnOn = "1";
+    private boolean udporhttp = false;
 
 
     public CheckOnline(Context context, FragmentManager fragmentManager) {
@@ -106,17 +109,21 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void getMac(int position, Object[] objects) {
-        for (int i = 0; i < ListObj.size(); i++) {
-            if (position == i && objects[0] != null) {
-                UserDevice userDevice = (UserDevice) ListObj.get(i);
-                ContentValues contentValues = new ContentValues();
-                //2代表在线1代表不在线
-                contentValues.put(Online, On);
-                //判断在线之后将在线状态修改到数据库
-                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{userDevice.getDeviceMac()});
-            }
-        }
-        ReData();
+        if (objects != null) {
+            if (objects[0] != null) {
+                HttpURL.STATE = NetWork.WIFI;
+                setUnOnline();
+                for (int i = 0; i < ListObj.size(); i++) {
+                    if (position == i) {
+                        UserDevice userDevice = (UserDevice) ListObj.get(i);
+                        setOnline(userDevice.getDeviceMac());
+                    }
+                }
+                ReData();
+            } else
+                HTTPCheck();
+        } else
+            HTTPCheck();
     }
 
     /**
@@ -127,13 +134,23 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void Error(int position, int error) {
-//        new CheckOnline(context, fragmentManager).HTTPCheck();
-//        ContentValues contentValues = new ContentValues();
-//        //2代表在线1代表不在线
-//        contentValues.put("deviceOnline", "1");
-//        //判断在线之后将在线状态修改到数据库
-//        new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "deviceMac = ?", new String[]{map.get(position).get("deviceMac")});
-//        ReData();
+        HTTPCheck();
+    }
+
+    private void setOnline(String mac) {
+        ContentValues contentValues = new ContentValues();
+        //2代表在线1代表不在线
+        contentValues.put(Online, On);
+        //判断在线之后将在线状态修改到数据库
+        new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{mac});
+    }
+
+    private void setUnOnline() {
+        //首先将所有设备登录状态设置为不在线
+        ContentValues contentValues = new ContentValues();
+        //2代表在线1代表不在线
+        contentValues.put(Online, UnOn);
+        new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "", null);
     }
 
     /**
@@ -144,26 +161,25 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void handler(int position, String result) {
+        setUnOnline();
         if (result != null) {
+            HttpURL.STATE = NetWork.INTNET;
             Gson gson = new Gson();
             CheckMac checkMac = gson.fromJson(result, CheckMac.class);
-
-            //首先将所有设备登录状态设置为不在线
-            ContentValues contentValues = new ContentValues();
-            //2代表在线1代表不在线
-            contentValues.put(Online, UnOn);
-            new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "", null);
-
-            //如果返回数据里面有该设备就设置为在线状态
-            for (int i = 0; i < checkMac.getList().size(); i++) {
-                contentValues = new ContentValues();
-                //2代表在线1代表不在线
-                contentValues.put(Online, On);
-                //判断在线之后将在线状态修改到数据库
-                new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, Mac + " = ?", new String[]{checkMac.getList().get(i)});
+            if (checkMac != null) {
+                //如果返回数据里面有该设备就设置为在线状态
+                for (int i = 0; i < checkMac.getList().size(); i++) {
+                    for (int r = 0 ; r < ListObj.size() ; r++) {
+                        userDevice = (UserDevice) ListObj.get(r);
+                        if (checkMac.getList().get(i).equals(userDevice.getDeviceMac())) {
+                            setOnline(userDevice.getDeviceMac());
+                            break;
+                        }
+                    }
+                }
             }
-            ReData();
         }
+        ReData();
     }
 
     private void ReData() {

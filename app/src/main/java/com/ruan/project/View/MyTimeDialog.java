@@ -9,6 +9,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.administrator.data_sdk.SystemUtil.TimeTool;
+import com.example.administrator.ui_sdk.DensityUtil;
+import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.ruan.project.Moudle.Device;
 import com.ruan.project.R;
 
 /**
@@ -76,6 +79,9 @@ public class MyTimeDialog extends Dialog implements NumberPicker.OnValueChangeLi
         timeEnter = (TextView) view.findViewById(R.id.timeEnter);
         numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
         numberPicker1 = (NumberPicker) view.findViewById(R.id.numberPicker1);
+
+        DensityUtil.setRelWidth(timeRelayout , BaseActivity.width / 3 * 2);
+
 
 
         NumberPicker();

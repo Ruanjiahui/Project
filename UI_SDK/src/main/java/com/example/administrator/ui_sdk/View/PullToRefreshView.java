@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.view.ViewCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewConfiguration;
@@ -17,6 +18,9 @@ import android.widget.AbsListView;
 import android.widget.ImageView;
 
 public class PullToRefreshView extends ViewGroup {
+
+
+    public static boolean isSrcoll = true;
 
     private static final int DRAG_MAX_DISTANCE = 120;
     private static final float DRAG_RATE = .5f;
@@ -116,16 +120,18 @@ public class PullToRefreshView extends ViewGroup {
                 mInitialMotionY = initialMotionY;
                 break;
             case MotionEvent.ACTION_MOVE:
-                if (mActivePointerId == INVALID_POINTER) {
-                    return false;
-                }
-                final float y = getMotionEventY(ev, mActivePointerId);
-                if (y == -1) {
-                    return false;
-                }
-                final float yDiff = y - mInitialMotionY;
-                if (yDiff > mTouchSlop && !mIsBeingDragged) {
-                    mIsBeingDragged = true;
+                if (isSrcoll) {
+                    if (mActivePointerId == INVALID_POINTER) {
+                        return false;
+                    }
+                    final float y = getMotionEventY(ev, mActivePointerId);
+                    if (y == -1) {
+                        return false;
+                    }
+                    final float yDiff = y - mInitialMotionY;
+                    if (yDiff > mTouchSlop && !mIsBeingDragged) {
+                        mIsBeingDragged = true;
+                    }
                 }
                 break;
             case MotionEvent.ACTION_UP:
@@ -152,30 +158,32 @@ public class PullToRefreshView extends ViewGroup {
 
         switch (action) {
             case MotionEvent.ACTION_MOVE: {
-                final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
-                if (pointerIndex < 0) {
-                    return false;
-                }
+                if (isSrcoll) {
+                    final int pointerIndex = MotionEventCompat.findPointerIndex(ev, mActivePointerId);
+                    if (pointerIndex < 0) {
+                        return false;
+                    }
 
-                final float y = MotionEventCompat.getY(ev, pointerIndex);
-                final float yDiff = y - mInitialMotionY;
-                final float scrollTop = yDiff * DRAG_RATE;
-                mCurrentDragPercent = scrollTop / mTotalDragDistance;
-                if (mCurrentDragPercent < 0) {
-                    return false;
-                }
-                float boundedDragPercent = Math.min(1f, Math.abs(mCurrentDragPercent));
-                float extraOS = Math.abs(scrollTop) - mTotalDragDistance;
-                float slingshotDist = mTotalDragDistance;
-                float tensionSlingshotPercent = Math.max(0,
-                        Math.min(extraOS, slingshotDist * 2) / slingshotDist);
-                float tensionPercent = (float) ((tensionSlingshotPercent / 4) - Math.pow(
-                        (tensionSlingshotPercent / 4), 2)) * 2f;
-                float extraMove = (slingshotDist) * tensionPercent / 2;
-                int targetY = (int) ((slingshotDist * boundedDragPercent) + extraMove);
+                    final float y = MotionEventCompat.getY(ev, pointerIndex);
+                    final float yDiff = y - mInitialMotionY;
+                    final float scrollTop = yDiff * DRAG_RATE;
+                    mCurrentDragPercent = scrollTop / mTotalDragDistance;
+                    if (mCurrentDragPercent < 0) {
+                        return false;
+                    }
+                    float boundedDragPercent = Math.min(1f, Math.abs(mCurrentDragPercent));
+                    float extraOS = Math.abs(scrollTop) - mTotalDragDistance;
+                    float slingshotDist = mTotalDragDistance;
+                    float tensionSlingshotPercent = Math.max(0,
+                            Math.min(extraOS, slingshotDist * 2) / slingshotDist);
+                    float tensionPercent = (float) ((tensionSlingshotPercent / 4) - Math.pow(
+                            (tensionSlingshotPercent / 4), 2)) * 2f;
+                    float extraMove = (slingshotDist) * tensionPercent / 2;
+                    int targetY = (int) ((slingshotDist * boundedDragPercent) + extraMove);
 
-                mRefreshView.setPercent(mCurrentDragPercent);
-                setTargetOffsetTop(targetY - mCurrentOffsetTop, true);
+                    mRefreshView.setPercent(mCurrentDragPercent);
+                    setTargetOffsetTop(targetY - mCurrentOffsetTop, true);
+                }
                 break;
             }
             case MotionEventCompat.ACTION_POINTER_DOWN:
@@ -396,6 +404,9 @@ public class PullToRefreshView extends ViewGroup {
     }
 
     public interface OnRefreshListener {
+        /**
+         * 这个刷新的接口
+         */
         void onRefresh();
     }
 

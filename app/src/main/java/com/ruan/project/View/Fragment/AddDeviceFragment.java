@@ -13,6 +13,7 @@ import android.widget.ListView;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.ruan.project.Controllar.DeviceActivityControl;
 import com.ruan.project.Moudle.Device;
+import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
