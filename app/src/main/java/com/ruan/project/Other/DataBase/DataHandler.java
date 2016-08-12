@@ -52,7 +52,7 @@ public class DataHandler {
      * @return
      */
     public static ContentValues getContentValue(Context context, Class loadClass , Object object, String db, String Table_Name) {
-        return new LoadResouce().ObjectToContentValues(context , loadClass, object, new GetDatabaseData().getTableField(context, db, Table_Name));
+        return new LoadResouce().ObjectToContentValues(context , loadClass, object);
 
     }
 

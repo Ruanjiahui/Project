@@ -6,6 +6,8 @@ import android.database.Cursor;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.administrator.data_sdk.Crash.LogException;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -84,8 +86,8 @@ public class GetDatabaseData extends Operation {
         Cursor cursor = query(context, db, Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit);
         //如果传入对象是有父类则调用第一个
         if (SuperClass)
-            return new LoadResouce().CursorToObjects(context , cursor, loadclass);
-        return new LoadResouce().CursorToObject(context , cursor, loadclass);
+            return new LoadResouce().CursorToObjects(context, cursor, loadclass);
+        return new LoadResouce().CursorToObject(context, cursor, loadclass);
     }
 
     /**
@@ -130,8 +132,8 @@ public class GetDatabaseData extends Operation {
         Cursor cursor = distinctQuery(context, db, Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit, distinct, distinctType);
 
         if (SuperClass)
-            return new LoadResouce().CursorToObjects(context , cursor, loadClass);
-        return new LoadResouce().CursorToObject(context , cursor, loadClass);
+            return new LoadResouce().CursorToObjects(context, cursor, loadClass);
+        return new LoadResouce().CursorToObject(context, cursor, loadClass);
     }
 
     /**
@@ -144,8 +146,33 @@ public class GetDatabaseData extends Operation {
      * @param whereclause
      * @param whereargs
      */
+    @Deprecated
     public void Update(Context context, String db, String table, ContentValues contentValues, String whereclause, String[] whereargs) {
         update(context, db, table, contentValues, whereclause, whereargs);
+    }
+
+
+    /**
+     * 这个是更新数据库的操作
+     *
+     * @param context
+     * @param db          数据库的名称
+     * @param table       数据库的表
+     * @param whereclause 更新数据库where的key
+     * @param whereargs   更新数据库where的value
+     * @param object      更新数据（接收对象）
+     * @param SuperClass  true当前这个是继承类false不是
+     * @return
+     */
+    public int Update(Context context, String db, String table, String whereclause, String[] whereargs, Object object, boolean SuperClass) {
+        if (object != null) {
+            if (SuperClass)
+                return update(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object), whereclause, whereargs);
+            return update(context, db, table, new LoadResouce().ObjectToContentValue(context, object.getClass(), object), whereclause, whereargs);
+        } else {
+            LogException.ThrowRunTime("对象不能为空");
+            return 0;
+        }
     }
 
     /**
@@ -156,8 +183,29 @@ public class GetDatabaseData extends Operation {
      * @param table
      * @param contentValues
      */
+    @Deprecated
     public void Insert(Context context, String db, String table, ContentValues contentValues) {
         insert(context, db, table, contentValues);
+    }
+
+
+    /**
+     * 将数据插进数据库
+     *
+     * @param context
+     * @param db      数据库的名称
+     * @param table   数据表的名称
+     * @param object  插入数据（接收对象）
+     */
+    public long Insert(Context context, String db, String table, Object object, boolean SuperClass) {
+        if (object != null) {
+            if (SuperClass)
+                return insert(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object));
+            return insert(context, db, table, new LoadResouce().ObjectToContentValue(context, object.getClass(), object));
+        } else {
+            LogException.ThrowRunTime("对象不能为空");
+            return 0;
+        }
     }
 
     /**
@@ -169,8 +217,8 @@ public class GetDatabaseData extends Operation {
      * @param whereclause
      * @param whereargs
      */
-    public void Delete(Context context, String db, String table, String whereclause, String[] whereargs) {
-        delete(context, db, table, whereclause, whereargs);
+    public int Delete(Context context, String db, String table, String whereclause, String[] whereargs) {
+        return delete(context, db, table, whereclause, whereargs);
     }
 
     /**

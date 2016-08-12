@@ -27,11 +27,11 @@ public class Operation {
      * @param table
      * @param contentValues
      */
-    protected void insert(Context context, String db, String table, ContentValues contentValues) {
+    protected long insert(Context context, String db, String table, ContentValues contentValues) {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
 
-        sqLiteDatabase.insert(table, null, contentValues);
+        return sqLiteDatabase.insert(table, null, contentValues);
     }
 
     /**
@@ -44,11 +44,11 @@ public class Operation {
      * @param whereclause
      * @param whereargs
      */
-    protected void update(Context context, String db, String table, ContentValues contentValues, String whereclause, String[] whereargs) {
+    protected int update(Context context, String db, String table, ContentValues contentValues, String whereclause, String[] whereargs) {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
 
-        int count = sqLiteDatabase.update(table, contentValues, whereclause, whereargs);
+        return sqLiteDatabase.update(table, contentValues, whereclause, whereargs);
     }
 
     /**
@@ -163,11 +163,11 @@ public class Operation {
      * @param whereargs
      */
 
-    protected void delete(Context context, String db, String Table_Name, String whereclause, String[] whereargs) {
+    protected int delete(Context context, String db, String Table_Name, String whereclause, String[] whereargs) {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
 
-        sqLiteDatabase.delete(Table_Name, whereclause, whereargs);
+        return sqLiteDatabase.delete(Table_Name, whereclause, whereargs);
     }
 
     /**

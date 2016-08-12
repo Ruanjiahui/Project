@@ -41,10 +41,9 @@ public abstract class LoadClass {
      *
      * @param loadClass 封装的类对象
      * @param objects   类对象实体类
-     * @param colums    数据库的字段
      * @return
      */
-    protected abstract ContentValues getContentValues(Class loadClass, Object objects, String[] colums);
+    protected abstract ContentValues getContentValues(Class loadClass, Object objects);
 
 
     /**
@@ -52,10 +51,9 @@ public abstract class LoadClass {
      *
      * @param loadClass 封装的类对象
      * @param objects   类对象实体类
-     * @param colums    数据库的字段
      * @return
      */
-    protected abstract ContentValues getContentValue(Class loadClass, Object objects, String[] colums);
+    protected abstract ContentValues getContentValue(Class loadClass, Object objects);
 
 
     /**

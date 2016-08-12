@@ -50,10 +50,8 @@ public class LoadResouce extends LoadClass {
                             Field field = fields[i];
                             //设置可以访问
                             field.setAccessible(true);
-//                            FileTool.saveFileByte((field.getName() + "---" + cursor.getString(cursor.getColumnIndex(columName))).getBytes() , "code.txt" , FilePath.getFilePath(context));
                             //如果数据库的字段名和类的属性名称一样就说明是同一个变量
                             if (field.getName().equals(columName)) {
-
                                 //将数据库的数据设置给类的属性
                                 field.set(object, cursor.getString(cursor.getColumnIndex(columName)));
                                 break;
@@ -67,8 +65,6 @@ public class LoadResouce extends LoadClass {
             } catch (InstantiationException e) {
                 e.printStackTrace();
             }
-//        getMain(loadclass);
-//        setMain(loadclass);
         }
         return list;
     }
@@ -117,8 +113,6 @@ public class LoadResouce extends LoadClass {
             } catch (InstantiationException e) {
                 e.printStackTrace();
             }
-//        getMain(loadclass);
-//        setMain(loadclass);
         }
         return list;
     }
@@ -128,22 +122,19 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass 封装的类对象
      * @param objects   类对象实体类
-     * @param colums    数据库的字段
      * @return
      */
     @Override
-    protected ContentValues getContentValues(Class loadClass, Object objects, String[] colums) {
+    protected ContentValues getContentValues(Class loadClass, Object objects) {
         ContentValues contentValues = new ContentValues();
 
         Field[] fields = loadClass.getFields();
         try {
-            for (String colum : colums) {
-                for (Field field : fields) {
-                    field.setAccessible(true);
-                    if (colum.equals(field.getName())) {
-                        contentValues.put(colum, (String) field.get(objects));
-                        break;
-                    }
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if (field.get(objects) != null && !"".equals(field.get(objects))) {
+                    contentValues.put(field.getName(), (String) field.get(objects));
+                    break;
                 }
             }
         } catch (IllegalAccessException e) {
@@ -157,22 +148,19 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass 封装的类对象
      * @param objects   类对象实体类
-     * @param colums    数据库的字段
      * @return
      */
     @Override
-    protected ContentValues getContentValue(Class loadClass, Object objects, String[] colums) {
+    protected ContentValues getContentValue(Class loadClass, Object objects) {
         ContentValues contentValues = new ContentValues();
 
         Field[] fields = loadClass.getDeclaredFields();
         try {
-            for (String colum : colums) {
-                for (Field field : fields) {
-                    field.setAccessible(true);
-                    if (colum.equals(field.getName())) {
-                        contentValues.put(colum, (String) field.get(objects));
-                        break;
-                    }
+            for (Field field : fields) {
+                field.setAccessible(true);
+                if ((String) field.get(objects) != null && "".equals((String) field.get(objects))) {
+                    contentValues.put(field.getName(), (String) field.get(objects));
+                    break;
                 }
             }
         } catch (IllegalAccessException e) {
@@ -265,12 +253,11 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass
      * @param objects
-     * @param colums
      * @return
      */
-    public ContentValues ObjectToContentValues(Context context, Class loadClass, Object objects, String[] colums) {
+    public ContentValues ObjectToContentValues(Context context, Class loadClass, Object objects) {
         this.context = context;
-        return getContentValues(loadClass, objects, colums);
+        return getContentValues(loadClass, objects);
     }
 
     /**
@@ -278,12 +265,11 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass
      * @param objects
-     * @param colums
      * @return
      */
-    public ContentValues ObjectToContentValue(Context context, Class loadClass, Object objects, String[] colums) {
+    public ContentValues ObjectToContentValue(Context context, Class loadClass, Object objects) {
         this.context = context;
-        return getContentValue(loadClass, objects, colums);
+        return getContentValue(loadClass, objects);
     }
 
 
