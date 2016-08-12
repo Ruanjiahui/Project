@@ -21,6 +21,7 @@ import android.widget.Toast;
 
 
 import com.DeviceURL;
+import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.Connect;
 import com.example.administrator.Interface.Result;
 import com.example.administrator.data_sdk.CommonIntent;
@@ -48,6 +49,7 @@ import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.Other.HTTP.HttpWeather;
 import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.R;
+import com.ruan.project.View.Activity.City;
 import com.ruan.project.View.Activity.DeviceType;
 import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
@@ -144,10 +146,17 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         DensityUtil.setRelHeight(fragment1Top, BaseActivity.height / 4);
         DensityUtil.setRelayoutSize(fragment1Logo, BaseActivity.width / 2, DensityUtil.dip2px(context, 20), DensityUtil.dip2px(context, 40), 0, 0, 0);
 
-
-        //获取天气
-        new HttpWeather(HttpURL.WethereURL, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
-        weather = new Weather();
+        if (HttpURL.Cityweather == null && HttpURL.CityName != null) {
+            fragment1City.setText(HttpURL.CityName);
+            //获取天气
+            new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
+            weather = new Weather();
+        } else {
+            if (HttpURL.Cityweather != null && HttpURL.Cityweather[0] != null) {
+                fragment1City.setText(HttpURL.CityName);
+                fragment1weather.setText(HttpURL.Cityweather[0] + "~" + HttpURL.Cityweather[1]);
+            }
+        }
 
         return view;
     }
@@ -197,6 +206,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 CommonIntent.IntentActivity(context, DeviceType.class);
                 break;
             case R.id.fragment1City:
+                CommonIntent.IntentResActivity(activity, City.class, 001, 001);
                 break;
         }
     }
@@ -236,7 +246,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
             case R.id.slideListView:
                 userDevice = (UserDevice) ListObj.get(position);
                 if (userDevice.getDeviceOnline().equals("2"))
-                    CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID(), String.valueOf(DeviceURL.Switch));
+                    CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac(), String.valueOf(DeviceURL.Switch));
                 else
                     Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
                 break;
@@ -256,7 +266,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         switch (View) {
             //编辑点击事件
             case 0:
-                CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceID(), "edit");
+                CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceMac(), "edit");
                 break;
             //删除点击事件
             case 1:
@@ -264,7 +274,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 list.remove(position);
                 adapter.RefreshData(list);
                 //删除本地数据库的数据
-                databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"});
+                databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
                 //删除服务器的数据库的数据
                 break;
         }
@@ -364,6 +374,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onRefresh() {
+        //获取天气
+        new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
+        weather = new Weather();
         new CheckOnline(context, this).UDPCheck();
     }
 
@@ -376,8 +389,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onSucceful(int code, String result) {
         weather.setJson(result);
-        if (weather.getWeather() != null)
-            fragment1weather.setText(weather.getWeather()[0] + "~" + weather.getWeather()[1]);
+        HttpURL.Cityweather = weather.getWeather();
+        if (HttpURL.Cityweather != null && HttpURL.Cityweather[0] != null)
+            fragment1weather.setText(HttpURL.Cityweather[0] + "~" + HttpURL.Cityweather[1]);
     }
 
     /**
@@ -388,6 +402,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onError(int code, int Error) {
-
+        if (Error == HttpCode.TIMEOUT)
+            Toast.makeText(context, "请求超时", Toast.LENGTH_SHORT).show();
     }
 }

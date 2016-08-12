@@ -5,6 +5,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.JSON.JSONClass;
+import com.example.ruan.udp_sdk.TimerHandler;
 import com.ruan.project.Controllar.CallBack;
 import com.ruan.project.Interface.UDPInterface;
 import com.ruan.project.MainActivity;
@@ -26,6 +28,7 @@ import com.ruan.project.Moudle.SocketSwitch;
 import com.ruan.project.Moudle.TimeMoudle;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.System.ReceiverAction;
+import com.ruan.project.Other.System.ReceiverHandler;
 import com.ruan.project.Other.UDP.FormatData;
 import com.ruan.project.R;
 import com.ruan.project.View.MyTimeDialog;
@@ -37,7 +40,7 @@ import org.json.JSONObject;
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class SocketSwitchFragment extends Fragment implements UDPInterface.HandlerMac, HttpInterface.HttpHandler, View.OnClickListener {
+public class SocketSwitchFragment extends Fragment implements UDPInterface.HandlerMac, HttpInterface.HttpHandler, View.OnClickListener, ReceiverHandler.TimeHandler {
 
     private ImageView button;
     private ImageView button2;
@@ -79,7 +82,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     private UserDevice userDevice = null;
 
     //当前点击是哪个按钮
-    private int jack = 0;
+    private int jack = 999;
     private int ON = 1;
     private int UnOn = 0;
 
@@ -135,7 +138,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         //一进来马上获取一下设备的实现的数据对界面进行更新
         callBack = new CallBack(this, this);
         //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
-        callBack.setDeviceControl(IP, PORT, MAC, data, 999);
+        callBack.setDeviceControl(IP, PORT, MAC, data, jack);
 
 
         switchCell2.setOnClickListener(this);
@@ -148,6 +151,14 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
 
+        setTimeStyle();
+
+
+        return view;
+    }
+
+
+    private void setTimeStyle() {
         switchTime2.setText(TimeMoudle.getSwitch1()[0] + ":" + TimeMoudle.getSwitch1()[1]);
         switchTime3.setText(TimeMoudle.getSwitch2()[0] + ":" + TimeMoudle.getSwitch2()[1]);
         switchTime4.setText(TimeMoudle.getSwitch3()[0] + ":" + TimeMoudle.getSwitch3()[1]);
@@ -156,9 +167,6 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         setSwitchDrawable(switchCell3, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG2));
         setSwitchDrawable(switchCell4, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG3));
         setSwitchDrawable(switchCell5, MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG4));
-
-
-        return view;
     }
 
     /**
@@ -195,15 +203,23 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
                 data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus4()), jack);
                 break;
             case R.id.switchCell2:
+                jack = 1;
+                data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus1()), jack);
                 getMyDialog(FLAG1);
                 return;
             case R.id.switchCell3:
+                jack = 2;
+                data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus2()), jack);
                 getMyDialog(FLAG2);
                 return;
             case R.id.switchCell4:
+                jack = 3;
+                data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus3()), jack);
                 getMyDialog(FLAG3);
                 return;
             case R.id.switchCell5:
+                jack = 4;
+                data = socketSwitch.setSocketSwtich(getStatus(socketSwitch.getStatus4()), jack);
                 getMyDialog(FLAG4);
                 return;
         }
@@ -230,9 +246,11 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void getMac(int position, Object[] objects) {
-        String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
-        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
-        SocketHandler(position, socketSwitch.getJackArray(), 0);
+        if (activity != null) {
+            String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
+            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
+            SocketHandler(position, socketSwitch.getJackArray(), 0);
+        }
     }
 
 
@@ -257,8 +275,9 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void Error(int position, int error) {
-
+        Toast.makeText(context, "操作超时", Toast.LENGTH_SHORT).show();
     }
+
 
     /**
      * 这个是处理Http返回来的结果
@@ -268,9 +287,11 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void handler(int position, String result) {
-        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
-        socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
-        SocketHandler(position, socketSwitch.getJackArray(), 1);
+        if (activity != null) {
+            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
+            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
+            SocketHandler(position, socketSwitch.getJackArray(), 1);
+        }
     }
 
 
@@ -330,6 +351,8 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
             setButtonState(button, UnOn);
             socketSwitch.setStatus0(UnOn);
         }
+
+        setTimeStyle();
     }
 
     /**
@@ -405,14 +428,42 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
             view.setImageDrawable(getResources().getDrawable(R.mipmap.cell3));
     }
 
+    /**
+     * 定时开始的操作
+     *
+     * @param position
+     */
     private void startTime(int position) {
-        ReceiverAction.USER_TIME = userDevice.getDeviceID();
+        ReceiverAction.USER_TIME = userDevice.getDeviceMac();
         if (!registerState)
-            MainActivity.registerTime.registerTime(number, ReceiverAction.USER_TIME, position);
+            MainActivity.registerTime.registerTime(number, ReceiverAction.USER_TIME, position, this, IP, PORT, MAC, data, jack);
         else {
             Toast.makeText(context, "定时已取消", Toast.LENGTH_SHORT).show();
             MainActivity.registerTime.unreisterTime(ReceiverAction.USER_TIME, position);
         }
 
+    }
+
+
+    /**
+     * 定时开始的操作发出指令
+     * 这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
+     *
+     * @param IP
+     * @param PORT
+     * @param MAC
+     * @param data
+     * @param jack
+     */
+    @Override
+    public void Start(String IP, int PORT, String MAC, String data, int jack) {
+        //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
+        callBack.setDeviceControl(IP, PORT, MAC, data, jack);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        activity = null;
     }
 }

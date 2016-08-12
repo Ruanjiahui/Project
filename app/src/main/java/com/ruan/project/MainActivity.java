@@ -2,33 +2,30 @@ package com.ruan.project;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Toast;
 
-import com.DeviceURL;
-import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
 import com.ruan.project.Controllar.FragmentControl;
-import com.ruan.project.Moudle.TimeMoudle;
-import com.ruan.project.Other.System.ListenTime;
-import com.ruan.project.Other.System.ReceiverAction;
+import com.ruan.project.Moudle.User;
+import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.Other.System.ReceiverHandler;
 import com.ruan.project.Other.System.RegisterTime;
 import com.ruan.project.Other.System.WifiReceiver;
-import com.ruan.project.View.Activity.DeviceControl;
-import com.ruan.project.View.Control.SocketSwitchFragment;
+import com.ruan.project.Other.Utils.LocalHandle;
+import com.ruan.project.Other.Utils.LocalUtils;
 import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.Fragment.Fragment2;
 import com.ruan.project.View.Fragment.Fragment3;
 import com.ruan.project.View.Fragment.Fragment4;
 
-public class MainActivity extends NavActivity {
+public class MainActivity extends NavActivity implements LocalHandle {
     private View view = null;
     private static Context context = null;
     private WifiReceiver wifiReceiver = null;
@@ -85,8 +82,12 @@ public class MainActivity extends NavActivity {
 
         //初始化数据库
         FragmentControl.DataBaseHandler(context);
+        //获取当前城市名称
+//        HttpURL.CityName = LocalUtils.getCNBylocation(context);
 
-        intentFragment(new Fragment1());
+//        HttpURL.CityName = "无法定位";
+        new LocalUtils(context).getCityName(this);
+        HttpURL.CityName = User.getInstance().getUserCity();
 
         setNavContent(view);
 
@@ -119,6 +120,9 @@ public class MainActivity extends NavActivity {
         setNav3("商城");
         setNav4("我的");
 
+
+        intentFragment(new Fragment1());
+
     }
 
     @Override
@@ -141,11 +145,39 @@ public class MainActivity extends NavActivity {
                 .commitAllowingStateLoss();
     }
 
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 001) {
+            intentFragment(new Fragment1());
+        }
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unregisterReceiver(wifiReceiver);
+        if (null != LocalUtils.locationClient) {
+            /**
+             * 如果AMapLocationClient是在当前Activity实例化的，
+             * 在Activity的onDestroy中一定要执行AMapLocationClient的onDestroy
+             */
+            LocalUtils.locationClient.onDestroy();
+            LocalUtils.locationClient = null;
+            LocalUtils.locationOption = null;
+        }
         Applications.getInstance().onTerminate();
-//        registerTime.unreisterTime();
+    }
+
+    /**
+     * 获取城市名称
+     *
+     * @param city
+     */
+    @Override
+    public void getCity(String city) {
+        HttpURL.CityName = city;
+        if (isRefresh = true)
+            intentFragment(new Fragment1());
     }
 }

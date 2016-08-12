@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/WhiteSmoke"
+    android:focusable="true"
+    android:focusableInTouchMode="true">
+
+
+    <LinearLayout
+        android:id="@+id/sortLinear"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <EditText
+            android:id="@+id/sortEdit"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit"
+            android:hint="请输入城市名称"
+            android:inputType="text"
+            android:padding="8dp"
+            android:singleLine="true"
+            android:textColor="@color/Red"
+            android:textColorHint="@color/Grey"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+    <ListView
+        android:id="@+id/SortlistView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sortLinear"
+        android:layout_marginTop="10dp" />
+
+    <com.example.administrator.ui_sdk.View.SortView
+        android:id="@+id/sortTitle"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/sortLinear" />
+
+
+    <TextView
+        android:id="@+id/Sorttext"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_centerInParent="true"
+        android:background="@drawable/sortcircle"
+        android:gravity="center"
+        android:textColor="@color/White"
+        android:textSize="25sp"
+        android:visibility="gone" />
+
+
+</RelativeLayout>

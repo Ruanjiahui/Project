@@ -4,4 +4,31 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <com.example.administrator.ui_sdk.View.CircleLoading
+        android:id="@+id/scanConn"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+    <TextView
+        android:id="@+id/scanText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="10dp"
+        android:gravity="center_horizontal"
+        android:text="@string/scanHint"
+        android:textColor="@color/GreySmoke"
+        android:textSize="15sp" />
+
+
+    <com.example.administrator.ui_sdk.View.RefreshSideListView
+        android:id="@+id/scanSlideListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:divider="@color/WhiteSmoke"
+        android:dividerHeight="1dp"
+        android:visibility="gone" />
+
 </LinearLayout>

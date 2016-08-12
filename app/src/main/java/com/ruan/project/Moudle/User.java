@@ -20,13 +20,26 @@ public class User {
     private String userWeight = null;
     private String userPhone = null;
     private String userLogin = null;
+    private String userCity = null;
 
     private static User user = null;
+
+    public String getUserCity() {
+        return userCity;
+    }
+
+    public void setUserCity(String userCity) {
+        this.userCity = userCity;
+    }
 
     public static User getInstance() {
         if (user == null)
             user = new User();
         return user;
+    }
+
+    public static void setUser(User user) {
+        User.user = user;
     }
 
     public String getUserID() {

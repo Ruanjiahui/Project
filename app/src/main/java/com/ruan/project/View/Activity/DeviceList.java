@@ -93,9 +93,9 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        device = (Device) ListObj.get(position);
-        CommonIntent.IntentActivity(context, DeviceEdit.class, device.getDeviceID(), "new");
-//        CommonIntent.IntentActivity(context, AirkissNetWork.class);
+//        device = (Device) ListObj.get(position);
+//        CommonIntent.IntentActivity(context, DeviceEdit.class, device.getDeviceID(), "new");
+        CommonIntent.IntentActivity(context, AirkissNetWork.class);
 //        CommonIntent.IntentActivity(context, NetWorkSetting.class);
     }
 }

@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.Abstract.HttpRequester;
+import com.example.administrator.HttpCode;
 import com.example.administrator.http_sdk.HttpConnectSource;
 import com.example.administrator.http_sdk.HttpReadSource;
 
@@ -47,7 +48,7 @@ public class HttpWeatherResouce extends HttpRequest {
                 return httpReadSource.getResult();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            return HttpCode.TIMEOUT + "";
         }
         return null;
     }

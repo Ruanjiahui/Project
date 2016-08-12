@@ -14,4 +14,6 @@ public class DatabaseTableName {
     public static String UserDeviceName = "UserDevice";
     //数据库表的名称, （场景表）
     public static String SceneName = "Scene";
+    //数据库表的名称  （城市表）
+    public static String CityName = "City";
 }

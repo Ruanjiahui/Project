@@ -95,6 +95,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private Animation StopanimationBack = null;
 
     public static Context context = null;
+
     /**
      * Start()
      */
@@ -114,11 +115,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         databaseOpera = new DatabaseOpera(context);
 
 
-        if (tableName.equals("edit")) {
-            databaseName = DatabaseTableName.UserDeviceName;
-        } else if (tableName.equals("new")) {
-            databaseName = DatabaseTableName.DeviceTableName;
-        }
+        databaseName = DatabaseTableName.UserDeviceName;
 
         list = new ArrayList<>();
 
@@ -158,6 +155,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     }
 
     private void setInit() {
+        userDevice = new UserDevice();
+        editTitle.setText(FLAG);
         //获取到数据
         if (deviceListObj != null && deviceListObj.size() != 0) {
             userDevice = (UserDevice) deviceListObj.get(0);
@@ -183,7 +182,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     @Override
     protected void onStart() {
         super.onStart();
-        getDatabaseData("deviceID = ?", new String[]{FLAG});
+        if (tableName.equals("edit")) {
+            getDatabaseData("deviceMac = ?", new String[]{FLAG});
+        }
         getBottomList();
         //设置初始化界面
         setInit();
@@ -220,8 +221,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
 
                 //配置完网络这个是否使用设备编辑，这个时候应当扫描周边设备获取在线设备
                 if (tableName.equals("new")) {
+//                    Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
                     if (SystemTool.isNetState(context) == NetWork.WIFI)
-                        //扫描局域网的设备
+//                        //扫描局域网的设备
                         new UdpOpera(this).UDPDeviceScan(this);
                     else
                         Toast.makeText(context, "请链接wifi", Toast.LENGTH_SHORT).show();
@@ -331,24 +333,31 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     public void getMac(int position, Object[] objects) {
         //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
         String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
-        String IP = (String) objects[2];
-        int PORT = (int) objects[3];
-        userDevice.setDevicePORT(PORT + "");
-        userDevice.setDeviceIP(IP);
-        userDevice.setDeviceMac(mac);
-        userDevice.setDeviceOnline("2");
-        Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+//        Log.e("Ruan", mac + "--");
+        if (mac != null && FLAG.equals(mac)) {
+//            Log.e("Ruan", mac + "++");
+            String IP = (String) objects[2];
+            int PORT = (int) objects[3];
+            userDevice.setDevicePORT(PORT + "");
+            userDevice.setDeviceIP(IP);
+            userDevice.setDeviceMac(mac);
+            userDevice.setDeviceOnline("2");
+            Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        }
     }
+
 
     /**
      * 退出页面将设置好的参数保存到数据库
      */
     private void Exists(UserDevice userDevice, String db, String Table_Name) {
         userDevice.setUserID("123456");
-        ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class , userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
+        ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
 //        Toast.makeText(context , contentValues.getAsString("deviceID") + "--"+ contentValues.getAsString("deviceMac") , Toast.LENGTH_SHORT).show();
 
-        databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"}, "deviceID = ? and userID = ?", new String[]{userDevice.getDeviceID(), "123456"});
+//        Log.e("Ruan", userDevice.getDeviceMac() + "***");
+
+        databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"}, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
         Applications.getInstance().removeOneActivity(activity);
     }
 

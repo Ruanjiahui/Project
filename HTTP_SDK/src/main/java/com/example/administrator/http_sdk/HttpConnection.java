@@ -80,7 +80,7 @@ public class HttpConnection extends HttpRequest {
                 return httpReadSource.getResult();
             }
         } catch (java.io.IOException e) {
-            e.printStackTrace();
+            return result;
         }
         return result;
     }

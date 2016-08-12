@@ -24,6 +24,13 @@ public class RegisterTime implements ReceiverHandler {
     private ListenTime listenTime = null;
     private Map<String, Map<String, Object>> list = null;
     private Map<String, Object> map = null;
+    private TimeHandler timeHandler = null;
+
+    private int jack = 0;
+    private int PORT = 0;
+    private String IP = null;
+    private String Mac = null;
+    private String data = null;
 
     public RegisterTime(Context context) {
         this.context = context;
@@ -32,7 +39,13 @@ public class RegisterTime implements ReceiverHandler {
     }
 
 
-    public void registerTime(String[] time, String Action, int position) {
+    public void registerTime(String[] time, String Action, int position, TimeHandler timeHandler, String IP, int PORT, String MAC, String data, int jack) {
+        this.IP = IP;
+        this.Mac = MAC;
+        this.PORT = PORT;
+        this.data = data;
+        this.jack = jack;
+        this.timeHandler = timeHandler;
         listenTime = new ListenTime(context, this, Action, position);
         map.put("" + position, listenTime);
         list.put(Action, map);
@@ -59,12 +72,6 @@ public class RegisterTime implements ReceiverHandler {
         }
     }
 
-//    public void unAllreigisterTime(){
-//        for (int i = 0 ; i < list.size() ; i++){
-//
-//        }
-//    }
-
     /**
      * 这个处理广播的接口
      *
@@ -89,11 +96,9 @@ public class RegisterTime implements ReceiverHandler {
                     break;
             }
             Toast.makeText(context, "插排定时结束", Toast.LENGTH_SHORT).show();
+            //定时结束意味着发送指令给设备
+            timeHandler.Start(IP, PORT, Mac, data, jack);
             unreisterTime(STATE, position);
-            if (Applications.getInstance().getActivityOnline(DeviceControl.activity)) {
-                Applications.getInstance().removeOneActivity(DeviceControl.activity);
-                CommonIntent.IntentActivity(context, DeviceControl.class, String.valueOf(ReceiverAction.USER_TIME), String.valueOf(DeviceURL.Switch));
-            }
         }
     }
 

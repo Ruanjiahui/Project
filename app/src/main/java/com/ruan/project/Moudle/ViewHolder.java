@@ -23,6 +23,10 @@ public class ViewHolder {
     public ImageView gridCenterImage = null;
 
 
+    public TextView Sorttitle;
+    public TextView Sortname;
+
+
     public RelativeLayout listRelative;
     public ImageView listImage;
     public TextView listText;
@@ -71,6 +75,11 @@ public class ViewHolder {
                 gridImage = (ImageView) view.findViewById(R.id.gridImage);
                 gridText = (TextView) view.findViewById(R.id.gridText);
                 gridCenterImage = (ImageView) view.findViewById(R.id.gridCenterImage);
+                break;
+
+            case "SortListView":
+                Sorttitle = (TextView) view.findViewById(R.id.title);
+                Sortname = (TextView) view.findViewById(R.id.name);
                 break;
         }
 

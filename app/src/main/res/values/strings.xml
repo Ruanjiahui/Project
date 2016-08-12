@@ -9,4 +9,7 @@
     <string name="sample_str">文字</string>
     <string name="cancal">取消</string>
     <string name="center">确定</string>
+
+
+    <string name="scanHint">周边没有任何设备</string>
 </resources>

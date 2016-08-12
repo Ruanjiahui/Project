@@ -111,7 +111,7 @@ public class SceneList extends BaseActivity implements AdapterView.OnItemClickLi
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         userDevice = (UserDevice) ListObj.get(position);
         if (userDevice.getDeviceOnline().equals("2"))
-            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceID() , String.valueOf(DeviceURL.Switch));
+            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac() , String.valueOf(DeviceURL.Switch));
         else
             Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
     }

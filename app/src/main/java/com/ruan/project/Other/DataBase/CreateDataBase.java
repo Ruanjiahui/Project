@@ -1,6 +1,7 @@
 package com.ruan.project.Other.DataBase;
 
 import android.content.Context;
+import android.text.Editable;
 
 import com.example.administrator.data_sdk.Database.CheckDatabase;
 import com.example.administrator.data_sdk.Database.Database;
@@ -56,6 +57,8 @@ public class CreateDataBase implements Database.Check {
                 establish = getUserDevice();
             } else if (table.equals(DatabaseTableName.SceneName)) {
                 establish = getScene();
+            } else if (table.equals(DatabaseTableName.CityName)) {
+                establish = getCity();
             }
             return establish;
         }
@@ -114,6 +117,7 @@ public class CreateDataBase implements Database.Check {
         establish.put("userWeight", "varchar(10)");
         establish.put("userPhone", "varchar(11)");
         establish.put("userLogin", "varchar(5)");
+        establish.put("userCity" , "varchar(10)");
 
         return establish;
     }
@@ -162,6 +166,19 @@ public class CreateDataBase implements Database.Check {
         establish.put("sceneName", "varchar(50)");
         establish.put("sceneID", "varchar(50)");
         establish.put("scenePic", "varchar(50)");
+
+        return establish;
+    }
+
+    /**
+     * 城市表
+     *
+     * @return
+     */
+    private Establish getCity() {
+        Establish establish = new Establish();
+
+        establish.put("cityName", "varchar(50)");
 
         return establish;
     }

@@ -50,6 +50,8 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     private String UnOn = "1";
     private boolean udporhttp = false;
 
+    public CheckOnline() {
+    }
 
     public CheckOnline(Context context, FragmentManager fragmentManager) {
         this.fragmentManager = fragmentManager;
@@ -79,6 +81,8 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     public void HTTPCheck() {
 //        map = FragmentDatabase.getUserDeviceData(context);
+        //将所有的设备设置为不在线
+        setUnOnline();
         if (ListObj != null && ListObj.size() != 0)
             new HTTP(this, HttpURL.CheckOnline, FormatData.getHttpPOSTUserDevice(ListObj), 0);
     }
@@ -90,11 +94,21 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      * @param handlerMac
      */
     public void UDPCheck(UDPInterface.HandlerMac handlerMac) {
+        //将所有的设备设置为不在线
+        setUnOnline();
         for (int i = 0; i < ListObj.size(); i++) {
             UserDevice userDevice = (UserDevice) ListObj.get(i);
             new OnlineDeveice().Check(i, userDevice.getDeviceIP(), Integer.parseInt(userDevice.getDevicePORT()), userDevice.getDeviceMac(), handlerMac, 1);
             //计时器，广播没一秒发送一次，总共发送1次
         }
+    }
+
+    /**
+     * 设备不在线
+     */
+    public void DeviceUnOnline() {
+        setUnOnline();
+        ReData();
     }
 
     /**
@@ -112,7 +126,6 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
         if (objects != null) {
             if (objects[0] != null) {
                 HttpURL.STATE = NetWork.WIFI;
-                setUnOnline();
                 for (int i = 0; i < ListObj.size(); i++) {
                     if (position == i) {
                         UserDevice userDevice = (UserDevice) ListObj.get(i);
@@ -161,7 +174,6 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void handler(int position, String result) {
-        setUnOnline();
         if (result != null) {
             HttpURL.STATE = NetWork.INTNET;
             Gson gson = new Gson();
@@ -169,7 +181,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
             if (checkMac != null) {
                 //如果返回数据里面有该设备就设置为在线状态
                 for (int i = 0; i < checkMac.getList().size(); i++) {
-                    for (int r = 0 ; r < ListObj.size() ; r++) {
+                    for (int r = 0; r < ListObj.size(); r++) {
                         userDevice = (UserDevice) ListObj.get(r);
                         if (checkMac.getList().get(i).equals(userDevice.getDeviceMac())) {
                             setOnline(userDevice.getDeviceMac());

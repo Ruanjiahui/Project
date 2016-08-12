@@ -1,16 +1,20 @@
 package com.ruan.project.Controllar;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.administrator.data_sdk.Database.CreateTable;
+import com.example.administrator.data_sdk.Database.Database;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
+import com.example.administrator.data_sdk.Database.LoadResouce;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.Scene;
+import com.ruan.project.Moudle.Sort;
 import com.ruan.project.Moudle.User;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DataBase.CreateDataBase;
@@ -19,6 +23,7 @@ import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.Other.System.NetWork;
+import com.ruan.project.Other.Utils.ReadCityFile;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -46,9 +51,23 @@ public class FragmentControl {
         if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)) {
             new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, "");
         }
+        //判断是否存在城市表   如果没有存在则自动创建城市表
+        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.CityName)) {
+            ArrayList<Sort> list = ReadCityFile.readCity(context.getResources().openRawResource(R.raw.city));
+            for (int i = 0; i < list.size(); i++) {
+                Sort sort = list.get(i);
+                ContentValues contentValues = new ContentValues();
+                contentValues.put("cityName", sort.getCityName());
+                //添加数据
+                new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.CityName, contentValues);
+            }
+        }
 
+        //获取用户信息
+        ArrayList<Object> list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "userID", "123456", User.class, false);
+        User.setUser((User) list.get(0));
         //获取个人用户的数据
-        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "", new String[]{}));
+//        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "", new String[]{}));
     }
 
     /**
@@ -101,16 +120,21 @@ public class FragmentControl {
                 userDevice = (UserDevice) ListObj.get(i);
                 if (userDevice.getDeviceOnline().equals("1")) {
                     online = "离线";
-                    list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
+                    list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
                     continue;
                 } else if (userDevice.getDeviceOnline().equals("2")) {
                     online = "在线";
                     if (HttpURL.STATE == NetWork.WIFI)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 25)));
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 25)));
                     if (HttpURL.STATE == NetWork.INTNET)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 25)));
-                    if (HttpURL.STATE == NetWork.UNCONN)
-                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, "111", ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 25)));
+                    if (HttpURL.STATE == NetWork.UNCONN) {
+                        online = "离线";
+                        ContentValues contentValues = new ContentValues();
+                        contentValues.put("deviceOnline", "1");
+                        list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
+                        new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "deviceMac = ?", new String[]{userDevice.getDeviceMac()});
+                    }
                     continue;
                 }
             }

@@ -26,7 +26,7 @@ import java.util.Map;
 public class DeviceControl extends BaseActivity {
     private ArrayList<Map<String, String>> map = null;
     public static Activity activity = null;
-    private String deviceID = null;
+    private String deviceMac = null;
     private View view = null;
     private UserDevice userDevice = null;
     private String flag = null;
@@ -38,7 +38,7 @@ public class DeviceControl extends BaseActivity {
     public void init() {
         activity = this;
 
-        deviceID = getIntent().getExtras().getString("data");
+        deviceMac = getIntent().getExtras().getString("data");
         flag = getIntent().getExtras().getString("flag");
 
         view = LayoutInflater.from(context).inflate(R.layout.devicecontrol, null);
@@ -50,7 +50,7 @@ public class DeviceControl extends BaseActivity {
         setLeftTitleColor(R.color.White);
 
 
-        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceID = ?", new String[]{deviceID});
+        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ?", new String[]{deviceMac});
 
         userDevice = new UserDevice();
         userDevice.getUserDeviceMoudle(map);

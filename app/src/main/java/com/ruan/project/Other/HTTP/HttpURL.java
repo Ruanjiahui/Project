@@ -13,11 +13,14 @@ public class HttpURL {
     public static String ControlDevice = IP + "dataManipulation/forwardData";
 
     //获取天气的链接
-    public static String WethereURL = "http://apis.baidu.com/heweather/weather/free?city=shenzhen";
+    public static String WethereURL = "http://apis.baidu.com/heweather/weather/free?city=";
 
     //这个标志当前网络状态
     // 0   当前没有网络状态
     // 1   当前是wifi状态
     // 2   当前是外网状态
     public static int STATE = 0;
+
+    public static String[] Cityweather = null;
+    public static String CityName = null;
 }

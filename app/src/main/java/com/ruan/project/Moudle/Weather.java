@@ -15,7 +15,7 @@ public class Weather {
     private boolean isfirst = false;
 
     public void setJson(String json) {
-        if (!isfirst) {
+        if (!isfirst && json != null) {
             isfirst = true;
             tmp = new String[2];
             try {

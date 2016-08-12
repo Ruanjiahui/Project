@@ -16,6 +16,7 @@
     <color name="legacy_primary_dark">#000000</color>
     <color name="legacy_primary">#e6e6e6</color>
     <color name="GreyDeep">#999999</color>
+    <color name="GreyDeepTran">#66999999</color>
     <color name="sky_background">#228FC1</color>
     <color name="Blue_Down">#6628beff</color>
 </resources>

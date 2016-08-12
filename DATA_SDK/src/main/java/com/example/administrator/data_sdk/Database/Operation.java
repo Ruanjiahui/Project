@@ -30,6 +30,7 @@ public class Operation {
     protected void insert(Context context, String db, String table, ContentValues contentValues) {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
+
         sqLiteDatabase.insert(table, null, contentValues);
     }
 
@@ -47,7 +48,7 @@ public class Operation {
         databaseHelper = CreateTable.getInstance(context, db);
         sqLiteDatabase = databaseHelper.getWritableDatabase();
 
-        sqLiteDatabase.update(table, contentValues, whereclause, whereargs);
+        int count = sqLiteDatabase.update(table, contentValues, whereclause, whereargs);
     }
 
     /**

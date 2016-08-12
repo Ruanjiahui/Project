@@ -20,4 +20,21 @@ public interface ReceiverHandler {
      */
     public void Error(String STATE, int position);
 
+
+    public interface TimeHandler {
+
+
+        /**
+         * 这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
+         *
+         * @param IP
+         * @param PORT
+         * @param MAC
+         * @param data
+         * @param jack
+         */
+        public void Start(String IP, int PORT, String MAC, String data, int jack);
+
+    }
+
 }

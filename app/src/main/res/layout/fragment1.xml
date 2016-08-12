@@ -47,7 +47,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="深圳"
+                android:text="城市"
                 android:textColor="@color/White"
                 android:textSize="14sp" />
 

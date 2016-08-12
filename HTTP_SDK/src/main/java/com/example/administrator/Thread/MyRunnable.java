@@ -5,6 +5,7 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.Connect;
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.Interface.Result;
@@ -103,6 +104,10 @@ public class MyRunnable implements Runnable {
                 RHttp.onSucceful(code, (InputStream) msg.obj);
             }
             if (RHttpString != null) {
+                if ((HttpCode.TIMEOUT + "").equals(msg.obj)) {
+                    RHttpString.onError(code, HttpCode.TIMEOUT);
+                    return;
+                }
                 RHttpString.onSucceful(code, (String) msg.obj);
             }
         }

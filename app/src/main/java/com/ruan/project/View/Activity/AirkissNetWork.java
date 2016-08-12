@@ -1,5 +1,6 @@
 package com.ruan.project.View.Activity;
 
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -16,13 +17,19 @@ import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.MyCircleLoading;
 import com.example.administrator.ui_sdk.View.CircleLoading;
+import com.ruan.project.Interface.UDPInterface;
+import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.AirKiss.AirKissCallBack;
 import com.ruan.project.Other.AirKiss.AirkissConfig;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.Other.System.NetWork;
+import com.ruan.project.Other.UDP.ScanDevice;
+import com.ruan.project.Other.UDP.UDPConfig;
 import com.ruan.project.R;
+
+import java.util.ArrayList;
 
 
 /**
@@ -31,7 +38,7 @@ import com.ruan.project.R;
  * <p/>
  * AirKiss配置网络的类
  */
-public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKissCallBack, MyCircleLoading {
+public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKissCallBack, MyCircleLoading, UDPInterface.HandlerMac {
 
     private View view = null;
 
@@ -41,6 +48,11 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     private boolean isClick = false;
 
     private AirkissConfig airkissConfig = null;
+
+    private ArrayList<String> listMac = null;
+
+    private ArrayList<Object> ListObj = null;
+    private UserDevice userDevice = null;
 
     /**
      * Start()
@@ -59,6 +71,8 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
 
         airkissConfig = new AirkissConfig();
 
+        listMac = new ArrayList<>();
+
         wifiSSID = (EditText) view.findViewById(R.id.wifiSSID);
         wifiPassword = (EditText) view.findViewById(R.id.wifiPassword);
         wifiConn = (CircleLoading) view.findViewById(R.id.wifiConn);
@@ -73,12 +87,13 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
 
         wifiSSID.addTextChangedListener(this);
         wifiPassword.addTextChangedListener(this);
-        wifiConn.setOnClickListener(this);
 
 
-        wifiConn.setTime(60000);
+        wifiConn.setTime(65000);
         wifiConn.setSweepAngle(360);
         wifiConn.setClick(this);
+
+        ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
     }
 
     /**
@@ -148,8 +163,12 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
      */
     @Override
     public void Result(Object object) {
-        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
-        Applications.getInstance().removeOneActivity(this);
+        if (airkissConfig != null)
+            airkissConfig.StopAirKiss();
+
+        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+//        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
+//        Applications.getInstance().removeOneActivity(this);
     }
 
     /**
@@ -159,8 +178,13 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
      */
     @Override
     public void Error(int error) {
-        wifiConn.setStop(CircleLoading.END);
-        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();
+        if (airkissConfig != null)
+            airkissConfig.StopAirKiss();
+
+        //计时器，广播没一秒发送一次，总共发送5次
+        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+//        wifiConn.setStop(CircleLoading.END);
+//        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -173,16 +197,69 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         if (isClick) {
             if (!wifiConn.getNowState()) {
                 wifiConn.setStart();
-//                Toast.makeText(context, "配置网络开始", Toast.LENGTH_SHORT).show();
+
+                //计时器，广播没一秒发送一次，总共发送5次
+//                new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+
                 airkissConfig.StartAirKiss(wifiSSID.getText().toString(), wifiPassword.getText().toString(), this);
             } else {
                 if (airkissConfig != null)
                     airkissConfig.StopAirKiss();
-//                Toast.makeText(context, "取消配置网络", Toast.LENGTH_SHORT).show();
                 wifiConn.setStop(CircleLoading.END);
             }
         } else {
             Toast.makeText(context, "请输入密码或者wifi名称", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * 这个方法获取Mac值
+     * //0 储存接收的数据
+     * //1 储存接收数据的长度
+     * //2 储存接收的地址
+     * //3 储存接收的端口
+     *
+     * @param position 标示
+     * @param objects  这个Object数组里面包含一些列的设备信息
+     */
+    private boolean isSuccesful = false;
+
+    @Override
+    public void getMac(int position, Object[] objects) {
+        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
+        if (ListObj != null && ListObj.size() > 0) {
+            for (int i = 0; i < ListObj.size(); i++) {
+                String mac1 = mac;
+                userDevice = (UserDevice) ListObj.get(i);
+                if (!userDevice.getDeviceMac().equals(mac1)) {
+                    ConfigSueccful();
+                    return;
+                }
+            }
+        } else {
+            if (!isSuccesful) {
+                isSuccesful = true;
+                ConfigSueccful();
+                return;
+            }
+        }
+    }
+
+    private void ConfigSueccful() {
+        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
+        CommonIntent.IntentActivity(context, ConfigList.class);
+        Applications.getInstance().removeOneActivity(this);
+    }
+
+    /**
+     * 超时
+     *
+     * @param position
+     * @param error
+     */
+    @Override
+    public void Error(int position, int error) {
+        wifiConn.setStop(CircleLoading.END);
+        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();
     }
 }
