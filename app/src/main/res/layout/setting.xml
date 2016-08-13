@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -14,10 +14,24 @@
         android:id="@+id/settingBut"
         android:layout_width="match_parent"
         android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
         android:layout_marginTop="50dp"
-        android:background="@drawable/button_selector_red"
+        android:background="@drawable/button_selector_blue"
         android:text="登录"
         android:textColor="@color/White"
         android:textSize="15sp" />
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/settingRel"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/myprogressstyle"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/myprogress"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -142,7 +142,6 @@ public class FragmentControl {
         return list;
     }
 
-
     public ArrayList<Object> getFragment2List(ArrayList<Object> ListObj) {
         Scene scene = null;
         ArrayList<Object> list = new ArrayList<>();

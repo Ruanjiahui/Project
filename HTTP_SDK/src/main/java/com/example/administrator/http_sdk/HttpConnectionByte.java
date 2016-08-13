@@ -1,36 +1,29 @@
 package com.example.administrator.http_sdk;
 
-import android.util.Log;
-
-import com.example.administrator.Abstract.HttpRequest;
+import com.example.administrator.Abstract.HttpRequester;
+import com.example.administrator.HttpCode;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
 /**
- * Created by Administrator on 2016/2/15.
- * <p/>
- * 这个一个网络链接的类
- * <p/>
- * 下面是HTTP请求的POST与GET请求的方法
+ * Created by Administrator on 2016/8/13.
  */
-public class HttpConnection extends HttpRequest {
-
+public class HttpConnectionByte extends HttpRequester {
 
     private HttpConnectSource httpConnectSource = null;
     private HttpReadSource httpReadSource = null;
 
     /**
-     * 下面是 HTTP  GET请求的方法
+     * 这个是GET请求的方法(支持对象传参)
      *
      * @param uri
      * @return
      */
     @Override
-    public String GET(String uri) {
-        String result = null;
+    public byte[] GET(String uri) {
+        byte[] result = null;
         try {
             httpConnectSource = new HttpConnectSource(uri);
             // 将默认设置请求方式POST改成GET
@@ -41,25 +34,24 @@ public class HttpConnection extends HttpRequest {
 
             if (connection.getResponseCode() == 200) {
                 httpReadSource = new HttpReadSource(connection);
-                return httpReadSource.getResult();
+                return httpReadSource.getResultByte();
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            return (HttpCode.TIMEOUT + "").getBytes();
         }
         return result;
     }
 
-
     /**
-     * 这个是HTTP  POST请求的方法
+     * 这个是POST请求的方法(支持对象传参)
      *
      * @param uri
      * @param data
      * @return
      */
     @Override
-    public String POST(String uri, String data) {
-        String result = null;
+    public byte[] POST(String uri, byte[] data) {
+        byte[] result = null;
         try {
             httpConnectSource = new HttpConnectSource(uri);
             httpConnectSource.setUseCaches(false); //不使用缓存
@@ -67,7 +59,7 @@ public class HttpConnection extends HttpRequest {
 
             //创建输出字节对象z
             OutputStream outputStream = connection.getOutputStream();
-            outputStream.write(data.getBytes());
+            outputStream.write(data);
             outputStream.flush();
             outputStream.close();
 
@@ -77,10 +69,10 @@ public class HttpConnection extends HttpRequest {
             //如果请求码 不等于200 则说明请求不成功
             if (connection.getResponseCode() == 200) {
                 httpReadSource = new HttpReadSource(connection);
-                return httpReadSource.getResult();
+                return httpReadSource.getResultByte();
             }
         } catch (java.io.IOException e) {
-            return result;
+            return (HttpCode.TIMEOUT + "").getBytes();
         }
         return result;
     }

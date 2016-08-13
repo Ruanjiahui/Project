@@ -106,7 +106,6 @@ public class Operation {
                     }
                 }
                 String sql = "select distinct(" + colums[0] + ")" + content + " from " + Table_Name;
-                Log.e("Ruan", sql);
                 return sqLiteDatabase.rawQuery(sql, new String[]{});
             } else {
                 return sqLiteDatabase.query(Table_Name, colums, selection, selectionArgs, groupBy, having, orderBy, limit);

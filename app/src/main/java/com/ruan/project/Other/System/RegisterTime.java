@@ -26,28 +26,16 @@ public class RegisterTime implements ReceiverHandler {
     private Map<String, Object> map = null;
     private TimeHandler timeHandler = null;
 
-    private int jack = 0;
-    private int PORT = 0;
-    private String IP = null;
-    private String Mac = null;
-    private String data = null;
-
     public RegisterTime(Context context) {
         this.context = context;
         list = new HashMap<>();
         map = new HashMap<>();
     }
 
-
-    public void registerTime(String[] time, String Action, int position, TimeHandler timeHandler, String IP, int PORT, String MAC, String data, int jack) {
-        this.IP = IP;
-        this.Mac = MAC;
-        this.PORT = PORT;
-        this.data = data;
-        this.jack = jack;
+    public void registerTime(String[] time, String Action, int FLAG, TimeHandler timeHandler) {
         this.timeHandler = timeHandler;
-        listenTime = new ListenTime(context, this, Action, position);
-        map.put("" + position, listenTime);
+        listenTime = new ListenTime(context, this, Action, FLAG);
+        map.put("" + FLAG, listenTime);
         list.put(Action, map);
         listenTime.setListtenTime(time);
         listenTime.StartListen();
@@ -72,16 +60,17 @@ public class RegisterTime implements ReceiverHandler {
         }
     }
 
+
     /**
      * 这个处理广播的接口
      *
-     * @param STATE
-     * @param position
+     * @param ACTION
+     * @param FLAG
      */
     @Override
-    public void Result(String STATE, int position) {
-        if (STATE.equals(ReceiverAction.USER_TIME)) {
-            switch (position) {
+    public void Result(String ACTION, int FLAG) {
+        if (ACTION.equals(ReceiverAction.USER_TIME)) {
+            switch (FLAG) {
                 case SocketSwitchFragment.FLAG1:
                     TimeMoudle.setSwitch1(null);
                     break;
@@ -97,8 +86,8 @@ public class RegisterTime implements ReceiverHandler {
             }
             Toast.makeText(context, "插排定时结束", Toast.LENGTH_SHORT).show();
             //定时结束意味着发送指令给设备
-            timeHandler.Start(IP, PORT, Mac, data, jack);
-            unreisterTime(STATE, position);
+            timeHandler.Start(FLAG);
+            unreisterTime(ACTION, FLAG);
         }
     }
 

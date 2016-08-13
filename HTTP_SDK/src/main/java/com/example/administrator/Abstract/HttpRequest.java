@@ -29,7 +29,7 @@ public abstract class HttpRequest {
      * @return
      */
     @Deprecated
-    public abstract String POST(String uri, String data);
+    public abstract String POST(String uri, byte[] data);
 
 
 }

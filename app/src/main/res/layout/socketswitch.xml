@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_height="match_parent">
 
 
     <RelativeLayout
+        android:id="@+id/socketTotal"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         android:orientation="horizontal">
 
@@ -25,10 +25,11 @@
 
 
     <LinearLayout
+        android:id="@+id/socket1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/socketTotal"
         android:layout_marginTop="15dp"
-        android:layout_weight="1"
         android:orientation="horizontal">
 
         <ImageView
@@ -74,10 +75,11 @@
 
 
     <LinearLayout
+        android:id="@+id/socket2"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/socket1"
         android:layout_marginTop="15dp"
-        android:layout_weight="1"
         android:orientation="horizontal">
 
         <ImageView
@@ -120,8 +122,10 @@
 
 
     <LinearLayout
+        android:id="@+id/socket3"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/socket2"
         android:layout_marginTop="15dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -166,8 +170,10 @@
 
 
     <LinearLayout
+        android:id="@+id/socket4"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/socket3"
         android:layout_marginTop="15dp"
         android:layout_weight="1"
         android:orientation="horizontal">
@@ -209,4 +215,20 @@
                 android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/socketBack"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/BlackTrafer"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/myprogress"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+</RelativeLayout>

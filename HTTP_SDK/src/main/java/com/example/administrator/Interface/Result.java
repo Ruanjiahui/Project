@@ -16,7 +16,7 @@ public interface Result {
          * @param code        请求标识
          * @param inputStream 请求返回的字节流
          */
-        public void onSucceful(int code, InputStream inputStream);
+        public void onSucceful(int code, byte[] inputStream);
 
         /**
          * 处理http连接出错的接口

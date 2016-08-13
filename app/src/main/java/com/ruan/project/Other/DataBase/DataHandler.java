@@ -6,6 +6,7 @@ import android.content.Context;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.Database.LoadClass;
 import com.example.administrator.data_sdk.Database.LoadResouce;
+import com.example.administrator.data_sdk.Database.Operation;
 import com.ruan.project.Moudle.UserDevice;
 
 import java.util.ArrayList;
@@ -52,7 +53,8 @@ public class DataHandler {
      * @return
      */
     public static ContentValues getContentValue(Context context, Class loadClass , Object object, String db, String Table_Name) {
-        return new LoadResouce().ObjectToContentValues(context , loadClass, object);
+        String[] colums = new GetDatabaseData().getTableField(context , db , Table_Name);
+        return new LoadResouce().ObjectToContentValues(context , loadClass, object , colums);
 
     }
 

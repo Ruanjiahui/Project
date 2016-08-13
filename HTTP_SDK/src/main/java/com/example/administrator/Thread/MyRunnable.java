@@ -100,9 +100,18 @@ public class MyRunnable implements Runnable {
             super.dispatchMessage(msg);
             if (httpHandler != null)
                 httpHandler.handler(position, (String) msg.obj);
+
+
             if (RHttp != null) {
-                RHttp.onSucceful(code, (InputStream) msg.obj);
+                if ((HttpCode.TIMEOUT + "").equals(msg.obj)) {
+                    RHttp.onError(code, HttpCode.TIMEOUT);
+                    return;
+                }
+                RHttp.onSucceful(code, (byte[]) msg.obj);
             }
+
+
+            //判断返回结果为字符串的处理结果
             if (RHttpString != null) {
                 if ((HttpCode.TIMEOUT + "").equals(msg.obj)) {
                     RHttpString.onError(code, HttpCode.TIMEOUT);

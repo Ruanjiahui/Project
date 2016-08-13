@@ -46,6 +46,17 @@ public abstract class LoadClass {
     protected abstract ContentValues getContentValues(Class loadClass, Object objects);
 
 
+
+    /**
+     * 将对象的数据封装成可以插进数据库的数据(包括父类)
+     *
+     * @param loadClass 封装的类对象
+     * @param objects   类对象实体类
+     * @return
+     */
+    protected abstract ContentValues getContentValues(Class loadClass, Object objects , String[] colums);
+
+
     /**
      * 将对象的数据封装成可以插进数据库的数据(不包括父类)
      *

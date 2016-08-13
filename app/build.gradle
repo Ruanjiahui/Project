@@ -29,6 +29,7 @@ android {
     tasks.withType(JavaCompile) {
         compileTask -> compileTask.dependsOn(nativeLibsToJar)
     }
+
 }
 
 dependencies {

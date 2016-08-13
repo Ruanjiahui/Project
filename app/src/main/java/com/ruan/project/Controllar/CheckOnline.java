@@ -174,7 +174,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
      */
     @Override
     public void handler(int position, String result) {
-        if (result != null) {
+        if (result != null && result.length() > 0) {
             HttpURL.STATE = NetWork.INTNET;
             Gson gson = new Gson();
             CheckMac checkMac = gson.fromJson(result, CheckMac.class);

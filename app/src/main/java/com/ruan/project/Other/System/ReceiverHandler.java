@@ -8,9 +8,9 @@ public interface ReceiverHandler {
     /**
      * 这个处理广播的接口
      *
-     * @param STATE
+     * @param ACTION
      */
-    public void Result(String STATE, int position);
+    public void Result(String ACTION, int FLAG);
 
 
     /**
@@ -26,15 +26,16 @@ public interface ReceiverHandler {
 
         /**
          * 这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
-         *
-         * @param IP
-         * @param PORT
-         * @param MAC
-         * @param data
-         * @param jack
          */
-        public void Start(String IP, int PORT, String MAC, String data, int jack);
+        public void Start(int FLAG);
 
+    }
+
+
+    public interface ReceiverTime {
+
+
+        public boolean Stop();
     }
 
 }

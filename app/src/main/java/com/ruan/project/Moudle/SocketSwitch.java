@@ -194,7 +194,7 @@ public class SocketSwitch {
      * @param json
      * @return
      */
-    public void getMoudle(String json, int position) {
+    public void getMoudle(String json) {
 
         //    {“type”:”getsocketswtich”,”jackArray”:[{”jack”:1,”status”:1}，{”jack”:2,”status”:0}，{”jack”:3,”status”:0}，{”jack”:4,”status”:1}]}
         try {

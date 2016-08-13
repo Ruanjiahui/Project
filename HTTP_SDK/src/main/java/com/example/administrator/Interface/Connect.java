@@ -14,7 +14,7 @@ public interface Connect {
          *
          * @return
          */
-        public InputStream connection();
+        public byte[] connection();
 
     }
 

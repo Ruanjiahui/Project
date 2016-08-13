@@ -7,11 +7,12 @@ import android.os.Message;
 import android.util.Log;
 
 import com.example.administrator.data_sdk.SystemUtil.TimeTool;
+import com.example.ruan.udp_sdk.TimerHandler;
 
 /**
  * Created by Administrator on 2016/8/4.
  */
-public class ListenTime {
+public class ListenTime implements ReceiverHandler.ReceiverTime {
 
 
     private Context context = null;
@@ -57,7 +58,7 @@ public class ListenTime {
     public void StartListen() {
         stop = false;
         if (time != null && time.length != 0)
-            new Thread(new TimeRunnable()).start();
+            new Thread(new TimeRunnable(this , receiverHandler ,  time , ACTION , position)).start();
         else
             receiverHandler.Error(ACTION, position);
     }
@@ -66,37 +67,14 @@ public class ListenTime {
     /**
      * 停止监听
      */
+
     public void StopListen() {
         stop = true;
+        Stop();
     }
 
-    private class TimeRunnable implements Runnable {
-
-        /**
-         * Starts executing the active part of the class' code. This method is
-         * called when a thread is started that has been created with a class which
-         * implements {@code Runnable}.
-         */
-        @Override
-        public void run() {
-            while (!stop) {
-                //实时监听时间是否到了
-                //判断是否到了监听时间
-                if (TimeTool.getTime24Hour().equals(time[0]) && TimeTool.getTimeMinuts().equals(time[1])) {
-                    Message message = new Message();
-                    handler.sendMessage(message);
-                    //停止线程
-                    StopListen();
-                }
-            }
-        }
+    @Override
+    public boolean Stop() {
+        return stop;
     }
-
-    private Handler handler = new Handler(new Handler.Callback() {
-        @Override
-        public boolean handleMessage(Message msg) {
-            receiverHandler.Result(ACTION, position);
-            return false;
-        }
-    });
 }

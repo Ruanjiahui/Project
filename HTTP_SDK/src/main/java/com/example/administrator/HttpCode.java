@@ -5,5 +5,10 @@ package com.example.administrator;
  */
 public class HttpCode {
 
-    public static int TIMEOUT = 001;
+    public static int TIMEOUT = 1;
+
+    //post请求标识
+    public final static String POST = "POST";
+    //get请求标识
+    public final static String GET = "GET";
 }

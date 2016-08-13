@@ -52,6 +52,7 @@ public class LoadResouce extends LoadClass {
                             field.setAccessible(true);
                             //如果数据库的字段名和类的属性名称一样就说明是同一个变量
                             if (field.getName().equals(columName)) {
+
                                 //将数据库的数据设置给类的属性
                                 field.set(object, cursor.getString(cursor.getColumnIndex(columName)));
                                 break;
@@ -118,7 +119,7 @@ public class LoadResouce extends LoadClass {
     }
 
     /**
-     * 将对象的数据封装成可以插进数据库的数据
+     * 将对象的数据封装成可以插进数据库的数据(包括父类)
      *
      * @param loadClass 封装的类对象
      * @param objects   类对象实体类
@@ -132,9 +133,39 @@ public class LoadResouce extends LoadClass {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (field.get(objects) != null && !"".equals(field.get(objects))) {
-                    contentValues.put(field.getName(), (String) field.get(objects));
-                    break;
+                if (!field.getName().startsWith("&")) {
+                    if (field.get(objects) != null && !"".equals(field.get(objects))) {
+                        contentValues.put(field.getName(), (String) field.get(objects));
+                        break;
+                    }
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return contentValues;
+    }
+
+    /**
+     * 将对象的数据封装成可以插进数据库的数据
+     *
+     * @param loadClass 封装的类对象
+     * @param objects   类对象实体类
+     * @return
+     */
+    @Override
+    protected ContentValues getContentValues(Class loadClass, Object objects, String[] colums) {
+        ContentValues contentValues = new ContentValues();
+
+        Field[] fields = loadClass.getFields();
+        try {
+            for (String colum : colums) {
+                for (Field field : fields) {
+                    field.setAccessible(true);
+                    if (field.getName().equals(colum)) {
+                        contentValues.put(field.getName(), (String) field.get(objects));
+                        break;
+                    }
                 }
             }
         } catch (IllegalAccessException e) {
@@ -253,6 +284,20 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass
      * @param objects
+     * @param colums
+     * @return
+     */
+    public ContentValues ObjectToContentValues(Context context, Class loadClass, Object objects, String[] colums) {
+        this.context = context;
+        return getContentValues(loadClass, objects, colums);
+    }
+
+
+    /**
+     * 对外面开放的接口(包括父类)
+     *
+     * @param loadClass
+     * @param objects
      * @return
      */
     public ContentValues ObjectToContentValues(Context context, Class loadClass, Object objects) {
@@ -265,6 +310,7 @@ public class LoadResouce extends LoadClass {
      *
      * @param loadClass
      * @param objects
+     * @param
      * @return
      */
     public ContentValues ObjectToContentValue(Context context, Class loadClass, Object objects) {

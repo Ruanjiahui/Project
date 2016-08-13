@@ -167,7 +167,7 @@ public class GetDatabaseData extends Operation {
     public int Update(Context context, String db, String table, String whereclause, String[] whereargs, Object object, boolean SuperClass) {
         if (object != null) {
             if (SuperClass)
-                return update(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object), whereclause, whereargs);
+                return update(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object , null), whereclause, whereargs);
             return update(context, db, table, new LoadResouce().ObjectToContentValue(context, object.getClass(), object), whereclause, whereargs);
         } else {
             LogException.ThrowRunTime("对象不能为空");
@@ -200,7 +200,7 @@ public class GetDatabaseData extends Operation {
     public long Insert(Context context, String db, String table, Object object, boolean SuperClass) {
         if (object != null) {
             if (SuperClass)
-                return insert(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object));
+                return insert(context, db, table, new LoadResouce().ObjectToContentValues(context, object.getClass(), object , null));
             return insert(context, db, table, new LoadResouce().ObjectToContentValue(context, object.getClass(), object));
         } else {
             LogException.ThrowRunTime("对象不能为空");

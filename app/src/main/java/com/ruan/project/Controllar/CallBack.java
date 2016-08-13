@@ -28,19 +28,19 @@ public class CallBack {
      * @param IP       设备IP
      * @param PORT     设备PORT
      * @param data     操作的数据
-     * @param position 操作标识
+     * @param FLAG 操作标识
      */
-    public void setDeviceControl(String IP, int PORT, String MAC , String data, int position) {
+    public void setDeviceControl(String IP, int PORT, String MAC , String data, int FLAG) {
         ControlDevice controlDevice = new ControlDevice(IP, PORT);
         switch (HttpURL.STATE) {
             case NetWork.WIFI:
                 //通过udp进行控制
                 //防止丢包，所以发送5次数据包
-                controlDevice.UDPControl(position, FormatData.getUDP(data), handlerMac, 1);
+                controlDevice.UDPControl(FLAG, FormatData.getUDP(data), handlerMac, 1);
                 break;
             case NetWork.INTNET:
                 //通过云端进行控制
-                controlDevice.HTTPControl(HttpURL.ControlDevice, FormatData.getPOSTControlDevice(MAC, data) , httpHandler, position);
+                controlDevice.HTTPControl(HttpURL.ControlDevice, FormatData.getPOSTControlDevice(MAC, data) , httpHandler, FLAG);
                 break;
         }
     }

@@ -356,7 +356,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
 //        Toast.makeText(context , contentValues.getAsString("deviceID") + "--"+ contentValues.getAsString("deviceMac") , Toast.LENGTH_SHORT).show();
 
 //        Log.e("Ruan", userDevice.getDeviceMac() + "***");
-
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"}, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
         Applications.getInstance().removeOneActivity(activity);
     }

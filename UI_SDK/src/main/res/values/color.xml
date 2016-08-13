@@ -12,6 +12,7 @@
     <color name="Blue_Blackest">#1cb3ee</color>
     <color name="Red">#FF0000</color>
     <color name="Black">#000000</color>
+    <color name="BlackTrafer">#55000000</color>
     <color name="background_dark">#000000</color>
     <color name="legacy_primary_dark">#000000</color>
     <color name="legacy_primary">#e6e6e6</color>

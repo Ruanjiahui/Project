@@ -61,7 +61,7 @@ public class HttpWeatherResouce extends HttpRequest {
      * @return
      */
     @Override
-    public String POST(String uri, String data) {
+    public String POST(String uri, byte[] data) {
         return null;
     }
 }

@@ -4,7 +4,9 @@ import android.graphics.Bitmap;
 
 import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.Abstract.HttpUploadDown;
+import com.example.administrator.Interface.Connect;
 import com.example.administrator.Interface.HttpInterface;
+import com.example.administrator.Interface.Result;
 import com.example.administrator.Thread.MyAsyncTask;
 import com.example.administrator.Thread.MyAsyncTaskDown;
 import com.example.administrator.Thread.MyRunnable;
@@ -30,7 +32,36 @@ public class HTTP implements HttpInterface.HttpConnect {
     //创建下载上传的对象
     private HttpUploadDown httpUploadDown = null;
     //请求的标示
-    private  int position = 0;
+    private int position = 0;
+
+
+    /**
+     * 这个是访问网络的HTTP请求返回来的是字节数组
+     *
+     * @param RHttp      处理方法的接口
+     * @param method     请求的方法
+     * @param URL        请求连接
+     * @param object     请求的数据对象
+     * @param FLAG       请求的标识
+     * @param SuperClass 数据对象是否是继承对象
+     */
+    public HTTP(Result.Http RHttp, String method, String URL, Object object, int FLAG, boolean SuperClass) {
+        new Thread(new MyRunnable(new Httpbyte(method, URL, object, FLAG, SuperClass), RHttp, FLAG)).start();
+    }
+
+    /**
+     * 这个是访问网络的HTTP请求返回来的是字符串
+     *
+     * @param RHttpString 处理方法的接口
+     * @param method      请求的方法
+     * @param URL         请求连接
+     * @param object      请求的数据对象
+     * @param FLAG        请求的标识
+     * @param SuperClass  数据对象是否是继承对象
+     */
+    public HTTP(Result.HttpString RHttpString, String method, String URL, Object object, int FLAG, boolean SuperClass) {
+        new Thread(new MyRunnable(new HttpString(method, URL, object, FLAG, SuperClass), RHttpString, FLAG)).start();
+    }
 
     /**
      * POST请求的方法
@@ -39,13 +70,13 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param url
      * @param data
      */
-    public HTTP(HttpInterface.HttpHandler httpHandler, String url, String data , int position) {
+    public HTTP(HttpInterface.HttpHandler httpHandler, String url, String data, int position) {
         this.url = url;
         this.data = data;
         this.position = position;
         //实例化对象
-        httpRequest = new HttpConnection();
-        new Thread(new MyRunnable(this, httpHandler , position)).start();
+        httpRequest = new HttpConnectionString();
+        new Thread(new MyRunnable(this, httpHandler, position)).start();
     }
 
     /**
@@ -57,7 +88,7 @@ public class HTTP implements HttpInterface.HttpConnect {
     public HTTP(HttpInterface.HttpHandler httpHandler, String url) {
         this.url = url;
         //实例化对象
-        httpRequest = new HttpConnection();
+        httpRequest = new HttpConnectionString();
         new Thread(new MyRunnable(this, httpHandler)).start();
     }
 
@@ -75,7 +106,7 @@ public class HTTP implements HttpInterface.HttpConnect {
         this.data = data;
         this.key = key;
         httpUploadDown = new UploadDown();
-        new MyAsyncTask(this, httpHandler , "File").execute();
+        new MyAsyncTask(this, httpHandler, "File").execute();
     }
 
     /**
@@ -92,7 +123,7 @@ public class HTTP implements HttpInterface.HttpConnect {
         this.data = data;
         this.key = key;
         httpUploadDown = new UploadDown();
-        new MyAsyncTask(this, httpHandler , "").execute();
+        new MyAsyncTask(this, httpHandler, "").execute();
     }
 
     /**
@@ -108,9 +139,9 @@ public class HTTP implements HttpInterface.HttpConnect {
         this.data = data;
         httpUploadDown = new UploadDown();
         if ("Bitmap".equals(flag))
-            new MyAsyncTaskDown(this, httpHandler , flag).execute();
+            new MyAsyncTaskDown(this, httpHandler, flag).execute();
         else
-            new MyAsyncTaskDown(this, httpHandler , flag).execute();
+            new MyAsyncTaskDown(this, httpHandler, flag).execute();
     }
 
     @Override
@@ -121,7 +152,7 @@ public class HTTP implements HttpInterface.HttpConnect {
         } else {
             //如果数据不为空则分两种清空
             //第一种判断Array<File>是不是为空，空则是POST请求
-            return httpRequest.POST(url, data);
+            return httpRequest.POST(url, data.getBytes());
         }
     }
 

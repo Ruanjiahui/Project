@@ -1,6 +1,7 @@
 package com.example.administrator.http_sdk;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -21,6 +22,7 @@ public class HttpReadSource {
 
     /**
      * 获取网络请求返回来的数据
+     *
      * @return
      */
     public String getResult() {
@@ -38,5 +40,27 @@ public class HttpReadSource {
             e.printStackTrace();
         }
         return result;
+    }
+
+
+    /**
+     * 将输入流转字节数组
+     *
+     * @return
+     */
+    public byte[] getResultByte() {
+        ByteArrayOutputStream output = null;
+        try {
+            in = httpURLConnection.getInputStream();
+            output = new ByteArrayOutputStream();
+            byte[] buffer = new byte[4096];
+            int n = 0;
+            while (-1 != (n = in.read(buffer))) {
+                output.write(buffer, 0, n);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return output.toByteArray();
     }
 }

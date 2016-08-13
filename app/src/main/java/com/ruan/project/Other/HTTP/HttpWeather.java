@@ -1,16 +1,8 @@
 package com.ruan.project.Other.HTTP;
 
-import android.graphics.Bitmap;
-import android.util.Log;
-
-import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.Interface.Connect;
-import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.Interface.Result;
 import com.example.administrator.Thread.MyRunnable;
-import com.example.administrator.http_sdk.HttpConnection;
-
-import java.io.InputStream;
 
 /**
  * Created by Administrator on 2016/8/10.
