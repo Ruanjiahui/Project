@@ -15,6 +15,7 @@ import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
 import com.ruan.project.R;
+import com.ruan.project.View.Control.RGBLightFragment;
 import com.ruan.project.View.Control.SocketSwitchFragment;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class DeviceControl extends BaseActivity {
     private View view = null;
     private UserDevice userDevice = null;
     private String flag = null;
+    private String tableName = null;
+    private boolean status;
 
     /**
      * Start()
@@ -40,17 +43,22 @@ public class DeviceControl extends BaseActivity {
 
         deviceMac = getIntent().getExtras().getString("data");
         flag = getIntent().getExtras().getString("flag");
+        status = getIntent().getExtras().getBoolean("status");
 
         view = LayoutInflater.from(context).inflate(R.layout.devicecontrol, null);
 
         setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
-        setTitle("设备控制");
+        setTitle(getResources().getString(R.string.DeviceControlTitle));
         setRightTitleVisiable(false);
         setLeftTitleColor(R.color.White);
 
+        if (status)
+            tableName = DatabaseTableName.UserDeviceName;
+        else
+            tableName = DatabaseTableName.AnalogyName;
 
-        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ?", new String[]{deviceMac});
+        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, "deviceMac = ?", new String[]{deviceMac});
 
         userDevice = new UserDevice();
         userDevice.getUserDeviceMoudle(map);
@@ -58,7 +66,10 @@ public class DeviceControl extends BaseActivity {
 
         switch (Integer.parseInt(flag)) {
             case DeviceURL.Switch:
-                intentFragment(SocketSwitchFragment.getInstance(userDevice));
+                intentFragment(SocketSwitchFragment.getInstance(userDevice , status));
+                break;
+            case DeviceURL.RGBLight:
+                intentFragment(RGBLightFragment.getInstance(userDevice));
                 break;
         }
         //RGB灯控制

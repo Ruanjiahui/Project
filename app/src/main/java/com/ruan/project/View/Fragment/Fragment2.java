@@ -74,10 +74,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
         fragment2Top.setBackgroundResource(R.color.Blue);
         base_top_title.setPadding(0, DensityUtil.dip2px(getActivity(), 20), 0, 0);
         base_top_text1.setPadding(0, DensityUtil.dip2px(getActivity(), 20), 0, 0);
-        base_top_title.setText("场景");
+        base_top_title.setText(getResources().getString(R.string.SceneName));
         base_top_title.setTextColor(getResources().getColor(R.color.White));
         base_top_relative.setVisibility(View.GONE);
-        base_top_text1.setText("添加场景");
+        base_top_text1.setText(getResources().getString(R.string.AddSceneName));
         base_top_text1.setTextColor(getResources().getColor(R.color.White));
 
 
@@ -102,10 +102,10 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
-        ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class , false);
+        ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
 
         if (ListObj != null && ListObj.size() != 0) {
             list = new FragmentControl(context).getFragment2List(ListObj);
@@ -118,13 +118,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
             }
             adapter.setItemClick(this);
         }
-    }
-
-    private Object getItem(String title, Drawable drawable) {
-        Item item = new Item();
-        item.setHomeText(title);
-        item.setHomeImage(drawable);
-        return item;
     }
 
     /**
@@ -170,6 +163,6 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         scene = (Scene) ListObj.get(position);
-        CommonIntent.IntentActivity(context , SceneList.class , scene.getSceneName() , scene.getSceneID());
+        CommonIntent.IntentActivity(context, SceneList.class, scene.getSceneName(), scene.getSceneID());
     }
 }

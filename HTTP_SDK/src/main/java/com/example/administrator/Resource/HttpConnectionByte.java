@@ -1,4 +1,6 @@
-package com.example.administrator.http_sdk;
+package com.example.administrator.Resource;
+
+import android.util.Log;
 
 import com.example.administrator.Abstract.HttpRequester;
 import com.example.administrator.HttpCode;
@@ -14,6 +16,7 @@ public class HttpConnectionByte extends HttpRequester {
 
     private HttpConnectSource httpConnectSource = null;
     private HttpReadSource httpReadSource = null;
+    private HttpURLConnection connection = null;
 
     /**
      * 这个是GET请求的方法(支持对象传参)
@@ -28,10 +31,9 @@ public class HttpConnectionByte extends HttpRequester {
             httpConnectSource = new HttpConnectSource(uri);
             // 将默认设置请求方式POST改成GET
             httpConnectSource.setRequestMethod("GET");
-            HttpURLConnection connection = httpConnectSource.getHttpURLConnection();
+            connection = httpConnectSource.getHttpURLConnection();
 
             connection.connect();//发送请求链接
-
             if (connection.getResponseCode() == 200) {
                 httpReadSource = new HttpReadSource(connection);
                 return httpReadSource.getResultByte();
@@ -55,7 +57,7 @@ public class HttpConnectionByte extends HttpRequester {
         try {
             httpConnectSource = new HttpConnectSource(uri);
             httpConnectSource.setUseCaches(false); //不使用缓存
-            HttpURLConnection connection = httpConnectSource.getHttpURLConnection();
+            connection = httpConnectSource.getHttpURLConnection();
 
             //创建输出字节对象z
             OutputStream outputStream = connection.getOutputStream();
@@ -76,4 +78,13 @@ public class HttpConnectionByte extends HttpRequester {
         }
         return result;
     }
+
+    /**
+     * 取消链接的方法
+     */
+    @Override
+    public void disConnection() {
+        connection.disconnect();
+    }
+
 }

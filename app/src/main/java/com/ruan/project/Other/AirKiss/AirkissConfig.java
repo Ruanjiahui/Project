@@ -32,7 +32,7 @@ public class AirkissConfig {
         this.airKissCallBack = airKissCallBack;
 
         try {
-            Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 60000L, 5000, 80);
+            Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 60000L, 0, 5);
             C2JavaExDevice.getInstance().setHandler(this.handler);
         }catch (Exception e){
             airKissCallBack.Error(-1);

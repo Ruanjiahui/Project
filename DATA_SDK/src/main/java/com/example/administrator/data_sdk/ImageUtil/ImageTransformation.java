@@ -7,6 +7,9 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Environment;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
 
 import java.io.InputStream;
 
@@ -111,5 +114,23 @@ public class ImageTransformation {
         String path = url; //获得SDCard目录
         Bitmap bmpDefaultPic = BitmapFactory.decodeFile(path, null);
         return Bitmap2Drawable(context, bmpDefaultPic);
+    }
+
+    /**
+     * 回收设置背景图片的内存
+     *
+     * @param imageView
+     */
+    public static void releaseImageViewResouce(View imageView) {
+        if (imageView == null)
+            return;
+        Drawable drawable = imageView.getBackground();
+        if (drawable != null && drawable instanceof BitmapDrawable) {
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) drawable;
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            if (bitmap != null && !bitmap.isRecycled()) {
+                bitmap.recycle();
+            }
+        }
     }
 }

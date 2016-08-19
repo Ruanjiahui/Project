@@ -5,8 +5,29 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/Blue</item>
         <item name="colorPrimaryDark">@color/Blue</item>
-        <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+
+    <style name="NoWhite" parent="AppTheme">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowActionBar">false</item>
+        <item name="android:windowFullscreen">false</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <!--<style name="AnimActivityTheme">-->
+        <!--<item name="android:windowAnimationStyle">@style/FeelyouWindowAnimTheme</item>-->
+    <!--</style>-->
+
+    <!--&lt;!&ndash; 设置Activity的跳转动画 &ndash;&gt;-->
+    <!--<style name="FeelyouWindowAnimTheme" parent="@android:style/Animation.Activity">-->
+        <!--<item name="android:activityOpenEnterAnimation">@anim/in_from_left</item>-->
+        <!--&lt;!&ndash; <item name="android:activityOpenExitAnimation">@anim/out_from_right</item> &ndash;&gt;-->
+        <!--&lt;!&ndash; <item name="android:activityCloseEnterAnimation">@anim/in_from_right</item> &ndash;&gt;-->
+        <!--<item name="android:activityCloseExitAnimation">@anim/out_from_left</item>-->
+    <!--</style>-->
+
+
 
 
     <style name="AnimationPreview" parent="@android:style/Theme.Dialog">
@@ -40,7 +61,7 @@
         <!-- 是否变暗 -->
         <item name="android:backgroundDimEnabled">true</item>
         <!-- 点击空白部分activity消失 -->
-        <item name="android:windowCloseOnTouchOutside">true</item>
+        <item name="android:windowCloseOnTouchOutside">false</item>
     </style>
 
 

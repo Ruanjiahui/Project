@@ -1,50 +1,44 @@
 package com.example.administrator.Thread;
 
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
 import com.example.administrator.HttpCode;
-import com.example.administrator.Interface.Connect;
+import com.example.administrator.Interface.HttpConnect;
 import com.example.administrator.Interface.HttpInterface;
-import com.example.administrator.Interface.Result;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import com.example.administrator.Interface.HttpResult;
 
 /**
  * Created by Administrator on 2016/2/15.
  */
-public class MyRunnable implements Runnable {
+public class HttpRunnable implements Runnable {
 
     private HttpInterface.HttpConnect httpConnect = null;
     private HttpInterface.HttpHandler httpHandler = null;
     private int position = 0;
 
-    public MyRunnable(HttpInterface.HttpConnect httpConnect) {
+    public HttpRunnable(HttpInterface.HttpConnect httpConnect) {
         this.httpConnect = httpConnect;
     }
 
     @Deprecated
-    public MyRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler) {
+    public HttpRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler) {
         this.httpConnect = httpConnect;
         this.httpHandler = httpHandler;
     }
 
     @Deprecated
-    public MyRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler, int position) {
+    public HttpRunnable(HttpInterface.HttpConnect httpConnect, HttpInterface.HttpHandler httpHandler, int position) {
         this.httpConnect = httpConnect;
         this.httpHandler = httpHandler;
         this.position = position;
     }
 
-    private Connect.Http CHttp = null;
-    private Result.Http RHttp = null;
-    private Result.HttpString RHttpString = null;
-    private Connect.HttpString CHttpString = null;
+    private HttpConnect.Http CHttp = null;
+    private HttpResult.Http RHttp = null;
+    private HttpResult.HttpString RHttpString = null;
+    private HttpConnect.HttpString CHttpString = null;
     private int code = 0;
 
     /**
@@ -54,7 +48,7 @@ public class MyRunnable implements Runnable {
      * @param RHttp
      * @param code
      */
-    public MyRunnable(Connect.Http CHttp, Result.Http RHttp, int code) {
+    public HttpRunnable(HttpConnect.Http CHttp, HttpResult.Http RHttp, int code) {
         this.CHttp = CHttp;
         this.RHttp = RHttp;
         this.code = code;
@@ -67,7 +61,7 @@ public class MyRunnable implements Runnable {
      * @param RHttpString
      * @param code
      */
-    public MyRunnable(Connect.HttpString CHttpString, Result.HttpString RHttpString, int code) {
+    public HttpRunnable(HttpConnect.HttpString CHttpString, HttpResult.HttpString RHttpString, int code) {
         this.CHttpString = CHttpString;
         this.RHttpString = RHttpString;
         this.code = code;
@@ -98,12 +92,13 @@ public class MyRunnable implements Runnable {
         @Override
         public void dispatchMessage(Message msg) {
             super.dispatchMessage(msg);
-            if (httpHandler != null)
+            if (httpHandler != null) {
                 httpHandler.handler(position, (String) msg.obj);
+            }
 
 
             if (RHttp != null) {
-                if ((HttpCode.TIMEOUT + "").equals(msg.obj)) {
+                if ((HttpCode.TIMEOUT + "").equals(new String((byte[])msg.obj , 0 , ((byte[])msg.obj).length))){
                     RHttp.onError(code, HttpCode.TIMEOUT);
                     return;
                 }

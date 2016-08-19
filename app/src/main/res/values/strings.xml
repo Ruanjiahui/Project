@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Test</string>
+    <string name="app_name">必联智能</string>
     <string name="nav">标题</string>
     <string name="nav_1">首页</string>
     <string name="nav_2">首页</string>
@@ -12,4 +12,99 @@
 
 
     <string name="scanHint">周边没有任何设备</string>
+
+
+    <!-- 建议反馈的文字-->
+    <string name="SendText">发送</string>
+    <string name="PhoneEditHint">请输入你的电话号码</string>
+    <string name="SuggestEditHint">请输入反馈意见</string>
+
+
+    <!-- 设置的文字 -->
+    <string name="SettingTitle">设置</string>
+    <string name="LoginBut">登录</string>
+    <string name="ClearCache">清理缓存</string>
+    <string name="CheckUpdate">检查更新</string>
+    <string name="MessageSetting">消息设置</string>
+    <string name="AboutMe">关于我们</string>
+    <string name="VersionName">最新版本</string>
+    <string name="ClearText">清理</string>
+    <string name="MessageTitle">消息设置</string>
+    <string name="WifiUpdateTxt">WIFI情况下自动更新</string>
+    <string name="UpdateTieText">更新获取链接失败</string>
+    <string name="DownTieText">下载中</string>
+
+
+    <!-- Dialog文字-->
+    <string name="UpdateLeftButText">取消</string>
+    <string name="UpdateRightButText">更新</string>
+    <string name="UpdateMessageText">有新版本更新</string>
+    <string name="ReUpdateMessageText">下载失败是否重写下载</string>
+    <string name="InstallLeftButText">取消</string>
+    <string name="InstallRightButText">安装</string>
+    <string name="InstallMessageText">下载完成是否安装新版本</string>
+
+
+    <!-- 首页的文字-->
+    <string name="Nav1">首页</string>
+    <string name="Nav2">分类</string>
+    <string name="Nav3">商城</string>
+    <string name="Nav4">我的</string>
+    <string name="CityName">城市</string>
+    <string name="WeatherName">0 ~ 0</string>
+    <string name="SceneName">场景</string>
+    <string name="CityListName">城市列表</string>
+    <string name="CityNameHint">请输入城市名称</string>
+    <string name="CityEditTie">城市名称不能为空</string>
+    <string name="CityEditResult">没有这个城市</string>
+    <string name="Search">搜索</string>
+    <string name="DeviceName">设备</string>
+    <string name="ScanName">扫描</string>
+    <string name="NetWorkSetting">配置网络</string>
+    <string name="wifiName">Unknow network</string>
+    <string name="wifiNameHint">please into wifiSSD</string>
+    <string name="wifiPasswordHint">please into password</string>
+    <string name="AboutmeCompanyName">深圳市必联电子有限公司</string>
+    <string name="AboutmeCompanyURL">www.b-link.net.cn</string>
+    <string name="ONLINE">在线</string>
+    <string name="UNONLINE">离线</string>
+    <string name="SearchTitle">搜索设备</string>
+    <string name="DeviceControlTitle">设备控制</string>
+    <string name="UpdataTitle">修改</string>
+    <string name="SuggestTitle">意见反馈</string>
+    <string name="HelpTitle">帮助与支持</string>
+    <string name="UseHelp">使用帮助</string>
+    <string name="OnlineService">在线客服</string>
+    <string name="TeamView">远程协助</string>
+    <string name="RGBOpen">开</string>
+    <string name="RGBClose">关</string>
+
+    <!-- 编辑页面的文字-->
+    <string name="AddSceneName">添加场景</string>
+    <string name="EditSceneHint">请输入场景名称</string>
+    <string name="EditName">姓名</string>
+    <string name="EditNameHint">请输入你的姓名</string>
+    <string name="EditHeight">身高</string>
+    <string name="EditHeightHint">请输入你的身高</string>
+    <string name="EditWeight">体重</string>
+    <string name="EditWeightHint">请输入你的体重</string>
+    <string name="EditBirthday">生日</string>
+    <string name="EditSex">性别</string>
+    <string name="SexMan">男</string>
+    <string name="SexLady">女</string>
+    <string name="SaveTitle">保存</string>
+
+
+    <!-- Toast提示-->
+    <string name="DeviceOnline">设备不在线</string>
+    <string name="HttpError">请求超时</string>
+    <string name="NetWorkEditHint">请输入密码或者wifi名称</string>
+    <string name="NetWorkSuccess">配置成功</string>
+    <string name="NetWorkFail">配置失败</string>
+    <string name="DeleteFile">清理成功</string>
+    <string name="Exists">再点击一次退出软件</string>
+    <string name="DeviceTimeout">获取设备超时</string>
+    <string name="ConnectWifi">请链接wifi</string>
+    <string name="ConnectTimeout">连接超时,请重写设置</string>
+    <string name="Version">当前为最新版本</string>
 </resources>

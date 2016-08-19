@@ -5,7 +5,7 @@ import java.io.InputStream;
 /**
  * Created by Administrator on 2016/8/10.
  */
-public interface Connect {
+public interface HttpConnect {
 
     public interface Http {
 
@@ -28,6 +28,17 @@ public interface Connect {
         public String connection();
 
     }
+
+
+//    public interface HttpPack {
+//
+//        /**
+//         * 连接网络的接口
+//         *
+//         * @return
+//         */
+//        public byte[] connection();
+//    }
 
 
 }

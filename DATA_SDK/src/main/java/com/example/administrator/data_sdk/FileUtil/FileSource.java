@@ -92,7 +92,7 @@ public class FileSource extends FileRequest {
                 //每次循环获取相加就是等于文件的大小
 //                sumbyte += readbyte;
                 //将字节流写进文本当中
-                fileOutputStream.write(buffer, 0, readbyte);
+                fileOutputStream.write(buffer, 0, buffer.length);
 //            }
             //刷新
             fileOutputStream.flush();

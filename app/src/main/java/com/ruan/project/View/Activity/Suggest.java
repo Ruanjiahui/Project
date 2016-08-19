@@ -1,11 +1,15 @@
 package com.ruan.project.View.Activity;
 
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
+import com.example.administrator.ui_sdk.View.MyImageView;
 import com.ruan.project.R;
 
 
@@ -16,6 +20,9 @@ public class Suggest extends BaseActivity {
     private View view = null;
 
     private TextView suggestContent = null;
+    private TextView circlebut = null;
+    private View suggestSend = null;
+
 
     /**
      * Start()
@@ -26,19 +33,35 @@ public class Suggest extends BaseActivity {
 
 
         suggestContent = (TextView) view.findViewById(R.id.suggestContent);
+        circlebut = (TextView) view.findViewById(R.id.circlebut);
+        suggestSend = view.findViewById(R.id.suggestSend);
 
         setContentColor(R.color.WhiteSmoke);
         setRightTitleVisiable(false);
         setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
-        setTitle("意见反馈");
+        setTitle(getResources().getString(R.string.SuggestTitle));
         setLeftTitleColor(R.color.White);
 
 
-        DensityUtil.setRelHeight(suggestContent , BaseActivity.height / 3);
-
+        DensityUtil.setRelHeight(suggestContent, BaseActivity.height / 3);
 
         setContent(view);
 
+        circlebut.setText(getResources().getString(R.string.SendText));
+        suggestSend.setOnClickListener(this);
+        DensityUtil.setRelayoutSize(suggestSend, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 4 * 3, 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
+
+
+    }
+
+
+    @Override
+    public void Click(View v) {
+        switch (v.getId()) {
+            case R.id.suggestSend:
+                //反馈的接口
+                break;
+        }
     }
 }

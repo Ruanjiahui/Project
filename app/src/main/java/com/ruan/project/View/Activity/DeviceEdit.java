@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -41,8 +42,11 @@ import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.DeviceCode;
 import com.ruan.project.Other.System.NetWork;
+import com.ruan.project.Other.UDP.UDPConfig;
 import com.ruan.project.R;
+import com.ruan.project.View.Fragment.Fragment1;
 import com.ruan.project.View.MyPopWindow;
 
 import java.util.ArrayList;
@@ -94,7 +98,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private Animation StopanimationBottom = null;
     private Animation StopanimationBack = null;
 
-    public static Context context = null;
+    public Context context = null;
+    private Animation.AnimationListener animationListener = null;
+
 
     /**
      * Start()
@@ -116,12 +122,13 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
 
 
         databaseName = DatabaseTableName.UserDeviceName;
+        animationListener = this;
 
         list = new ArrayList<>();
 
 
         setTopColor(R.color.Blue);
-        setTitle("修改");
+        setTitle(getResources().getString(R.string.UpdataTitle));
         setRightTitleVisiable(false);
         setContentColor(R.color.GreySmoke);
         setLeftTitleColor(R.color.White);
@@ -183,7 +190,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     protected void onStart() {
         super.onStart();
         if (tableName.equals("edit")) {
-            getDatabaseData("deviceMac = ?", new String[]{FLAG});
+            getDatabaseData("deviceID = ?", new String[]{FLAG});
         }
         getBottomList();
         //设置初始化界面
@@ -221,18 +228,17 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
 
                 //配置完网络这个是否使用设备编辑，这个时候应当扫描周边设备获取在线设备
                 if (tableName.equals("new")) {
-//                    Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
                     if (SystemTool.isNetState(context) == NetWork.WIFI)
 //                        //扫描局域网的设备
-                        new UdpOpera(this).UDPDeviceScan(this);
+                        new UdpOpera(this).UDPDeviceScan(this, FLAG);
                     else
-                        Toast.makeText(context, "请链接wifi", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, getResources().getString(R.string.ConnectWifi), Toast.LENGTH_SHORT).show();
                 } else if (tableName.equals("edit")) {
                     Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
                 }
                 break;
             case R.id.editDrop:
-                bottomText.setText("场景");
+                bottomText.setText(getResources().getString(R.string.SceneName));
                 if (sideListViewAdapter == null) {
                     sideListViewAdapter = new SideListViewAdapter(context, list);
                     bottomListView.setAdapter(sideListViewAdapter);
@@ -332,16 +338,16 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     @Override
     public void getMac(int position, Object[] objects) {
         //要是mac有数据则就说明是有新数据出现这个时候直接插入就行了
-        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
-//        Log.e("Ruan", mac + "--");
-        if (mac != null && FLAG.equals(mac)) {
-//            Log.e("Ruan", mac + "++");
+        if (objects != null) {
+            String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
             String IP = (String) objects[2];
             int PORT = (int) objects[3];
             userDevice.setDevicePORT(PORT + "");
             userDevice.setDeviceIP(IP);
+            userDevice.setDeviceID(FLAG);
             userDevice.setDeviceMac(mac);
-            userDevice.setDeviceOnline("2");
+            userDevice.setDeviceOnline(String.valueOf(DeviceCode.ONLINE));
+            userDevice.setDeviceOnlineStatus(DeviceCode.WIFI);
             Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         }
     }
@@ -353,9 +359,6 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private void Exists(UserDevice userDevice, String db, String Table_Name) {
         userDevice.setUserID("123456");
         ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
-//        Toast.makeText(context , contentValues.getAsString("deviceID") + "--"+ contentValues.getAsString("deviceMac") , Toast.LENGTH_SHORT).show();
-
-//        Log.e("Ruan", userDevice.getDeviceMac() + "***");
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"}, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
         Applications.getInstance().removeOneActivity(activity);
     }
@@ -370,7 +373,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     @Override
     public void Error(int position, int error) {
         if (!visiable) {
-            Toast.makeText(context, "连接超时,请重写设置", Toast.LENGTH_SHORT);
+            Toast.makeText(context, getResources().getString(R.string.ConnectTimeout), Toast.LENGTH_SHORT);
             visiable = true;
         }
     }
@@ -397,7 +400,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         StopanimationBack = AnimationUtils.loadAnimation(context, R.anim.backgroudin);
         bottomMain.startAnimation(StopanimationBottom);
         deviceEditBackground.startAnimation(StopanimationBack);
-        StopanimationBottom.setAnimationListener(this);
+        StopanimationBottom.setAnimationListener(animationListener);
         isVisiable = false;
     }
 
@@ -456,5 +459,17 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         editScene.setText(scene.getSceneName());
         if (isVisiable)
             stopAnimation();
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (isVisiable)
+                stopAnimation();
+            else
+                Applications.getInstance().removeOneActivity(this);
+        }
+        return false;
     }
 }

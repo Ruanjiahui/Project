@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +19,7 @@ import com.example.administrator.ui_sdk.MyCircleLoading;
 import com.example.administrator.ui_sdk.MyWebClient;
 import com.example.administrator.ui_sdk.View.CircleWaiting;
 import com.example.administrator.ui_sdk.View.MyWebView;
+import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -61,7 +63,7 @@ public class Fragment3 extends Fragment implements MyWebClient, MyCircleLoading.
 
         fragment3Top.setBackgroundColor(context.getResources().getColor(R.color.Blue));
         base_top_title.setPadding(0, DensityUtil.dip2px(context, 20), 0, 0);
-        base_top_title.setText("商城");
+        base_top_title.setText(getResources().getString(R.string.Nav3));
 
 
         base_top_relative.setVisibility(View.GONE);
@@ -69,7 +71,7 @@ public class Fragment3 extends Fragment implements MyWebClient, MyCircleLoading.
         base_top_title.setTextColor(context.getResources().getColor(R.color.White));
 
         fragment3Wait.setVisibility(View.VISIBLE);
-        fragment3WebView.setWebView("http://blink.tmall.com", this);
+        fragment3WebView.setWebView(HttpURL.ShopURL, this);
         fragment3Wait.setAnimationState(this);
 
         return view;
@@ -86,7 +88,7 @@ public class Fragment3 extends Fragment implements MyWebClient, MyCircleLoading.
      */
     @Override
     public void Loading() {
-        fragment3Wait.setStart();
+            fragment3Wait.setStart();
     }
 
     /**

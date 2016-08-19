@@ -3,17 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <EditText
         android:id="@+id/suggestContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:background="@color/White"
+        android:hint="@string/SuggestEditHint"
         android:padding="5dp"
-        android:hint="请输入反馈意见"
-        android:textColorHint="@color/GreyDeep"
         android:textColor="@color/Grey"
+        android:textColorHint="@color/GreyDeep"
         android:textSize="15sp" />
 
 
@@ -27,18 +26,14 @@
         android:orientation="horizontal"
         android:padding="5dp">
 
-        <ImageView
-            android:id="@+id/suggestPhoneimg"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@mipmap/ic_launcher"/>
-
         <EditText
             android:id="@+id/suggestPhonetxt"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="@drawable/edit2"
             android:gravity="center_vertical"
-            android:hint="请输入你的电话号码"
+            android:hint="@string/PhoneEditHint"
+            android:padding="5dp"
             android:textColor="@color/Grey"
             android:textColorHint="@color/GreyDeep"
             android:textSize="15sp" />
@@ -46,54 +41,10 @@
 
     </LinearLayout>
 
-
-    <RelativeLayout
-        android:id="@+id/suggestDevice"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/White"
-        android:layout_below="@id/suggestPhone"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/suggestDeviceimg"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher"/>
-
-        <TextView
-            android:id="@+id/suggestDevicetxt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_centerVertical="true"
-            android:gravity="center_vertical"
-            android:layout_toRightOf="@id/suggestDeviceimg"
-            android:text="选择问题设备"
-            android:textColor="@color/GreyDeep"
-            android:textSize="15sp" />
-
-
-        <ImageView
-            android:id="@+id/suggestDeviceright"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/ic_launcher"/>
-
-    </RelativeLayout>
-
-
-    <TextView
+    <include
         android:id="@+id/suggestSend"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:background="@color/Blue"
-        android:gravity="center"
-        android:text="发送"
-        android:textColor="@color/White"
-        android:textSize="15sp" />
+        layout="@layout/circlelayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

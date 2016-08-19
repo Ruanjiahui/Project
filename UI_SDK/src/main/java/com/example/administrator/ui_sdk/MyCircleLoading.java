@@ -24,4 +24,12 @@ public interface MyCircleLoading {
          */
         public void AnimationState(boolean state);
     }
+
+    public interface ShowMemory {
+
+        /**
+         * 动画结束
+         */
+        public void AnimationEnd();
+    }
 }

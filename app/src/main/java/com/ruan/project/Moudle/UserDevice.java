@@ -18,6 +18,7 @@ public class UserDevice extends Device implements Parcelable {
     public String devicePORT = null;
     public String deviceIP = null;
     public String deviceRemarks = null;
+    public String deviceOnlineStatus = null;
 
     public UserDevice() {
     }
@@ -33,10 +34,19 @@ public class UserDevice extends Device implements Parcelable {
         devicePORT = in.readString();
         deviceIP = in.readString();
         deviceRemarks = in.readString();
-        deviceModel= in.readString();
-        deviceType= in.readString();
-        deviceTypeID= in.readString();
+        deviceModel = in.readString();
+        deviceType = in.readString();
+        deviceTypeID = in.readString();
+        deviceOnlineStatus = in.readString();
 
+    }
+
+    public String getDeviceOnlineStatus() {
+        return deviceOnlineStatus;
+    }
+
+    public void setDeviceOnlineStatus(String deviceOnlineStatus) {
+        this.deviceOnlineStatus = deviceOnlineStatus;
     }
 
     public static final Creator<UserDevice> CREATOR = new Creator<UserDevice>() {
@@ -142,6 +152,7 @@ public class UserDevice extends Device implements Parcelable {
         setDeviceRemarks(list.get(0).get("deviceRemarks"));
         setSceneID(list.get(0).get("sceneID"));
         setUserID(list.get(0).get("userID"));
+        setDeviceOnlineStatus(list.get(0).get("deviceOnlineStatus"));
     }
 
     /**
@@ -178,6 +189,7 @@ public class UserDevice extends Device implements Parcelable {
         dest.writeString(deviceModel);
         dest.writeString(deviceType);
         dest.writeString(deviceTypeID);
+        dest.writeString(deviceOnlineStatus);
     }
 
     private ArrayList<UserDevice> list = null;

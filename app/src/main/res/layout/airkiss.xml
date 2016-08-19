@@ -17,7 +17,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/edit2"
-        android:hint="please into wifiSSD"
+        android:hint="@string/wifiNameHint"
         android:padding="5dp"
         android:textColor="@color/Black"
         android:textSize="15sp" />
@@ -30,7 +30,7 @@
         android:layout_below="@id/wifiSSID"
         android:layout_marginTop="5dp"
         android:background="@drawable/edit2"
-        android:hint="please into password"
+        android:hint="@string/wifiPasswordHint"
         android:padding="5dp"
         android:textColor="@color/Black"
         android:textSize="15sp" />

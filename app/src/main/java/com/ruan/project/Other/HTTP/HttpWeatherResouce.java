@@ -1,15 +1,11 @@
 package com.ruan.project.Other.HTTP;
 
-import android.util.Log;
-
 import com.example.administrator.Abstract.HttpRequest;
-import com.example.administrator.Abstract.HttpRequester;
 import com.example.administrator.HttpCode;
-import com.example.administrator.http_sdk.HttpConnectSource;
-import com.example.administrator.http_sdk.HttpReadSource;
+import com.example.administrator.Resource.HttpConnectSource;
+import com.example.administrator.Resource.HttpReadSource;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 
 /**
@@ -63,5 +59,13 @@ public class HttpWeatherResouce extends HttpRequest {
     @Override
     public String POST(String uri, byte[] data) {
         return null;
+    }
+
+    /**
+     * 取消下载链接
+     */
+    @Override
+    public void disConnection() {
+
     }
 }

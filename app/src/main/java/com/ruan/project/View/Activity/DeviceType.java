@@ -73,8 +73,8 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
         setContent(view);
 
 
-        qqLeft.setText("添加");
-        qqRight.setText("扫描");
+        qqLeft.setText(getResources().getString(R.string.DeviceName));
+        qqRight.setText(getResources().getString(R.string.ScanName));
         base_top_relative.setOnClickListener(this);
         deviceTypeViewPager.addOnPageChangeListener(this);
         qqLeft.setOnClickListener(this);

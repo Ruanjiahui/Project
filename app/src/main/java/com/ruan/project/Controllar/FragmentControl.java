@@ -10,7 +10,9 @@ import com.example.administrator.data_sdk.Database.CreateTable;
 import com.example.administrator.data_sdk.Database.Database;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.Database.LoadResouce;
+import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Moudle.Scene;
@@ -21,10 +23,13 @@ import com.ruan.project.Other.DataBase.CreateDataBase;
 import com.ruan.project.Other.DataBase.DataHandler;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.DeviceCode;
 import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.Other.Utils.ReadCityFile;
 import com.ruan.project.R;
+import com.ruan.project.TestDevice;
+import com.ruan.project.TimerHandler;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -43,6 +48,13 @@ public class FragmentControl {
     public static void DataBaseHandler(Context context) {
         //判断是否存在用户表   如果没有存在则自动创建用户表
         new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName);
+        //判断是否存在用户表   如果没有存在则自动创建用户表
+        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName)) {
+            ArrayList<ContentValues> list = TestDevice.getTestDeviceContent(context);
+            for (int i = 0; i < list.size(); i++)
+                new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName, list.get(i));
+        }
+
         //判断是否存在场景表   如果没有存在则自动创建场景表
         new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
         //模拟插个人数据库进去
@@ -68,6 +80,14 @@ public class FragmentControl {
         User.setUser((User) list.get(0));
         //获取个人用户的数据
 //        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "", new String[]{}));
+
+
+        //配置文件操作
+        //将信息写入配置文件
+        //默认为wifi情况下自动更新软件
+        if (!FileTool.getProperties(context, HttpURL.ConfigName))
+            FileTool.WriteProperties(context, HttpURL.ConfigName, "WIFI", true + "");
+
     }
 
     /**
@@ -115,23 +135,24 @@ public class FragmentControl {
         ArrayList<Object> list = new ArrayList<>();
         UserDevice userDevice;
         String online = null;
+        HttpURL.STATE = SystemTool.isNetState(context);
         if (ListObj != null && ListObj.size() > 0) {
             for (int i = 0; i < ListObj.size(); i++) {
                 userDevice = (UserDevice) ListObj.get(i);
-                if (userDevice.getDeviceOnline().equals("1")) {
-                    online = "离线";
+                if (DeviceCode.UNONLINE == Integer.parseInt(userDevice.getDeviceOnline())) {
+                    online = context.getResources().getString(R.string.UNONLINE);
                     list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
                     continue;
-                } else if (userDevice.getDeviceOnline().equals("2")) {
-                    online = "在线";
-                    if (HttpURL.STATE == NetWork.WIFI)
+                } else if (DeviceCode.ONLINE == Integer.parseInt(userDevice.getDeviceOnline())) {
+                    online = context.getResources().getString(R.string.ONLINE);
+                    if (DeviceCode.WIFI.equals(userDevice.getDeviceOnlineStatus()))
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.wifionline), DensityUtil.dip2px(context, 25)));
-                    if (HttpURL.STATE == NetWork.INTNET)
+                    else if (DeviceCode.CLOUD.equals(userDevice.getDeviceOnlineStatus()))
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cloudonline), DensityUtil.dip2px(context, 25)));
-                    if (HttpURL.STATE == NetWork.UNCONN) {
-                        online = "离线";
+                    else if (HttpURL.STATE == NetWork.UNCONN) {
+                        online = context.getResources().getString(R.string.UNONLINE);
                         ContentValues contentValues = new ContentValues();
-                        contentValues.put("deviceOnline", "1");
+                        contentValues.put("deviceOnline", String.valueOf(DeviceCode.UNONLINE));
                         list.add(getItem(userDevice.getDeviceName(), userDevice.getDeviceRemarks(), ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), online, userDevice.getDeviceMac(), ImageTransformation.Resouce2Drawable(context, R.mipmap.unonline), DensityUtil.dip2px(context, 25)));
                         new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "deviceMac = ?", new String[]{userDevice.getDeviceMac()});
                     }
@@ -172,5 +193,4 @@ public class FragmentControl {
         item.setHomeImage(drawable);
         return item;
     }
-
 }

@@ -16,4 +16,8 @@ public class DatabaseTableName {
     public static String SceneName = "Scene";
     //数据库表的名称  （城市表）
     public static String CityName = "City";
+    //数据库表的名称  （设置配置表）
+    public static String ConfigName = "Config";
+    //数据库表的名称   (模拟设备表)
+    public static String AnalogyName = "Analogy";
 }

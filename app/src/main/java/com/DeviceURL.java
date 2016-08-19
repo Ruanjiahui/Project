@@ -5,6 +5,8 @@ package com;
  */
 public class DeviceURL {
 
-
+    //插排的标识
     public final static int Switch = 1;
+    //RGB灯的标识
+    public final static int RGBLight = 2;
 }

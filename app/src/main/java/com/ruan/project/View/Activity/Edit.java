@@ -93,30 +93,30 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
         setLeftTitleColor(R.color.White);
         setRightTitleColor(R.color.White);
         setTopColor(R.color.Blue);
-        setRightTitle("保存");
+        setRightTitle(getSystemText(R.string.SaveTitle));
         setTopTitleColor(R.color.White);
 
         switch (FLAG) {
             case "name":
-                setTitle("姓名");
+                setTitle(getSystemText(R.string.EditName));
                 personEdit.setVisibility(View.VISIBLE);
-                hint = "请输入你的姓名";
+                hint = getSystemText(R.string.EditNameHint);
                 setHint();
                 break;
             case "height":
-                setTitle("身高");
+                setTitle(getSystemText(R.string.EditHeight));
                 personEdit.setVisibility(View.VISIBLE);
-                hint = "请输入你的身高";
+                hint = getSystemText(R.string.EditNameHint);
                 setHint();
                 break;
             case "weight":
-                setTitle("体重");
+                setTitle(getSystemText(R.string.EditWeight));
                 personEdit.setVisibility(View.VISIBLE);
-                hint = "请输入你的体重";
+                hint = getSystemText(R.string.EditWeightHint);
                 setHint();
                 break;
             case "birthday":
-                setTitle("生日");
+                setTitle(getSystemText(R.string.EditBirthday));
                 personPick.setVisibility(View.VISIBLE);
                 if (content != null && !"".equals(content) && content.length() != 0) {
                     int[] a = getbirthday(content);
@@ -128,20 +128,20 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                 NumberPicker();
                 break;
             case "sex":
-                setTitle("性别");
+                setTitle(getSystemText(R.string.EditSex));
                 personRadio.setVisibility(View.VISIBLE);
-                if ("男".equals(content)) {
+                if (getSystemText(R.string.SexMan).equals(content)) {
                     radioButton.setChecked(true);
-                } else if ("女".equals(content)) {
+                } else if (getSystemText(R.string.SexLady).equals(content)) {
                     radioButton1.setChecked(true);
                 }
                 break;
             //场景新建
             case "scene":
-                setTitle("场景");
+                setTitle(getSystemText(R.string.SceneName));
+                hint = getSystemText(R.string.EditSceneHint);
                 personRelative.setVisibility(View.VISIBLE);
                 personEdit.setVisibility(View.VISIBLE);
-                hint = "请输入场景名称";
                 Map<String, String> map = new GetDatabaseData().Query(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, new String[]{"max(sceneID)"}, "", null, "", "", "", "");
                 if ("".equals(content)) {
                     if (map.get("max(sceneID)") != null)
@@ -158,6 +158,10 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
         setContent(view);
 
         personRadio.setOnCheckedChangeListener(this);
+    }
+
+    private String getSystemText(int resid) {
+        return getResources().getString(resid);
     }
 
     /**
@@ -230,10 +234,10 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
     public void onCheckedChanged(RadioGroup group, int checkedId) {
         switch (checkedId) {
             case R.id.radioButton:
-                sex = "男";
+                sex = getSystemText(R.string.SexMan);
                 break;
             case R.id.radioButton1:
-                sex = "女";
+                sex = getSystemText(R.string.SexLady);
                 break;
         }
     }

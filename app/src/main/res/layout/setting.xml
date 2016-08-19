@@ -10,22 +10,27 @@
         android:layout_height="wrap_content" />
 
 
-    <Button
+    <include
         android:id="@+id/settingBut"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="50dp"
-        android:background="@drawable/button_selector_blue"
-        android:text="登录"
-        android:textColor="@color/White"
-        android:textSize="15sp" />
+        layout="@layout/circlelayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    <!--<Button-->
+        <!--android:id="@+id/settingBut"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_marginTop="50dp"-->
+        <!--android:background="@drawable/button_selector_blue"-->
+        <!--android:text="登录"-->
+        <!--android:textColor="@color/White"-->
+        <!--android:textSize="15sp" />-->
 
     <RelativeLayout
         android:id="@+id/settingRel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/myprogressstyle"
+        android:background="@color/BlackTrafer"
         android:visibility="gone">
 
         <include

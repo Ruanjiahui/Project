@@ -24,4 +24,11 @@ public abstract class HttpRequester {
      * @return
      */
     public abstract byte[] POST(String uri, byte[] data);
+
+
+    /**
+     * 取消链接的方法
+     */
+    public abstract void disConnection();
+
 }

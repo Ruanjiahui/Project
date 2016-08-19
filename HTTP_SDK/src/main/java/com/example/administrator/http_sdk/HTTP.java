@@ -1,15 +1,19 @@
 package com.example.administrator.http_sdk;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.Abstract.HttpUploadDown;
-import com.example.administrator.Interface.Connect;
+import com.example.administrator.HttpContent;
+import com.example.administrator.Interface.HttpFileResult;
 import com.example.administrator.Interface.HttpInterface;
-import com.example.administrator.Interface.Result;
+import com.example.administrator.Interface.HttpResult;
+import com.example.administrator.Resource.HttpConnectionString;
+import com.example.administrator.Thread.HttpFileAsyncTask;
 import com.example.administrator.Thread.MyAsyncTask;
 import com.example.administrator.Thread.MyAsyncTaskDown;
-import com.example.administrator.Thread.MyRunnable;
+import com.example.administrator.Thread.HttpRunnable;
 
 import java.io.File;
 import java.io.InputStream;
@@ -34,9 +38,13 @@ public class HTTP implements HttpInterface.HttpConnect {
     //请求的标示
     private int position = 0;
 
+    private HttpFileAsyncTask httpFileAsyncTask = null;
+    private Httpbyte httpbyte = null;
+    private HttpString httpString = null;
+
 
     /**
-     * 这个是访问网络的HTTP请求返回来的是字节数组
+     * 这个是访问网络的HTTP请求返回来的是字节数组(获取数据的接口)
      *
      * @param RHttp      处理方法的接口
      * @param method     请求的方法
@@ -45,12 +53,14 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param FLAG       请求的标识
      * @param SuperClass 数据对象是否是继承对象
      */
-    public HTTP(Result.Http RHttp, String method, String URL, Object object, int FLAG, boolean SuperClass) {
-        new Thread(new MyRunnable(new Httpbyte(method, URL, object, FLAG, SuperClass), RHttp, FLAG)).start();
+    public HTTP(HttpResult.Http RHttp, String method, String URL, Object object, int FLAG, boolean SuperClass) {
+        httpbyte = new Httpbyte(method, URL, object, SuperClass);
+        new Thread(new HttpRunnable(httpbyte, RHttp, FLAG)).start();
     }
 
+
     /**
-     * 这个是访问网络的HTTP请求返回来的是字符串
+     * 这个是访问网络的HTTP请求返回来的是字符串(获取数据的接口)
      *
      * @param RHttpString 处理方法的接口
      * @param method      请求的方法
@@ -59,9 +69,39 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param FLAG        请求的标识
      * @param SuperClass  数据对象是否是继承对象
      */
-    public HTTP(Result.HttpString RHttpString, String method, String URL, Object object, int FLAG, boolean SuperClass) {
-        new Thread(new MyRunnable(new HttpString(method, URL, object, FLAG, SuperClass), RHttpString, FLAG)).start();
+    public HTTP(HttpResult.HttpString RHttpString, String method, String URL, Object object, int FLAG, boolean SuperClass) {
+        httpString = new HttpString(method, URL, object, SuperClass);
+        new Thread(new HttpRunnable(httpString, RHttpString, FLAG)).start();
     }
+
+    /**
+     * 这个是下载和上传的方法没有下载过程的显示
+     *
+     * @param httpFileResult
+     * @param method
+     * @param URL
+     * @param list
+     * @param FLAG
+     */
+    public HTTP(HttpFileResult httpFileResult, String method, String URL, ArrayList<HttpContent> list, int FLAG) {
+        httpFileAsyncTask = new HttpFileAsyncTask(new HttpFile(method, URL, list), httpFileResult, FLAG);
+        httpFileAsyncTask.execute();
+    }
+
+    /**
+     * 这个是下载和上传的方法有下载过程的显示
+     *
+     * @param httpFileResult
+     * @param FLAG
+     * @param method
+     * @param URL
+     * @param list
+     */
+    public HTTP(HttpFileResult httpFileResult, int FLAG, String method, String URL, ArrayList<HttpContent> list) {
+        httpFileAsyncTask = new HttpFileAsyncTask(new HttpFile(httpFileResult, FLAG, method, URL, list), httpFileResult, FLAG);
+        httpFileAsyncTask.execute();
+    }
+
 
     /**
      * POST请求的方法
@@ -70,13 +110,14 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param url
      * @param data
      */
+    @Deprecated
     public HTTP(HttpInterface.HttpHandler httpHandler, String url, String data, int position) {
         this.url = url;
         this.data = data;
         this.position = position;
         //实例化对象
         httpRequest = new HttpConnectionString();
-        new Thread(new MyRunnable(this, httpHandler, position)).start();
+        new Thread(new HttpRunnable(this, httpHandler, position)).start();
     }
 
     /**
@@ -85,11 +126,12 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param httpHandler
      * @param url
      */
+    @Deprecated
     public HTTP(HttpInterface.HttpHandler httpHandler, String url) {
         this.url = url;
         //实例化对象
         httpRequest = new HttpConnectionString();
-        new Thread(new MyRunnable(this, httpHandler)).start();
+        new Thread(new HttpRunnable(this, httpHandler)).start();
     }
 
     /**
@@ -100,6 +142,7 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param url
      * @param data
      */
+    @Deprecated
     public HTTP(HttpInterface.DownUploadHandler.Upload httpHandler, ArrayList<File> file, String url, String data, String key) {
         this.file = file;
         this.url = url;
@@ -117,6 +160,7 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param url
      * @param data
      */
+    @Deprecated
     public HTTP(HttpInterface.DownUploadHandler.Upload httpHandler, InputStream inputStream, String url, String data, String key) {
         this.inputStream = inputStream;
         this.url = url;
@@ -134,6 +178,7 @@ public class HTTP implements HttpInterface.HttpConnect {
      * @param data
      * @param flag
      */
+    @Deprecated
     public HTTP(HttpInterface.DownUploadHandler.Download httpHandler, String url, String data, String flag) {
         this.url = url;
         this.data = data;
@@ -148,6 +193,8 @@ public class HTTP implements HttpInterface.HttpConnect {
     public String connect() {
         //如果数据为空则是GET请求
         if (data == null) {
+            String data = httpRequest.GET(url);
+            Log.e("Ruan", "&&&&" + data);
             return httpRequest.GET(url);
         } else {
             //如果数据不为空则分两种清空
@@ -179,5 +226,22 @@ public class HTTP implements HttpInterface.HttpConnect {
     @Override
     public InputStream downFile() {
         return httpUploadDown.DownFile(url);
+    }
+
+
+    /**
+     * 取消下载的操作
+     */
+    public void disConnectionFile() {
+        httpFileAsyncTask.disConnection();
+    }
+
+
+    public void disConnectionByte() {
+        httpbyte.disConnection();
+    }
+
+    public void disConnectionString() {
+        httpString.disConnection();
     }
 }

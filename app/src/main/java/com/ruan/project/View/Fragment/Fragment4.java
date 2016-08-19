@@ -40,11 +40,11 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     private Context context = null;
     private RelativeLayout fragment4Top = null;
     private GridView fragment4Grid = null;
-    private TextView fragment4ID = null;
+//    private TextView fragment4ID = null;
     private ArrayList<Object> list = null;
-    private ImageView fragment4Logo = null;
+//    private ImageView fragment4Logo = null;
 
-    private View fragmentOrigin = null;
+//    private View fragmentOrigin = null;
     private User user = null;
 
     @Nullable
@@ -56,31 +56,31 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
 
         fragment4Top = (RelativeLayout) view.findViewById(R.id.fragment4Top);
         fragment4Grid = (GridView) view.findViewById(R.id.fragment4Grid);
-        fragmentOrigin = view.findViewById(R.id.fragmentOrigin);
-        fragment4Logo = (ImageView) view.findViewById(R.id.fragment4Logo);
-        fragment4ID = (TextView) view.findViewById(R.id.fragment4ID);
+//        fragmentOrigin = view.findViewById(R.id.fragmentOrigin);
+//        fragment4Logo = (ImageView) view.findViewById(R.id.fragment4Logo);
+//        fragment4ID = (TextView) view.findViewById(R.id.fragment4ID);
 
         list = new ArrayList<>();
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "家庭成员", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "帮助与支持", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "意见反馈", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.ic_launcher), "系统设置", DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.family), "家庭成员", DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.help), "帮助与支持", DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.suggest), "意见反馈", DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.setting), "系统设置", DensityUtil.dip2px(context, 120)));
 
         DensityUtil.setHeight(fragment4Top, BaseActivity.height / 3);
 
         user = User.getInstance();
 
-        if ("true".equals(user.getUserLogin())) {
-            fragment4ID.setText(user.getUserName());
-        }
+//        if ("true".equals(user.getUserLogin())) {
+//            fragment4ID.setText(user.getUserName());
+//        }
 
 
         fragment4Grid.setAdapter(new LGAdapter(context, list, "GridView"));
-        fragmentOrigin.setVisibility(View.GONE);
+//        fragmentOrigin.setVisibility(View.GONE);
 
 
         fragment4Grid.setOnItemClickListener(this);
-        fragment4Logo.setOnClickListener(this);
+//        fragment4Logo.setOnClickListener(this);
 
         return view;
     }
@@ -134,9 +134,9 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.fragment4Logo:
+//            case R.id.fragment4Logo:
 //                if ("true".equals(user.getUserLogin()))
-                    CommonIntent.IntentActivity(context, Person.class);
+//                CommonIntent.IntentActivity(context, Person.class);
 //                else
 //                    CommonIntent.IntentActivity(context, Login.class);
 //                break;

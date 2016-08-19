@@ -38,13 +38,17 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     private ArrayList<Object> obj = null;
     private UserDevice userDevice = null;
 
+    //这个获取扫描的对象数据
+    private String data = null;
+
     /**
      * Start()
      */
     @Override
     public void init() {
+        data = getIntent().getExtras().getString("data");
 
-        setTitle("搜索设备");
+        setTitle(getResources().getString(R.string.SearchTitle));
         setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
         setLeftTitleColor(R.color.White);
@@ -63,16 +67,17 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
+    protected void onResume() {
+        super.onResume();
 
         obj = new ArrayList<>();
         ListObj = null;
         ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
 
         list = new ArrayList<>();
+        //这个广播是广播Blink所有的设备
         //计时器，广播没一秒发送一次，总共发送5次
-        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+        new ScanDevice().Scanner(UDPConfig.PORT, data , this, UDPConfig.count);
     }
 
 
@@ -143,7 +148,7 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
      */
     @Override
     public void Error(int position, int error) {
-        Toast.makeText(context, "获取设备超时", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getResources().getString(R.string.DeviceTimeout), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -162,6 +167,6 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         userDevice = (UserDevice) obj.get(position);
-        CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceMac(), "new");
+        CommonIntent.IntentActivity(context, DeviceEdit.class, data, "new");
     }
 }

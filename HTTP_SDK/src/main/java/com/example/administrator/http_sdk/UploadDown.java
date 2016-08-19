@@ -8,6 +8,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
 import com.example.administrator.Abstract.HttpUploadDown;
+import com.example.administrator.Resource.HttpConnectSource;
+import com.example.administrator.Resource.HttpReadSource;
 
 import java.io.DataOutputStream;
 import java.io.File;

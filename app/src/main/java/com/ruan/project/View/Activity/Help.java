@@ -7,6 +7,7 @@ import android.widget.ListView;
 
 
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.ruan.project.Moudle.Item;
 import com.ruan.project.Other.Adapter.LGAdapter;
@@ -28,7 +29,7 @@ public class Help extends BaseActivity {
      */
     @Override
     public void init() {
-        view = LayoutInflater.from(context).inflate(R.layout.help , null);
+        view = LayoutInflater.from(context).inflate(R.layout.help, null);
 
         helpList = (ListView) view.findViewById(R.id.helpList);
 
@@ -36,15 +37,16 @@ public class Help extends BaseActivity {
         setRightTitleVisiable(false);
         setTopTitleColor(R.color.White);
         setLeftTitleColor(R.color.White);
+        setTitle(getResources().getString(R.string.HelpTitle));
 
 
         list = new ArrayList<>();
 
-        list.add(getItem("使用帮助" ,"" , ImageTransformation.Resouce2Drawable(context , R.mipmap.ic_launcher)));
-        list.add(getItem("在线客服" ,"" , ImageTransformation.Resouce2Drawable(context , R.mipmap.ic_launcher)));
-        list.add(getItem("远程协助" ,"111k" , ImageTransformation.Resouce2Drawable(context , R.mipmap.ic_launcher)));
+        list.add(getItem(getResources().getString(R.string.UseHelp), null, ImageTransformation.Resouce2Drawable(context, R.mipmap.right)));
+        list.add(getItem(getResources().getString(R.string.OnlineService), null, ImageTransformation.Resouce2Drawable(context, R.mipmap.right)));
+        list.add(getItem(getResources().getString(R.string.TeamView), null, ImageTransformation.Resouce2Drawable(context, R.mipmap.right)));
 
-        helpList.setAdapter(new LGAdapter(context , list , "ListView"));
+        helpList.setAdapter(new LGAdapter(context, list, "ListView"));
 
 
         setContent(view);
@@ -56,6 +58,7 @@ public class Help extends BaseActivity {
         item.setListSubText(subtitile);
         item.setListText(title);
         item.setListright(drawable);
+        item.setHeight(DensityUtil.dip2px(context, 50));
 
         return item;
     }

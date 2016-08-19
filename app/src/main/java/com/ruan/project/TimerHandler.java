@@ -11,8 +11,11 @@ public interface TimerHandler {
 
     /**
      * 调用标示
+     *
      * @param position
      * @return
      */
     public Message timerRun(int position);
+
+
 }

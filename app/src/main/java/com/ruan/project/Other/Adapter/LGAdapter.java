@@ -119,10 +119,24 @@ public class LGAdapter extends BaseAdapter {
                     viewHolder.listSubText.setText(item.getListSubText());
                     viewHolder.listSubText.setVisibility(View.VISIBLE);
                 }
+                //显示右边的设置按钮
+                if (item.isVisiable()) {
+                    viewHolder.listSetting.setVisibility(View.VISIBLE);
+                    if (item.isCheck()) {
+                        viewHolder.listSetting.setBackground(context.getResources().getDrawable(R.drawable.setting_but_selector));
+                        viewHolder.listSettingText1.setBackground(context.getResources().getDrawable(R.drawable.setting_but_open));
+                        viewHolder.listSettingText2.setBackground(context.getResources().getDrawable(R.drawable.setting_but_selector));
+                    } else {
+                        viewHolder.listSetting.setBackground(context.getResources().getDrawable(R.drawable.setting_but_unselector));
+                        viewHolder.listSettingText1.setBackground(context.getResources().getDrawable(R.drawable.setting_but_unselector));
+                        viewHolder.listSettingText2.setBackground(context.getResources().getDrawable(R.drawable.setting_but_open));
+                    }
+                }
             }
             if (item.getHeight() != 0)
                 DensityUtil.setHeight(viewHolder.listRelative, item.getHeight());
         } else if ("GridView".equals(state)) {
+            viewHolder.gridLinear.setBackgroundResource(R.drawable.itemsector);
             viewHolder.gridText.setText(item.getGridText());
             viewHolder.gridImage.setImageDrawable(item.getGridImage());
             if (item.getHeight() != 0)

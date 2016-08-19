@@ -33,6 +33,9 @@ public class ViewHolder {
     public TextView listSubText;
     public ImageView listright;
     public TextView listRightText;
+    public LinearLayout listSetting = null;
+    public TextView listSettingText1 = null;
+    public TextView listSettingText2 = null;
 
 
     public RelativeLayout homeRelative;
@@ -68,6 +71,9 @@ public class ViewHolder {
                 listSubText = (TextView) view.findViewById(R.id.listSubText);
                 listright = (ImageView) view.findViewById(R.id.listright);
                 listRightText = (TextView) view.findViewById(R.id.listRightText);
+                listSetting = (LinearLayout) view.findViewById(R.id.listSetting);
+                listSettingText1 = (TextView) view.findViewById(R.id.listSettingText1);
+                listSettingText2 = (TextView) view.findViewById(R.id.listSettingText2);
                 break;
             case "GridView":
                 //纯GirdView

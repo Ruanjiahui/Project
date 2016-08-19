@@ -54,11 +54,15 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     private ArrayList<Object> ListObj = null;
     private UserDevice userDevice = null;
 
+    private String data = null;
+
     /**
      * Start()
      */
     @Override
     public void init() {
+        data = getIntent().getExtras().getString("data");
+
         view = LayoutInflater.from(context).inflate(R.layout.airkiss, null);
 
         setTopColor(R.color.Blue);
@@ -66,7 +70,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         setContentColor(R.color.WhiteSmoke);
         setRightTitleVisiable(false);
         setLeftTitleColor(R.color.White);
-        setTitle("配置网络");
+        setTitle(getResources().getString(R.string.NetWorkSetting));
 
 
         airkissConfig = new AirkissConfig();
@@ -81,7 +85,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         if (SystemTool.isNetState(context) == NetWork.WIFI)
             wifiSSID.setText(WifiFactory.getWifiSSID(context));
         else
-            wifiSSID.setText("Unknow network");
+            wifiSSID.setText(getResources().getString(R.string.wifiName));
 
         setContent(view);
 
@@ -166,7 +170,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         if (airkissConfig != null)
             airkissConfig.StopAirKiss();
 
-        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+        new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
 //        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
 //        Applications.getInstance().removeOneActivity(this);
     }
@@ -182,7 +186,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
             airkissConfig.StopAirKiss();
 
         //计时器，广播没一秒发送一次，总共发送5次
-        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
+        new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
 //        wifiConn.setStop(CircleLoading.END);
 //        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();
     }
@@ -198,7 +202,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
             if (!wifiConn.getNowState()) {
                 wifiConn.setStart();
 
-                //计时器，广播没一秒发送一次，总共发送5次
+//                //计时器，广播没一秒发送一次，总共发送5次
 //                new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
 
                 airkissConfig.StartAirKiss(wifiSSID.getText().toString(), wifiPassword.getText().toString(), this);
@@ -208,7 +212,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
                 wifiConn.setStop(CircleLoading.END);
             }
         } else {
-            Toast.makeText(context, "请输入密码或者wifi名称", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.NetWorkEditHint), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -226,28 +230,30 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
 
     @Override
     public void getMac(int position, Object[] objects) {
-        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
-        if (ListObj != null && ListObj.size() > 0) {
-            for (int i = 0; i < ListObj.size(); i++) {
-                String mac1 = mac;
-                userDevice = (UserDevice) ListObj.get(i);
-                if (!userDevice.getDeviceMac().equals(mac1)) {
-                    ConfigSueccful();
-                    return;
-                }
-            }
-        } else {
-            if (!isSuccesful) {
-                isSuccesful = true;
-                ConfigSueccful();
-                return;
-            }
-        }
+        if (objects != null)
+            ConfigSueccful();
+//        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
+//        if (ListObj != null && ListObj.size() > 0) {
+//            for (int i = 0; i < ListObj.size(); i++) {
+//                String mac1 = mac;
+//                userDevice = (UserDevice) ListObj.get(i);
+//                if (!userDevice.getDeviceMac().equals(mac1)) {
+//                    ConfigSueccful();
+//                    return;
+//                }
+//            }
+//        } else {
+//            if (!isSuccesful) {
+//                isSuccesful = true;
+//                ConfigSueccful();
+//                return;
+//            }
+//        }
     }
 
     private void ConfigSueccful() {
-        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
-        CommonIntent.IntentActivity(context, ConfigList.class);
+        Toast.makeText(context, getResources().getString(R.string.NetWorkSuccess), Toast.LENGTH_SHORT).show();
+        CommonIntent.IntentActivity(context, ConfigList.class, data);
         Applications.getInstance().removeOneActivity(this);
     }
 
@@ -260,6 +266,6 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     @Override
     public void Error(int position, int error) {
         wifiConn.setStop(CircleLoading.END);
-        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, getResources().getString(R.string.NetWorkFail), Toast.LENGTH_SHORT).show();
     }
 }

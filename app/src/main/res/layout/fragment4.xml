@@ -10,58 +10,58 @@
         android:id="@+id/fragment4Top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@mipmap/logo"
+        android:background="@mipmap/companylogo"
         android:gravity="center">
 
 
-        <ImageView
-            android:id="@+id/fragment4Logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="5dp"
-            android:src="@mipmap/ic_launcher" />
+        <!--<ImageView-->
+            <!--android:id="@+id/fragment4Logo"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_centerHorizontal="true"-->
+            <!--android:layout_marginTop="5dp"-->
+            <!--android:src="@mipmap/companylogo" />-->
 
-        <TextView
-            android:id="@+id/fragment4ID"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fragment4Logo"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center_horizontal"
-            android:text="请登录"
-            android:textColor="@color/Black"
-            android:textSize="14sp" />
+        <!--<TextView-->
+        <!--android:id="@+id/fragment4ID"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/fragment4Logo"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="请登录"-->
+        <!--android:textColor="@color/Black"-->
+        <!--android:textSize="14sp" />-->
 
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/fragment4ID"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/message"
-            android:layout_marginTop="10dp"
-            android:paddingLeft="12dp"
-            android:paddingRight="12dp">
+        <!--<RelativeLayout-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_below="@id/fragment4ID"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:background="@drawable/message"-->
+        <!--android:layout_marginTop="10dp"-->
+        <!--android:paddingLeft="12dp"-->
+        <!--android:paddingRight="12dp">-->
 
-            <include
-                android:id="@+id/fragmentOrigin"
-                layout="@layout/origin"
-                android:layout_width="17dp"
-                android:layout_height="17dp" />
+        <!--<include-->
+        <!--android:id="@+id/fragmentOrigin"-->
+        <!--layout="@layout/origin"-->
+        <!--android:layout_width="17dp"-->
+        <!--android:layout_height="17dp" />-->
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/fragmentOrigin"
-                android:gravity="center_horizontal"
-                android:text="消息通知"
-                android:layout_marginLeft="2dp"
-                android:textColor="@color/White"
-                android:textSize="12sp" />
+        <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_centerVertical="true"-->
+        <!--android:layout_toRightOf="@id/fragmentOrigin"-->
+        <!--android:gravity="center_horizontal"-->
+        <!--android:text="消息通知"-->
+        <!--android:layout_marginLeft="2dp"-->
+        <!--android:textColor="@color/White"-->
+        <!--android:textSize="12sp" />-->
 
-        </RelativeLayout>
+        <!--</RelativeLayout>-->
     </RelativeLayout>
 
 

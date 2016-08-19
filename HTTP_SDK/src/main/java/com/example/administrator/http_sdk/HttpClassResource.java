@@ -10,10 +10,6 @@ import java.lang.reflect.Field;
 public class HttpClassResource extends HttpClass {
 
 
-    public byte[] setObject(Object object, boolean SuperClass) {
-        return setObjectToByte(object, SuperClass);
-    }
-
     /**
      * 将对象转换成连接的操作方法
      *
@@ -50,14 +46,17 @@ public class HttpClassResource extends HttpClass {
      */
     @Override
     protected byte[] setObjectToByte(Object object, boolean SuperClass) {
-        Class loadClass = object.getClass();
-        Field[] fields = null;
-        if (!SuperClass)
-            //获取对象的属性
-            fields = loadClass.getDeclaredFields();
-        else
-            fields = loadClass.getFields();
+        if (object != null) {
+            Class loadClass = object.getClass();
+            Field[] fields = null;
+            if (!SuperClass)
+                //获取对象的属性
+                fields = loadClass.getDeclaredFields();
+            else
+                fields = loadClass.getFields();
 
-        return setOperatData(fields, object);
+            return setOperatData(fields, object);
+        }
+        return null;
     }
 }

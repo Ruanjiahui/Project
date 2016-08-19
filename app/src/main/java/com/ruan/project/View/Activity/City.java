@@ -53,21 +53,21 @@ public class City extends BaseActivity implements SorViewInterface, AdapterView.
     private int position = 1;
 
 
-    private int flag = 0;
+//    private int flag = 0;
 
     /**
      * Start()
      */
     @Override
     public void init() {
-        flag = getIntent().getExtras().getInt("data");
+//        flag = getIntent().getExtras().getInt("data");
 
 
-        setTitle("城市列表");
+        setTitle(getResources().getString(R.string.CityListName));
         setTopColor(R.color.Blue);
         setTopTitleColor(R.color.White);
         setLeftTitleColor(R.color.White);
-        setRightTitle("搜索");
+        setRightTitle(getResources().getString(R.string.Search));
         setRightTitleColor(R.color.White);
 
 
@@ -121,7 +121,7 @@ public class City extends BaseActivity implements SorViewInterface, AdapterView.
         super.setRightTextClick(v);
         String citySearch = sortEdit.getText().toString();
         if (citySearch == null && citySearch.length() == 0 && "".equals(citySearch)) {
-            Toast.makeText(context, "城市名称不能为空", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.CityEditTie), Toast.LENGTH_SHORT).show();
             return;
         }
         //搜索功能
@@ -131,10 +131,10 @@ public class City extends BaseActivity implements SorViewInterface, AdapterView.
             HttpURL.CityName = sort.getCityName();
             HttpURL.Cityweather = null;
             DataInert(sort.getCityName());
-            CommonIntent.SetActivity(activity, new String[]{}, flag);
+//            CommonIntent.SetActivity(activity, new String[]{}, flag);
             Applications.getInstance().removeOneActivity(this);
         } else {
-            Toast.makeText(context, "没有这个城市", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.CityEditResult), Toast.LENGTH_SHORT).show();
         }
     }
 

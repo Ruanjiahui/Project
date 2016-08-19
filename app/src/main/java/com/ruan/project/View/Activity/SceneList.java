@@ -17,6 +17,7 @@ import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.DeviceCode;
 import com.ruan.project.R;
 
 import java.util.ArrayList;
@@ -91,7 +92,23 @@ public class SceneList extends BaseActivity implements AdapterView.OnItemClickLi
      */
     @Override
     public void OnClick(int position, int View) {
-
+        sceneListView.ShowNormal();
+        userDevice = (UserDevice) ListObj.get(position);
+        switch (View) {
+            //编辑点击事件
+            case 0:
+                CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceID(), "edit");
+                break;
+            //删除点击事件
+            case 1:
+                //删除界面的item并且同时删除本地数据的数据和服务器上面的数据
+                list.remove(position);
+                adapter.RefreshData(list);
+                //删除本地数据库的数据
+                databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
+                //删除服务器的数据库的数据
+                break;
+        }
     }
 
     /**
@@ -110,9 +127,9 @@ public class SceneList extends BaseActivity implements AdapterView.OnItemClickLi
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         userDevice = (UserDevice) ListObj.get(position);
-        if (userDevice.getDeviceOnline().equals("2"))
-            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac() , String.valueOf(DeviceURL.Switch));
+        if (DeviceCode.ONLINE == Integer.parseInt(userDevice.getDeviceOnline()))
+            CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac(), String.valueOf(DeviceURL.Switch) , true);
         else
-            Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.DeviceOnline), Toast.LENGTH_SHORT).show();
     }
 }

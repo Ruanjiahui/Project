@@ -63,6 +63,35 @@
             android:textColor="@color/GreyDeep"
             android:textSize="15sp" />
 
+
+        <LinearLayout
+            android:id="@+id/listSetting"
+            android:layout_width="80dp"
+            android:layout_height="25dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/setting_but_selector"
+            android:orientation="horizontal"
+            android:padding="1dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/listSettingText1"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/setting_but_open" />
+
+
+            <TextView
+                android:id="@+id/listSettingText2"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:background="@drawable/setting_but_selector" />
+        </LinearLayout>
+
     </RelativeLayout>
 
 

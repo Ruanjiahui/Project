@@ -1,4 +1,4 @@
-package com.example.administrator.http_sdk;
+package com.example.administrator.Resource;
 
 import android.util.Log;
 
@@ -6,7 +6,6 @@ import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.HttpCode;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 
@@ -22,6 +21,7 @@ public class HttpConnectionString extends HttpRequest {
 
     private HttpConnectSource httpConnectSource = null;
     private HttpReadSource httpReadSource = null;
+    private HttpURLConnection connection = null;
 
     /**
      * 下面是 HTTP  GET请求的方法
@@ -36,10 +36,9 @@ public class HttpConnectionString extends HttpRequest {
             httpConnectSource = new HttpConnectSource(uri);
             // 将默认设置请求方式POST改成GET
             httpConnectSource.setRequestMethod("GET");
-            HttpURLConnection connection = httpConnectSource.getHttpURLConnection();
+            connection = httpConnectSource.getHttpURLConnection();
 
-            connection.connect();//发送请求链接
-
+//            connection.connect();//发送请求链接
             if (connection.getResponseCode() == 200) {
                 httpReadSource = new HttpReadSource(connection);
                 return httpReadSource.getResult();
@@ -64,7 +63,7 @@ public class HttpConnectionString extends HttpRequest {
         try {
             httpConnectSource = new HttpConnectSource(uri);
             httpConnectSource.setUseCaches(false); //不使用缓存
-            HttpURLConnection connection = httpConnectSource.getHttpURLConnection();
+            connection = httpConnectSource.getHttpURLConnection();
 
             //创建输出字节对象z
             OutputStream outputStream = connection.getOutputStream();
@@ -84,5 +83,13 @@ public class HttpConnectionString extends HttpRequest {
             return HttpCode.TIMEOUT + "";
         }
         return result;
+    }
+
+    /**
+     * 取消下载链接
+     */
+    @Override
+    public void disConnection() {
+        connection.disconnect();
     }
 }

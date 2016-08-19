@@ -51,7 +51,7 @@ public class DeviceActivityControl {
         ArrayList<Object> list = new ArrayList<>();
         for (int i = 0; i < ListObj.size(); i++) {
             device = (Device) ListObj.get(i);
-            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceType(), device.getDeviceModel(), ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60)));
+            list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.cooker), device.getDeviceName(), device.getDeviceModel(), ImageTransformation.Resouce2Drawable(context, R.mipmap.right), DensityUtil.dip2px(context, 60)));
         }
         return list;
     }

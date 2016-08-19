@@ -3,6 +3,8 @@ package com.example.administrator.data_sdk.FileUtil;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.example.administrator.data_sdk.FileUtilAbstract.FileRequest;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
@@ -17,10 +19,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.security.MessageDigest;
+import java.util.Enumeration;
+import java.util.Properties;
 
 /**
  * Created by Administrator on 2016/3/14.
@@ -295,11 +301,13 @@ public class FileTool {
      * @return
      * @throws FileNotFoundException
      */
-    public static String getMd5ByFile(String path) throws FileNotFoundException {
-        File file = new File(path);
+    public static String getMd5ByFile(String path, String filename) {
+        FileInputStream in = null;
         String value = null;
-        FileInputStream in = new FileInputStream(file);
         try {
+            File file = new File(path + filename);
+            in = new FileInputStream(file);
+
             MappedByteBuffer byteBuffer = in.getChannel().map(FileChannel.MapMode.READ_ONLY, 0, file.length());
             MessageDigest md5 = MessageDigest.getInstance("MD5");
             md5.update(byteBuffer);
@@ -321,6 +329,7 @@ public class FileTool {
 
     /**
      * inputStream转字符串
+     *
      * @param inputStream
      * @return
      */
@@ -339,5 +348,168 @@ public class FileTool {
             e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 将配置写入配置文件
+     *
+     * @param context
+     * @param keyName
+     * @param keyValue
+     */
+    public static void WriteProperties(Context context, String ConfigName, String keyName, String keyValue) {
+        Properties props = new Properties();
+        try {
+//            props.load(context.openFileInput(ConfigName));
+            OutputStream out = context.openFileOutput(ConfigName, Context.MODE_PRIVATE);
+            Enumeration<?> e = props.propertyNames();
+            if (e.hasMoreElements()) {
+                while (e.hasMoreElements()) {
+                    String s = (String) e.nextElement();
+                    if (!s.equals(keyName)) {
+                        props.setProperty(s, props.getProperty(s));
+                    }
+                }
+            }
+            props.setProperty(keyName, keyValue);
+            props.store(out, null);
+        } catch (FileNotFoundException e) {
+            Log.e("Ruan", "config.properties Not Found Exception", e);
+        } catch (IOException e) {
+            Log.e("Ruan", "config.properties IO Exception", e);
+        }
+
+    }
+
+    /**
+     * 判断配置文件在不在
+     *
+     * @param context
+     * @param ConfigName
+     * @return
+     */
+    public static boolean getProperties(Context context, String ConfigName) {
+        Properties props = new Properties();
+        try {
+            props.load(context.openFileInput(ConfigName));
+        } catch (IOException e) {
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 读取配置文件
+     *
+     * @param context
+     * @param keyName
+     * @return
+     */
+    public static String ReadProperties(Context context, String ConfigName, String keyName) {
+        Properties props = new Properties();
+        try {
+            props.load(context.openFileInput(ConfigName));
+            return props.getProperty(keyName);
+        } catch (FileNotFoundException e) {
+            Log.e("Ruan", "config.properties Not Found Exception", e);
+        } catch (IOException e) {
+            Log.e("Ruan", "config.properties IO Exception", e);
+        }
+        return null;
+    }
+
+
+    /**
+     * 获取文件夹大小
+     *
+     * @param file File实例
+     * @return long
+     */
+    public static long getFolderSize(File file) {
+
+        long size = 0;
+        try {
+            File[] fileList = file.listFiles();
+            for (int i = 0; i < fileList.length; i++) {
+                if (fileList[i].isDirectory()) {
+                    size = size + getFolderSize(fileList[i]);
+                } else {
+                    size = size + fileList[i].length();
+                }
+            }
+        } catch (Exception e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        //return size/1048576;
+        return size;
+    }
+
+
+    /**
+     * 删除指定目录下文件及目录
+     *
+     * @param deleteThisPath
+     * @param filePath
+     * @return
+     */
+    public static void deleteFolderFile(String filePath, boolean deleteThisPath) {
+        if (!TextUtils.isEmpty(filePath)) {
+            try {
+                File file = new File(filePath);
+                if (file.isDirectory()) {// 处理目录
+                    File files[] = file.listFiles();
+                    for (int i = 0; i < files.length; i++) {
+                        deleteFolderFile(files[i].getAbsolutePath(), true);
+                    }
+                }
+                if (deleteThisPath) {
+                    if (!file.isDirectory()) {// 如果是文件，删除
+                        file.delete();
+                    } else {// 目录
+                        if (file.listFiles().length == 0) {// 目录下没有文件或者目录，删除
+                            file.delete();
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+    /**
+     * 格式化单位
+     *
+     * @param size
+     * @return
+     */
+    public static String getFormatSize(double size) {
+        double kiloByte = size / 1024;
+        if (kiloByte < 1) {
+            return size + "B";
+        }
+
+        double megaByte = kiloByte / 1024;
+        if (megaByte < 1) {
+            BigDecimal result1 = new BigDecimal(Double.toString(kiloByte));
+            return result1.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "KB";
+        }
+
+        double gigaByte = megaByte / 1024;
+        if (gigaByte < 1) {
+            BigDecimal result2 = new BigDecimal(Double.toString(megaByte));
+            return result2.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "MB";
+        }
+
+        double teraBytes = gigaByte / 1024;
+        if (teraBytes < 1) {
+            BigDecimal result3 = new BigDecimal(Double.toString(gigaByte));
+            return result3.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "GB";
+        }
+        BigDecimal result4 = new BigDecimal(teraBytes);
+        return result4.setScale(2, BigDecimal.ROUND_HALF_UP).toPlainString() + "TB";
     }
 }

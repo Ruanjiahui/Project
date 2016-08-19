@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:background="@color/GreySmoke">
+    android:background="@color/GreySmoke"
+    android:fitsSystemWindows="true">
 
     <!--<RelativeLayout-->
     <!--android:id="@+id/fragment1Top"-->
@@ -21,8 +21,7 @@
         android:id="@+id/fragment1Top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@mipmap/bg_top"
-        >
+        android:background="@mipmap/bg_top">
 
         <ImageView
             android:id="@+id/fragment1Logo"
@@ -47,7 +46,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="城市"
+                android:text="@string/CityName"
                 android:textColor="@color/White"
                 android:textSize="14sp" />
 
@@ -57,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="0 ~ 0"
+                android:text="@string/WeatherName"
                 android:textColor="@color/White"
                 android:textSize="13sp" />
 
@@ -72,8 +71,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/fragment1Top"
-        android:orientation="vertical"
-        android:layout_marginBottom="2dp">
+        android:layout_marginBottom="2dp"
+        android:orientation="vertical">
 
         <com.example.administrator.ui_sdk.View.RefreshSideListView
             android:id="@+id/slideListView"

@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.DeviceURL;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 
 import java.util.ArrayList;
@@ -36,36 +37,47 @@ public class DatabaseOpera {
      */
     public void DataInert(String db, String table_name, String json) {
         //模拟一下数据添加
-        for (int i = 0; i < 10; i++) {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put("deviceID", "1111111111111" + i);
-            contentValues.put("deviceName", "设备" + i);
-            contentValues.put("deviceModel", "000012" + i);
-            contentValues.put("deviceType", "空调");
-            contentValues.put("deviceTypeID", "111");
-            contentValues.put("devicePic", "");
-            //调用插数据的函数
-            getDatabaseData.Insert(context, db, table_name, contentValues);
-        }
+//        for (int i = 0; i < 10; i++) {
+//            ContentValues contentValues = new ContentValues();
+//            contentValues.put("deviceID", "1111111111111" + i);
+//            contentValues.put("deviceName", "设备" + i);
+//            contentValues.put("deviceModel", "000012" + i);
+//            contentValues.put("deviceType", "空调");
+//            contentValues.put("deviceTypeID", "111");
+//            contentValues.put("devicePic", "");
+//            //调用插数据的函数
+//            getDatabaseData.Insert(context, db, table_name, contentValues);
+//        }
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("deviceID", "8711");
+        contentValues.put("deviceName", "四座排插");
+        contentValues.put("deviceModel", "8711");
+        contentValues.put("deviceType", "排插");
+        contentValues.put("deviceTypeID", DeviceURL.Switch);
+        contentValues.put("devicePic", "");
+        //调用插数据的函数
+        getDatabaseData.Insert(context, db, table_name, contentValues);
+
+
         ContentValues contentValues1 = new ContentValues();
-        contentValues1.put("deviceID", "1111111111111" + 111);
-        contentValues1.put("deviceName", "设备" + 111);
-        contentValues1.put("deviceModel", "000012" + 111);
-        contentValues1.put("deviceType", "电饭煲");
-        contentValues1.put("deviceTypeID", "222");
+        contentValues1.put("deviceID", "RTL8722");
+        contentValues1.put("deviceName", "RGB灯");
+        contentValues1.put("deviceModel", "RTL8722");
+        contentValues1.put("deviceType", "LEG灯");
+        contentValues1.put("deviceTypeID", DeviceURL.RGBLight);
         contentValues1.put("devicePic", "");
         //调用插数据的函数
         getDatabaseData.Insert(context, db, table_name, contentValues1);
 
-        ContentValues contentValues2 = new ContentValues();
-        contentValues2.put("deviceID", "1111111111111" + 222);
-        contentValues2.put("deviceName", "设备" + 222);
-        contentValues2.put("deviceModel", "000012" + 222);
-        contentValues2.put("deviceType", "洗衣机");
-        contentValues2.put("deviceTypeID", "3333");
-        contentValues2.put("devicePic", "");
+//        ContentValues contentValues2 = new ContentValues();
+//        contentValues2.put("deviceID", "1111111111111" + 222);
+//        contentValues2.put("deviceName", "设备" + 222);
+//        contentValues2.put("deviceModel", "000012" + 222);
+//        contentValues2.put("deviceType", "洗衣机");
+//        contentValues2.put("deviceTypeID", "3333");
+//        contentValues2.put("devicePic", "");
         //调用插数据的函数
-        getDatabaseData.Insert(context, db, table_name, contentValues2);
+//        getDatabaseData.Insert(context, db, table_name, contentValues2);
 
     }
 
@@ -76,8 +88,8 @@ public class DatabaseOpera {
      * @param table_name    数据库的表的名称
      * @param contentValues 插进去的数据
      */
-    public void DataInert(String db, String table_name, ContentValues contentValues) {
-        getDatabaseData.Insert(context, db, table_name, contentValues);
+    public long DataInert(String db, String table_name, ContentValues contentValues) {
+        return getDatabaseData.Insert(context, db, table_name, contentValues);
     }
 
     /**
@@ -109,14 +121,13 @@ public class DatabaseOpera {
      * @param whereclause   where后面的变量
      * @param whereargs     where后面的数据
      */
-    public void DataInert(String db, String table_name, ContentValues contentValues, boolean update, String key, String[] values, String whereclause, String[] whereargs) {
+    public int DataInert(String db, String table_name, ContentValues contentValues, boolean update, String key, String[] values, String whereclause, String[] whereargs) {
         if (update) {
             if (key != null || !"".equals(key)) {
-                getDatabaseData.Insert2Update(context, db, table_name, key, values, contentValues, whereclause, whereargs);
-                return;
+                return getDatabaseData.Insert2Update(context, db, table_name, key, values, contentValues, whereclause, whereargs);
             }
         }
-        getDatabaseData.Insert(context, db, table_name, contentValues);
+        return (int)getDatabaseData.Insert(context, db, table_name, contentValues);
     }
 
     /**

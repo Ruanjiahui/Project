@@ -1,6 +1,7 @@
 package com.ruan.project.Other.DataBase;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.text.Editable;
 
 import com.example.administrator.data_sdk.Database.CheckDatabase;
@@ -59,6 +60,10 @@ public class CreateDataBase implements Database.Check {
                 establish = getScene();
             } else if (table.equals(DatabaseTableName.CityName)) {
                 establish = getCity();
+            } else if (table.equals(DatabaseTableName.ConfigName)) {
+                establish = getConfig();
+            } else if (table.equals(DatabaseTableName.AnalogyName)) {
+                establish = getAnalogyUserDevice();
             }
             return establish;
         }
@@ -117,7 +122,7 @@ public class CreateDataBase implements Database.Check {
         establish.put("userWeight", "varchar(10)");
         establish.put("userPhone", "varchar(11)");
         establish.put("userLogin", "varchar(5)");
-        establish.put("userCity" , "varchar(10)");
+        establish.put("userCity", "varchar(10)");
 
         return establish;
     }
@@ -150,6 +155,32 @@ public class CreateDataBase implements Database.Check {
         establish.put("devicePORT", "varchar(10)");
         establish.put("deviceMac", "varchar(50)");
         establish.put("deviceOnline", "varchar(10)");
+        establish.put("deviceOnlineStatus", "varchar(10)");
+
+
+        return establish;
+    }
+
+
+    /**
+     * 模拟用户设备表
+     *
+     * @return
+     */
+    private Establish getAnalogyUserDevice() {
+        Establish establish = new Establish();
+
+        establish.put("userID", "varchar(20) not null");
+        establish.put("deviceID", "varchar(50)");
+        establish.put("devicePic", "varchar(50)");
+        establish.put("deviceName", "varchar(50)");
+        establish.put("deviceRemarks", "varchar(50)");
+        establish.put("sceneID", "varchar(50)");
+        establish.put("deviceIP", "varchar(50)");
+        establish.put("devicePORT", "varchar(10)");
+        establish.put("deviceMac", "varchar(50)");
+        establish.put("deviceOnline", "varchar(10)");
+        establish.put("deviceOnlineStatus", "varchar(10)");
 
 
         return establish;
@@ -182,4 +213,19 @@ public class CreateDataBase implements Database.Check {
 
         return establish;
     }
+
+    /**
+     * 城市表
+     *
+     * @return
+     */
+    private Establish getConfig() {
+        Establish establish = new Establish();
+
+        establish.put("wifi", "varchar(10)");
+        establish.put("Name", "varchar(10)");
+
+        return establish;
+    }
+
 }

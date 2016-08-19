@@ -133,16 +133,15 @@ public class LoadResouce extends LoadClass {
         try {
             for (Field field : fields) {
                 field.setAccessible(true);
-                if (!field.getName().startsWith("&")) {
-                    if (field.get(objects) != null && !"".equals(field.get(objects))) {
-                        contentValues.put(field.getName(), (String) field.get(objects));
-                        break;
-                    }
+                if (!field.getName().startsWith("&") && !field.getName().startsWith("CREATOR") && !field.getName().startsWith("CONTENTS_FILE_DESCRIPTOR") && !field.getName().startsWith("PARCELABLE_WRITE_RETURN_VALUE")) {
+                    contentValues.put(field.getName(), "" + field.get(objects));
+                    break;
                 }
             }
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
         return contentValues;
     }
 

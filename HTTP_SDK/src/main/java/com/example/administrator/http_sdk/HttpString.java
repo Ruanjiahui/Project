@@ -2,23 +2,22 @@ package com.example.administrator.http_sdk;
 
 import com.example.administrator.Abstract.HttpRequest;
 import com.example.administrator.HttpCode;
-import com.example.administrator.Interface.Connect;
+import com.example.administrator.Interface.HttpConnect;
+import com.example.administrator.Resource.HttpConnectionString;
 
 /**
  * Created by Administrator on 2016/8/13.
  */
-public class HttpString implements Connect.HttpString {
+public class HttpString implements HttpConnect.HttpString {
 
     private String URL = null;
     private String Method = null;
-    private int FLAG = 0;
     private Object object = null;
     private HttpRequest httpRequest = null;
     private HttpClassResource httpClass = null;
     private boolean SuperClass = false;
 
-    public HttpString(String method, String URL, Object object, int FLAG, boolean SuperClass) {
-        this.FLAG = FLAG;
+    public HttpString(String method, String URL, Object object, boolean SuperClass) {
         this.Method = method;
         this.object = object;
         this.URL = URL;
@@ -37,8 +36,12 @@ public class HttpString implements Connect.HttpString {
         if (HttpCode.GET.equals(Method)) {
             return httpRequest.GET(URL);
         } else if (HttpCode.POST.equals(Method)) {
-            return httpRequest.POST(URL, httpClass.setObject(object, SuperClass));
+            return httpRequest.POST(URL, httpClass.setObjectToByte(object, SuperClass));
         }
         return null;
+    }
+
+    public void disConnection(){
+        httpRequest.disConnection();
     }
 }

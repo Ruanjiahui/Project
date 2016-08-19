@@ -38,9 +38,9 @@ public class UdpOpera implements UDPHandler {
      *
      * @param handlerMac
      */
-    public void UDPDeviceScan(UDPInterface.HandlerMac handlerMac) {
+    public void UDPDeviceScan(UDPInterface.HandlerMac handlerMac , String data) {
         //计时器，广播没一秒发送一次，总共发送5次
-        new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, handlerMac, UDPConfig.count);
+        new ScanDevice().Scanner(UDPConfig.PORT, data, handlerMac, UDPConfig.count);
     }
 
     /**

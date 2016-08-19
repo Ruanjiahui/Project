@@ -32,7 +32,8 @@ public class Item {
     private String listSubText = null;
     private String listRightText = null;
     private String FLAG = null;
-
+    private boolean isVisiable = false;
+    private boolean isCheck = false;
 
 
     private Drawable homeImage = null;
@@ -43,6 +44,22 @@ public class Item {
     private String homeRight1 = null;
     private int homeRelative = 0;
 
+
+    public boolean isCheck() {
+        return isCheck;
+    }
+
+    public void setCheck(boolean check) {
+        isCheck = check;
+    }
+
+    public boolean isVisiable() {
+        return isVisiable;
+    }
+
+    public void setVisiable(boolean visiable) {
+        isVisiable = visiable;
+    }
 
     public Drawable getGridCenterImage() {
         return gridCenterImage;

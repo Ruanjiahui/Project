@@ -87,6 +87,8 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     private int ON = 1;
     private int UnOn = 0;
 
+    private boolean STATUS;
+
 
     /**
      * Activity传输Fragment
@@ -94,10 +96,11 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      * @param userDevice
      * @return
      */
-    public static Fragment getInstance(UserDevice userDevice) {
+    public static Fragment getInstance(UserDevice userDevice, boolean isTrue) {
         SocketSwitchFragment socketSwitchFragment = new SocketSwitchFragment();
         Bundle bundle = new Bundle();
         bundle.putParcelable("data", userDevice);
+        bundle.putBoolean("flag", isTrue);
         socketSwitchFragment.setArguments(bundle);
         return socketSwitchFragment;
     }
@@ -128,22 +131,25 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
 
         //获取Activuity传输的数据
         userDevice = getArguments().getParcelable("data");
-        //获取设备的数据
-        IP = userDevice.getDeviceIP();
-        PORT = Integer.parseInt(userDevice.getDevicePORT());
-        MAC = userDevice.getDeviceMac();
-
+        STATUS = getArguments().getBoolean("flag");
         //插座控制
         socketSwitch = new SocketSwitch();
         data = socketSwitch.getSocketSwtich();
 
         ReceiverAction.USER_TIME = userDevice.getDeviceMac();
-
-        //一进来马上获取一下设备的实现的数据对界面进行更新
-        callBack = new CallBack(this, this);
-        //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
-        callBack.setDeviceControl(IP, PORT, MAC, data, 999);
-
+        //如果是真的设备才进行请求
+        if (STATUS) {
+            //获取设备的数据
+            IP = userDevice.getDeviceIP();
+            PORT = Integer.parseInt(userDevice.getDevicePORT());
+            MAC = userDevice.getDeviceMac();
+            //设置加载框
+            socketBack.setVisibility(View.VISIBLE);
+            //一进来马上获取一下设备的实现的数据对界面进行更新
+            callBack = new CallBack(this, this);
+            //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
+            callBack.setDeviceControl(IP, PORT, MAC, data, 999, userDevice.getDeviceOnlineStatus());
+        }
 
         switchCell2.setOnClickListener(this);
         switchCell3.setOnClickListener(this);
@@ -163,9 +169,9 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
 
     private void setNormalTimeStyle() {
         setTimeStyle(FLAG1, TimeMoudle.getSwitch1(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG1));
-        setTimeStyle(FLAG2, TimeMoudle.getSwitch1(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG2));
-        setTimeStyle(FLAG3, TimeMoudle.getSwitch1(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG3));
-        setTimeStyle(FLAG4, TimeMoudle.getSwitch1(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG4));
+        setTimeStyle(FLAG2, TimeMoudle.getSwitch2(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG2));
+        setTimeStyle(FLAG3, TimeMoudle.getSwitch3(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG3));
+        setTimeStyle(FLAG4, TimeMoudle.getSwitch4(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG4));
     }
 
     /**
@@ -221,8 +227,11 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         setButtonClick(view, isClick);
         data = socketSwitch.setSocketSwtich(status, jack);
 
-        //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
-        callBack.setDeviceControl(IP, PORT, MAC, data, jack);
+        if (STATUS)
+            //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
+            callBack.setDeviceControl(IP, PORT, MAC, data, jack, userDevice.getDeviceOnlineStatus());
+        else
+            SocketHandler(jack, null);
     }
 
     /**
@@ -270,6 +279,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void getMac(int position, Object[] objects) {
         if (activity != null) {
+            setButtonClick(button, true);
             String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
             socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
             if ("setsocketswtich".equals(socketSwitch.getType()) || "getsocketswtich".equals(socketSwitch.getType()))
@@ -300,6 +310,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void Error(int position, int error) {
         Toast.makeText(context, "操作超时", Toast.LENGTH_SHORT).show();
+        setButtonClick(button, true);
     }
 
 
@@ -312,6 +323,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void handler(int position, String result) {
         if (activity != null) {
+            setButtonClick(button, true);
             socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
             socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
             if ("setsocketswtich".equals(socketSwitch.getType()) || "getsocketswtich".equals(socketSwitch.getType()))
@@ -405,7 +417,9 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         number = new String[2];
         myTimeDialog = new MyTimeDialog(context, R.style.dialog);
         myTimeDialog.DialogClick(this, FLAG);
-        myTimeDialog.show();
+        //如果是真实设置才允许设置闹铃
+        if (STATUS)
+            myTimeDialog.show();
         return number;
     }
 
@@ -453,7 +467,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
                 break;
         }
         //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
-        callBack.setDeviceControl(IP, PORT, MAC, data, FLAG);
+        callBack.setDeviceControl(IP, PORT, MAC, data, FLAG, userDevice.getDeviceOnlineStatus());
     }
 
     /**
@@ -461,6 +475,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     private void setTimeStyle(int FLAG, String[] number, boolean isVisiable) {
         if (number == null) {
+            number = new String[2];
             number[0] = "--";
             number[1] = "--";
         }

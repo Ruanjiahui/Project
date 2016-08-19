@@ -3,6 +3,8 @@ package com.example.administrator.ui_sdk;
 import android.app.Activity;
 import android.app.Application;
 
+import com.umeng.analytics.MobclickAgent;
+
 import java.util.ArrayList;
 
 /**

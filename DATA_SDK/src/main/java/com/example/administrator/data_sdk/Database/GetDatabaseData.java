@@ -147,8 +147,8 @@ public class GetDatabaseData extends Operation {
      * @param whereargs
      */
     @Deprecated
-    public void Update(Context context, String db, String table, ContentValues contentValues, String whereclause, String[] whereargs) {
-        update(context, db, table, contentValues, whereclause, whereargs);
+    public int Update(Context context, String db, String table, ContentValues contentValues, String whereclause, String[] whereargs) {
+        return update(context, db, table, contentValues, whereclause, whereargs);
     }
 
 
@@ -184,8 +184,8 @@ public class GetDatabaseData extends Operation {
      * @param contentValues
      */
     @Deprecated
-    public void Insert(Context context, String db, String table, ContentValues contentValues) {
-        insert(context, db, table, contentValues);
+    public long Insert(Context context, String db, String table, ContentValues contentValues) {
+        return insert(context, db, table, contentValues);
     }
 
 
@@ -304,16 +304,16 @@ public class GetDatabaseData extends Operation {
      * @param whereclause
      * @param whereargs
      */
-    public void Insert2Update(Context context, String db, String Table_name, String clause, String[] wherevalues, ContentValues contentValues, String whereclause, String[] whereargs) {
+    public int Insert2Update(Context context, String db, String Table_name, String clause, String[] wherevalues, ContentValues contentValues, String whereclause, String[] whereargs) {
         //返回false则没有改用户的数据
         //true则有该条的数据
 
         if (RepeatData(context, db, Table_name, clause, wherevalues))
             //将信息更新
-            Update(context, db, Table_name, contentValues, whereclause, whereargs);
+            return Update(context, db, Table_name, contentValues, whereclause, whereargs);
         else
             //将信息写到数据库
-            Insert(context, db, Table_name, contentValues);
+            return (int)Insert(context, db, Table_name, contentValues);
     }
 
     /**

@@ -63,6 +63,18 @@ public class CommonIntent {
         context.startActivity(intent);
     }
 
+
+    public static void IntentActivity(Context context, Class cls, String str, String str1 , boolean str2) {
+        Intent intent = new Intent();
+        Bundle bundle = new Bundle();
+        bundle.putString("data", str);
+        bundle.putString("flag", str1);
+        bundle.putBoolean("status" , str2);
+        intent.putExtras(bundle);
+        intent.setClass(context, cls);
+        context.startActivity(intent);
+    }
+
     /**
      * 传输Parcelable对象
      *

@@ -32,4 +32,10 @@ public abstract class HttpRequest {
     public abstract String POST(String uri, byte[] data);
 
 
+    /**
+     * 取消下载链接
+     */
+    public abstract void disConnection();
+
+
 }

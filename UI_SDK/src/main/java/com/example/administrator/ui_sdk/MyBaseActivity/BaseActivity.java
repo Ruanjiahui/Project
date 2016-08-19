@@ -23,6 +23,7 @@ import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.R;
 import com.example.administrator.ui_sdk.View.SystemManager;
+import com.umeng.analytics.MobclickAgent;
 
 import java.util.ArrayList;
 
@@ -165,7 +166,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
             }
             base_menu.setVisibility(View.GONE);
             base_menu.addView(view);
-            setShow(base_menu , BOTTOM , width , height / 2);
+            setShow(base_menu, BOTTOM, width, height / 2);
             return base_menu;
         }
         return null;
@@ -211,8 +212,8 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
     /**
      * 设置系统的动画
      */
-    public void setSystemStyle(){
-        setShowStyle(R.anim.bottom_in , R.anim.bottom_out);
+    public void setSystemStyle() {
+        setShowStyle(R.anim.bottom_in, R.anim.bottom_out);
     }
 
     /**
@@ -221,7 +222,7 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
      * @param resid_In
      * @param resid_Out
      */
-    public void setShowStyle(int resid_In , int resid_Out) {
+    public void setShowStyle(int resid_In, int resid_Out) {
         if (resid_In != 0 && resid_Out != 0) {
             //将底部菜单设置为可视状态
             base_Relative.setVisibility(View.VISIBLE);
@@ -532,4 +533,15 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         Click(v);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        MobclickAgent.onPause(this);
+    }
 }

@@ -65,21 +65,25 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
     //实现Item点击事件的接口对象
     private MyOnClickInterface.ItemClick dialogitemClick = null;
 
+    private int FLAG = 0;
+
     public MyDialog(Context context) {
         super(context);
         this.context = context;
         init();
     }
 
-    public MyDialog(Context context, int themeResId) {
+    public MyDialog(Context context, int themeResId , int FLAG) {
         super(context, themeResId);
         this.context = context;
+        this.FLAG = FLAG;
         init();
     }
 
-    protected MyDialog(Context context, boolean cancelable, OnCancelListener cancelListener) {
+    protected MyDialog(Context context, boolean cancelable, OnCancelListener cancelListener , int FLAG) {
         super(context, cancelable, cancelListener);
         this.context = context;
+        this.FLAG = FLAG;
         init();
     }
 
@@ -112,7 +116,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
 
             @Override
             public void onClick(View v) {
-                dialogClick.OnLeftClick();
+                dialogClick.OnLeftClick(FLAG);
             }
         });
 
@@ -121,7 +125,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
 
             @Override
             public void onClick(View v) {
-                dialogClick.OnRightClick();
+                dialogClick.OnRightClick(FLAG);
             }
         });
 
@@ -130,7 +134,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
 
             @Override
             public void onClick(View v) {
-                dialogClick.OnLeftClick();
+                dialogClick.OnLeftClick(FLAG);
             }
         });
 
@@ -139,7 +143,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
 
             @Override
             public void onClick(View v) {
-                dialogClick.OnRightClick();
+                dialogClick.OnRightClick(FLAG);
             }
         });
 
@@ -177,6 +181,26 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
     }
 
     /**
+     * 紧紧拥有文字和按钮
+     *
+     * @param Content_msg
+     * @param left_msg
+     * @param right_msg
+     */
+    public void DialogState(String Content_msg, String left_msg, String right_msg) {
+        setMessage(Content_msg);
+        dialog_left_but.setText(left_msg);
+        dialog_right_but.setText(right_msg);
+        if (left_msg.equals("")) {
+            dialog_left_but.setVisibility(View.GONE);
+        }
+
+        if (right_msg.equals("")) {
+            dialog_right_but.setVisibility(View.GONE);
+        }
+    }
+
+    /**
      * 该布局拥有编辑框,内容和两个按钮
      *
      * @param Content_msg
@@ -190,8 +214,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
         setMessage(Content_msg);
         setEditText(Edit_msg);
         setHint(Edit_hint_msg);
-        setLeft_but(left_msg);
-        setRight_but(right_msg);
+        setMessage(Content_msg);
         if (left_msg.equals("")) {
             dialog_left_but.setVisibility(View.GONE);
         }
@@ -215,7 +238,7 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
         dialog_listview.setAdapter(new MyBaseAdapter(context, map, maker));
         setLeft_but(left_msg);
         setRight_but(right_msg);
-        if (Content_msg.equals("")){
+        if (Content_msg.equals("")) {
             dialog_content.setVisibility(View.GONE);
         }
         if (left_msg.equals("")) {
@@ -337,6 +360,15 @@ public class MyDialog extends Dialog implements NumberPicker.OnValueChangeListen
 
     public int getNumberPicker() {
         return NumberPicker;
+    }
+
+
+    public void setLeftButColor(int resid) {
+        dialog_left_but.setTextColor(context.getResources().getColor(resid));
+    }
+
+    public void setRightButColor(int resid) {
+        dialog_right_but.setTextColor(context.getResources().getColor(resid));
     }
 
     /**

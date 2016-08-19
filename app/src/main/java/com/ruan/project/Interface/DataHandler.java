@@ -8,5 +8,5 @@ public interface DataHandler {
     /**
      * 更新数据的接口
      */
-    public void ReStartData();
+    public void ReStartData(int position);
 }

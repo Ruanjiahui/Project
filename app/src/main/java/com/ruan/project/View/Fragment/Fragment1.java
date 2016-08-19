@@ -6,15 +6,14 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,46 +21,39 @@ import android.widget.Toast;
 
 import com.DeviceURL;
 import com.example.administrator.HttpCode;
-import com.example.administrator.Interface.Connect;
-import com.example.administrator.Interface.Result;
+import com.example.administrator.Interface.HttpResult;
 import com.example.administrator.data_sdk.CommonIntent;
-import com.example.administrator.data_sdk.FileUtil.FileTool;
-import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.MyImageView;
 import com.example.administrator.ui_sdk.View.PullToRefreshView;
-import com.example.administrator.ui_sdk.View.RreshLinearLayout;
 import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.ruan.project.Controllar.CheckOnline;
 import com.example.administrator.ui_sdk.ItemClick;
 import com.ruan.project.Controllar.FragmentControl;
 import com.ruan.project.Interface.DataHandler;
-import com.ruan.project.Interface.PopWinOnClick;
+import com.ruan.project.Moudle.Device;
 import com.ruan.project.Moudle.Scene;
 import com.ruan.project.Moudle.UserDevice;
 import com.ruan.project.Moudle.Weather;
-import com.ruan.project.Other.Adapter.LGAdapter;
 import com.ruan.project.Other.Adapter.SideListViewAdapter;
 import com.ruan.project.Other.DataBase.DatabaseOpera;
 import com.ruan.project.Other.DatabaseTableName;
+import com.ruan.project.Other.DeviceCode;
 import com.ruan.project.Other.HTTP.HttpURL;
 import com.ruan.project.Other.HTTP.HttpWeather;
-import com.ruan.project.Other.System.NetWork;
 import com.ruan.project.R;
 import com.ruan.project.View.Activity.City;
 import com.ruan.project.View.Activity.DeviceType;
 import com.ruan.project.View.Activity.DeviceControl;
 import com.ruan.project.View.Activity.DeviceEdit;
-import com.ruan.project.View.MyPopWindow;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 
 /**
  * Created by Soft on 2016/6/23.
  */
-public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, DataHandler, Animation.AnimationListener, PullToRefreshView.OnRefreshListener, Result.HttpString {
+public class Fragment1 extends Fragment implements View.OnClickListener, ItemClick, AdapterView.OnItemClickListener, DataHandler, Animation.AnimationListener, PullToRefreshView.OnRefreshListener, HttpResult.HttpString {
 
     private View view = null;
     private Activity activity = null;
@@ -69,7 +61,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private ArrayList<Object> list = null;
     private ArrayList<Object> scenelist = null;
     private SideListViewAdapter adapter = null;
-    private Context context = null;
+    private static Context context = null;
     private RelativeLayout fragment1Top = null;
     private ImageView fragment1Logo = null;
     private PullToRefreshView mPullToRefreshView = null;
@@ -85,18 +77,20 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     private MyImageView MainFind = null;
     private MyImageView MainAdd = null;
-    private RelativeLayout fragment1Background;
-    private View bottomMain = null;
+    private static RelativeLayout fragment1Background;
+    private static View bottomMain = null;
     private RefreshSideListView bottomListView = null;
     private TextView bottomText = null;
     private SideListViewAdapter sideListViewAdapter = null;
-    private boolean isVisiable = false;
+    private static boolean isVisiable = false;
 
-    private Animation StopanimationBottom = null;
-    private Animation StopanimationBack = null;
+    private static Animation StopanimationBottom = null;
+    private static Animation StopanimationBack = null;
+    private static Animation.AnimationListener animationListener = null;
 
     private Weather weather = null;
-
+    //标识设备的状态值
+    private boolean status;
 
     @Nullable
     @Override
@@ -108,6 +102,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
         databaseOpera = new DatabaseOpera(context);
         fragmentControl = new FragmentControl(context);
+
+        animationListener = this;
 
 
         scenelist = new ArrayList<>();
@@ -139,31 +135,19 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         fragment1Background.setOnClickListener(this);
         MainAdd.setOnClickListener(this);
         MainFind.setOnClickListener(this);
-        DensityUtil.setRelayoutSize(MainFind, DensityUtil.dip2px(context, 50), DensityUtil.dip2px(context, 50), BaseActivity.height / 5 * 4, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
-        DensityUtil.setRelayoutSize(MainAdd, DensityUtil.dip2px(context, 50), DensityUtil.dip2px(context, 50), BaseActivity.height / 7 * 5, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
+        DensityUtil.setRelayoutSize(MainFind, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 5 * 4, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
+        DensityUtil.setRelayoutSize(MainAdd, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 3 * 2, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
         DensityUtil.setRelHeight(bottomMain, BaseActivity.height / 2, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
         DensityUtil.setRelHeight(view, BaseActivity.height);
         DensityUtil.setRelHeight(fragment1Top, BaseActivity.height / 4);
         DensityUtil.setRelayoutSize(fragment1Logo, BaseActivity.width / 2, DensityUtil.dip2px(context, 20), DensityUtil.dip2px(context, 40), 0, 0, 0);
 
-        if (HttpURL.Cityweather == null && HttpURL.CityName != null) {
-            fragment1City.setText(HttpURL.CityName);
-            //获取天气
-            new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
-            weather = new Weather();
-        } else {
-            if (HttpURL.Cityweather != null && HttpURL.Cityweather[0] != null) {
-                fragment1City.setText(HttpURL.CityName);
-                fragment1weather.setText(HttpURL.Cityweather[0] + "~" + HttpURL.Cityweather[1]);
-            }
-        }
-
         return view;
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
 
         getDatabaseData("", null);
 
@@ -173,6 +157,18 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
             adapter.setItemClick(this);
         } else {
             adapter.RefreshData(list);
+        }
+
+        if (HttpURL.CityName != null&& HttpURL.Cityweather[0] == null) {
+            fragment1City.setText(HttpURL.CityName);
+            //获取天气
+            new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, HttpURL.WeatherID, this, 0);
+            weather = new Weather();
+        } else {
+            if (HttpURL.Cityweather != null && HttpURL.Cityweather[0] != null) {
+                fragment1City.setText(HttpURL.CityName);
+                fragment1weather.setText(HttpURL.Cityweather[0] + "~" + HttpURL.Cityweather[1]);
+            }
         }
     }
 
@@ -189,7 +185,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                     stopAnimation();
                 break;
             case R.id.MainFind:
-                bottomText.setText("场景");
+                bottomText.setText(getResources().getString(R.string.SceneName));
                 getBottomList();
                 if (sideListViewAdapter == null) {
                     sideListViewAdapter = new SideListViewAdapter(context, scenelist);
@@ -206,11 +202,16 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 CommonIntent.IntentActivity(context, DeviceType.class);
                 break;
             case R.id.fragment1City:
-                CommonIntent.IntentResActivity(activity, City.class, 001, 001);
+                CommonIntent.IntentActivity(activity, City.class);
                 break;
         }
     }
 
+    /**
+     * 获取场景列表的数据
+     *
+     * @return
+     */
     private ArrayList<Object> getBottomList() {
         DatabaseOpera databaseOpera = new DatabaseOpera(context);
         sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
@@ -245,10 +246,13 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 break;
             case R.id.slideListView:
                 userDevice = (UserDevice) ListObj.get(position);
-                if (userDevice.getDeviceOnline().equals("2"))
-                    CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac(), String.valueOf(DeviceURL.Switch));
-                else
-                    Toast.makeText(context, "设备不在线", Toast.LENGTH_SHORT).show();
+                if (DeviceCode.ONLINE == Integer.parseInt(userDevice.getDeviceOnline())) {
+                    //获取设备的信息
+                    ArrayList<Object> ListDevice = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, null, "deviceID = ?", new String[]{userDevice.getDeviceID()}, "", "", "", "", Device.class, false);
+                    Device device = (Device) ListDevice.get(0);
+                    CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac(), device.getDeviceTypeID(), status);
+                } else
+                    Toast.makeText(context, getResources().getString(R.string.DeviceOnline), Toast.LENGTH_SHORT).show();
                 break;
         }
     }
@@ -261,22 +265,25 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void OnClick(int position, int View) {
-        slideListView.ShowNormal();
-        userDevice = (UserDevice) ListObj.get(position);
-        switch (View) {
-            //编辑点击事件
-            case 0:
-                CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceMac(), "edit");
-                break;
-            //删除点击事件
-            case 1:
-                //删除界面的item并且同时删除本地数据的数据和服务器上面的数据
-                list.remove(position);
-                adapter.RefreshData(list);
-                //删除本地数据库的数据
-                databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
-                //删除服务器的数据库的数据
-                break;
+        //如果是真实设备则允许侧滑点击
+        if (status) {
+            slideListView.ShowNormal();
+            userDevice = (UserDevice) ListObj.get(position);
+            switch (View) {
+                //编辑点击事件
+                case 0:
+                    CommonIntent.IntentActivity(context, DeviceEdit.class, userDevice.getDeviceID(), "edit");
+                    break;
+                //删除点击事件
+                case 1:
+                    //删除界面的item并且同时删除本地数据的数据和服务器上面的数据
+                    list.remove(position);
+                    adapter.RefreshData(list);
+                    //删除本地数据库的数据
+                    databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
+                    //删除服务器的数据库的数据
+                    break;
+            }
         }
     }
 
@@ -288,6 +295,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     private void getDatabaseData(String wherearg, String[] whereargs) {
         ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
+        status = true;
+        //如果获取用户设备为空则说明没有用户设备这个时候应该显示模拟设备，将当前的状态设置为模拟状态否则就是真实状态
+        if (ListObj.size() <= 0) {
+            status = false;
+            ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
+        }
         list = fragmentControl.setFragment1List(ListObj);
     }
 
@@ -295,19 +308,20 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     /**
      * 更新数据
      */
-    private void ReData() {
+    private void ReData(int position) {
         getDatabaseData("", null);
         adapter.RefreshData(list);
-        //关闭动画
-        mPullToRefreshView.setRefreshing(false);
+        if (position == 0)
+            //关闭动画
+            mPullToRefreshView.setRefreshing(false);
     }
 
     /**
      * 更新数据的接口
      */
     @Override
-    public void ReStartData() {
-        ReData();
+    public void ReStartData(int position) {
+        ReData(position);
     }
 
     /**
@@ -326,12 +340,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     /**
      * 停止动画的操作
      */
-    private void stopAnimation() {
+    private static void stopAnimation() {
         StopanimationBottom = AnimationUtils.loadAnimation(context, R.anim.bottom_in);
         StopanimationBack = AnimationUtils.loadAnimation(context, R.anim.backgroudin);
         bottomMain.startAnimation(StopanimationBottom);
         fragment1Background.startAnimation(StopanimationBack);
-        StopanimationBottom.setAnimationListener(this);
+        StopanimationBottom.setAnimationListener(animationListener);
         isVisiable = false;
     }
 
@@ -375,9 +389,13 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onRefresh() {
         //获取天气
-        new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, "c3070ac56cff43765b78f3fca4dc812a", this, 0);
+        new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, HttpURL.WeatherID, this, 0);
         weather = new Weather();
-        new CheckOnline(context, this).UDPCheck();
+        //下拉刷新如果是真实状态则允许UDP请求否则则不允许请求
+        if (status)
+            new CheckOnline(context, this).UDPCheck();
+        else
+            ReData(0);
     }
 
     /**
@@ -403,6 +421,15 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onError(int code, int Error) {
         if (Error == HttpCode.TIMEOUT)
-            Toast.makeText(context, "请求超时", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, getResources().getString(R.string.HttpError), Toast.LENGTH_SHORT).show();
+    }
+
+
+    public static boolean onKeyDown() {
+        if (isVisiable == true) {
+            stopAnimation();
+            return false;
+        }
+        return true;
     }
 }

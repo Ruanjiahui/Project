@@ -87,6 +87,19 @@ public class FormatData {
         return data;
     }
 
+
+    /**
+     * 将设备的Mac地址封装成字符串准备上传
+     *
+     * @param Mac
+     * @return
+     */
+    public static String getHttpPOSTUserDevice(String Mac) {
+        String data = "appKey=123&appSecret=456&MAC=";
+        data += Mac;
+        return data;
+    }
+
     /**
      * 将设备的Mac地址封装成字符串准备上传
      *

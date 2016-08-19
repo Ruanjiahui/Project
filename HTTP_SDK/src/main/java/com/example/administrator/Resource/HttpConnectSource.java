@@ -1,4 +1,4 @@
-package com.example.administrator.http_sdk;
+package com.example.administrator.Resource;
 
 import android.util.Log;
 
@@ -36,7 +36,7 @@ public class HttpConnectSource {
             httpURLConnection = (HttpURLConnection) url.openConnection();
             httpURLConnection.setDoInput(true);//设置输入采用字节流方式
             httpURLConnection.setDoOutput(true);//设置输出采用字节流的方式
-            httpURLConnection.setRequestMethod("POST");//设置GET请求
+            httpURLConnection.setRequestMethod("GET");//设置GET请求
             httpURLConnection.setConnectTimeout(20000);
             httpURLConnection.setReadTimeout(20000);//设置请求时间
             httpURLConnection.setRequestProperty("Charset", "utf-8");//设置字符编码
