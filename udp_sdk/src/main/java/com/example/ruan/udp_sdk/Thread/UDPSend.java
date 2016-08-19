@@ -1,12 +1,12 @@
 package com.example.ruan.udp_sdk.Thread;
 
-import com.example.ruan.udp_sdk.UDPInterface;
+import com.example.ruan.udp_sdk.UDPListen;
 
 /**
  * Created by Administrator on 2016/7/15.
  */
 public class UDPSend implements Runnable {
-    private UDPInterface.UDPSend uSend = null;
+    private UDPListen.UDPSend uSend = null;
     private byte[] buffer = null;
     private int count = 0;
 
@@ -15,7 +15,7 @@ public class UDPSend implements Runnable {
      *
      * @param uSend 发送信息的接口
      */
-    public UDPSend(UDPInterface.UDPSend uSend, byte[] buffer, int count) {
+    public UDPSend(UDPListen.UDPSend uSend, byte[] buffer, int count) {
         this.uSend = uSend;
         this.buffer = buffer;
         this.count = count;

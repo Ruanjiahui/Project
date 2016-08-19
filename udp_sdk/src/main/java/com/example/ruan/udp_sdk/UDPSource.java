@@ -1,7 +1,5 @@
 package com.example.ruan.udp_sdk;
 
-import java.net.DatagramSocket;
-
 /**
  * Created by Administrator on 2016/7/16.
  *
@@ -30,7 +28,7 @@ public abstract class UDPSource{
      * @param position  请求的标示
      * @param handler   返回数据进行更新
      */
-    protected abstract void Revice(int position , UDPInterface.UDPHandler handler);
+    protected abstract void Revice(int position , UDPListen.UDPHandler handler);
 
 
     /**

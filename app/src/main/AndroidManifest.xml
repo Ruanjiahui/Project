@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.ruan.project">
+    package="com.blink.blinkiot">
 
     <!-- 连接网络的权限-->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -22,33 +22,33 @@
         android:label="@string/app_name"
         android:theme="@style/NoWhite">
         <!--AnimActivityTheme-->
-        <activity android:name=".StartActivity">
+        <activity android:name="com.blink.blinkiot.Start.StartActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
-        <activity android:name=".View.Activity.DeviceType" />
-        <activity android:name=".View.Activity.DeviceList" />
-        <activity android:name=".View.Activity.Suggest" />
-        <activity android:name=".View.Activity.DeviceEdit" />
-        <activity android:name=".View.Activity.Setting" />
-        <activity android:name=".View.Activity.Help" />
-        <activity android:name=".View.Activity.Person" />
-        <activity android:name=".View.Activity.Edit" />
-        <activity android:name=".View.Activity.Login" />
-        <activity android:name=".View.Activity.DeviceControl" />
-        <activity android:name=".View.Activity.AirkissNetWork" />
-        <activity android:name=".View.Activity.NetWorkSetting" />
-        <activity android:name=".View.Activity.SceneList" />
-        <activity android:name=".View.Activity.picPick" />
-        <activity android:name=".View.Activity.City" />
-        <activity android:name=".View.Activity.ConfigList" />
-        <activity android:name=".View.Activity.ClearCache" />
-        <activity android:name=".View.Activity.MessageSetting" />
-        <activity android:name=".View.Activity.AboutMe" />
+        <activity android:name="com.blink.blinkiot.Start.MainActivity" />
+        <activity android:name="com.blink.blinkiot.View.Activity.DeviceType" />
+        <activity android:name="com.blink.blinkiot.View.Activity.DeviceList" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Suggest" />
+        <activity android:name="com.blink.blinkiot.View.Activity.DeviceEdit" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Setting" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Help" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Person" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Edit" />
+        <activity android:name="com.blink.blinkiot.View.Activity.Login" />
+        <activity android:name="com.blink.blinkiot.View.Activity.DeviceControl" />
+        <activity android:name="com.blink.blinkiot.View.Activity.AirkissNetWork" />
+        <activity android:name="com.blink.blinkiot.View.Activity.NetWorkSetting" />
+        <activity android:name="com.blink.blinkiot.View.Activity.SceneList" />
+        <activity android:name="com.blink.blinkiot.View.Activity.picPick" />
+        <activity android:name="com.blink.blinkiot.View.Activity.City" />
+        <activity android:name="com.blink.blinkiot.View.Activity.ConfigList" />
+        <activity android:name="com.blink.blinkiot.View.Activity.ClearCache" />
+        <activity android:name="com.blink.blinkiot.View.Activity.MessageSetting" />
+        <activity android:name="com.blink.blinkiot.View.Activity.AboutMe" />
 
 
         <!-- 注册广播 -->

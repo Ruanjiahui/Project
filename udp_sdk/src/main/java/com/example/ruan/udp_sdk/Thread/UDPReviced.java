@@ -3,15 +3,15 @@ package com.example.ruan.udp_sdk.Thread;
 import android.os.Handler;
 import android.os.Message;
 
-import com.example.ruan.udp_sdk.UDPInterface;
+import com.example.ruan.udp_sdk.UDPListen;
 
 
 /**
  * Created by Administrator on 2016/7/15.
  */
 public class UDPReviced implements Runnable {
-    private UDPInterface.UDPReviced uReviced = null;
-    private UDPInterface.UDPHandler uHandler = null;
+    private UDPListen.UDPReviced uReviced = null;
+    private UDPListen.UDPHandler uHandler = null;
     private int position = 0;
 
     /**
@@ -20,7 +20,7 @@ public class UDPReviced implements Runnable {
      * @param uReviced 接收信息的接口
      * @param uHandler 处理接收信息的接口
      */
-    public UDPReviced(int position , UDPInterface.UDPReviced uReviced, UDPInterface.UDPHandler uHandler) {
+    public UDPReviced(int position , UDPListen.UDPReviced uReviced, UDPListen.UDPHandler uHandler) {
         this.position = position;
         this.uReviced = uReviced;
         this.uHandler = uHandler;

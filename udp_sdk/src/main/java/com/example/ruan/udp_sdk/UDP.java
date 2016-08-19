@@ -25,7 +25,7 @@ public class UDP {
      * @param position      接收数据的标识
      * @param handler
      */
-    public void uReviced(int position , UDPInterface.UDPHandler handler) {
+    public void uReviced(int position , UDPListen.UDPHandler handler) {
         udpBase.Revice(position , handler);
     }
 
