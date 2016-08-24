@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -15,6 +17,7 @@ import android.os.StatFs;
 import android.provider.MediaStore;
 import android.text.format.Formatter;
 import android.util.Base64;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -25,7 +28,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -361,5 +364,24 @@ public class SystemTool {
         long blockSize = stat.getBlockSize();
         long availableBlocks = stat.getAvailableBlocks();
         return Formatter.formatFileSize(context, blockSize * availableBlocks);
+    }
+
+    /**
+     * 设置系统的语言
+     *
+     * @param locale
+     */
+    public static void switchLanguage(Context context, Locale locale) {
+        Resources resources = context.getResources();// 获得res资源对象
+        Configuration config = resources.getConfiguration();// 获得设置对象
+        DisplayMetrics dm = resources.getDisplayMetrics();// 获得屏幕参数：主要是分辨率，像素等。
+        config.locale = locale; // 简体中文
+        resources.updateConfiguration(config, dm);
+    }
+
+
+    public static Locale getSystemLanguage(Context context) {
+        Locale locale = context.getResources().getConfiguration().locale;
+        return locale;
     }
 }

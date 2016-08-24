@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 
 import com.blink.blinkiot.Other.DeviceCode;
+import com.blink.blinkiot.R;
 
 import java.util.ArrayList;
 
@@ -25,7 +26,7 @@ public class TestDevice {
         ContentValues contentValues = new ContentValues();
         contentValues.put("userID", "123456");
         contentValues.put("deviceID", "RTL8711");
-        contentValues.put("deviceName", "模拟排插");
+        contentValues.put("deviceName", context.getResources().getString(R.string.Sockets));
         contentValues.put("deviceMac", "11:11:11:11:11:11");
         contentValues.put("deviceOnline", String.valueOf(DeviceCode.ONLINE));
         contentValues.put("deviceOnlineStatus", DeviceCode.WIFI);
@@ -37,7 +38,7 @@ public class TestDevice {
         ContentValues contentValues = new ContentValues();
         contentValues.put("userID", "123456");
         contentValues.put("deviceID", "RTL8722");
-        contentValues.put("deviceName", "模拟RGB");
+        contentValues.put("deviceName", context.getResources().getString(R.string.RGBs));
         contentValues.put("deviceMac", "22:22:22:22:22:22");
         contentValues.put("deviceOnline", String.valueOf(DeviceCode.ONLINE));
         contentValues.put("deviceOnlineStatus", DeviceCode.WIFI);

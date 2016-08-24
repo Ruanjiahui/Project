@@ -532,16 +532,4 @@ public abstract class BaseActivity extends FragmentActivity implements View.OnCl
         }
         Click(v);
     }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        MobclickAgent.onResume(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        MobclickAgent.onPause(this);
-    }
 }

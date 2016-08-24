@@ -73,7 +73,7 @@ public class HttpReadSource {
             if (httpURLConnection.getContentLength() > 0)
                 buffer = new byte[httpURLConnection.getContentLength()];
             else
-                buffer = new byte[10240];
+                buffer = new byte[0];
             int n = 0;
             int length = 0;
             Object[] object = new Object[3];
@@ -97,6 +97,9 @@ public class HttpReadSource {
 //                    break;
 //                }
 //            }
+            if (httpURLConnection.getContentLength() == -1) {
+                return (HttpCode.NULL + "").getBytes();
+            }
 
             while ((n = in.read(buffer)) != -1) {
                 output.write(buffer, 0, n);

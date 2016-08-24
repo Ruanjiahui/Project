@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -133,7 +134,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         MainAdd.setOnClickListener(this);
         MainFind.setOnClickListener(this);
         DensityUtil.setRelayoutSize(MainFind, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 5 * 4, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
-        DensityUtil.setRelayoutSize(MainAdd, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 3 * 2, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
+        DensityUtil.setRelayoutSize(MainAdd, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 3 * 2 + DensityUtil.dip2px(context, 10), 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
         DensityUtil.setRelHeight(bottomMain, BaseActivity.height / 2, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
         DensityUtil.setRelHeight(view, BaseActivity.height);
         DensityUtil.setRelHeight(fragment1Top, BaseActivity.height / 4);
@@ -156,7 +157,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
             adapter.RefreshData(list);
         }
 
-        if (HttpURL.CityName != null&& HttpURL.Cityweather == null) {
+        if (HttpURL.CityName != null && HttpURL.Cityweather == null) {
             fragment1City.setText(HttpURL.CityName);
             //获取天气
             new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, HttpURL.WeatherID, this, 0);
@@ -246,6 +247,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                 if (DeviceCode.ONLINE == Integer.parseInt(userDevice.getDeviceOnline())) {
                     //获取设备的信息
                     ArrayList<Object> ListDevice = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, null, "deviceID = ?", new String[]{userDevice.getDeviceID()}, "", "", "", "", Device.class, false);
+                    if (ListDevice == null && ListDevice.size() <= 0)
+                        return;
                     Device device = (Device) ListDevice.get(0);
                     CommonIntent.IntentActivity(context, DeviceControl.class, userDevice.getDeviceMac(), device.getDeviceTypeID(), status);
                 } else
@@ -294,7 +297,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
         status = true;
         //如果获取用户设备为空则说明没有用户设备这个时候应该显示模拟设备，将当前的状态设置为模拟状态否则就是真实状态
-        if (ListObj.size() <= 0) {
+        if (ListObj.size() <= 0 || ListObj == null) {
             status = false;
             ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
         }
@@ -417,8 +420,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onError(int code, int Error) {
-        if (Error == HttpCode.TIMEOUT)
-            Toast.makeText(context, getResources().getString(R.string.HttpError), Toast.LENGTH_SHORT).show();
+//        if (Error == HttpCode.TIMEOUT)
+//            Toast.makeText(context, context.getResources().getString(R.string.HttpError), Toast.LENGTH_SHORT).show();
     }
 
 

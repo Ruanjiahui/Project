@@ -45,7 +45,9 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
         //进行检查更新
         new HTTP(this, DOWNXML, HttpCode.DOWN, HttpURL.UpdateURL, null);
 
-        wifiStatus = FileTool.ReadProperties(context, HttpURL.ConfigName, "WIFI");
+        if (!FileTool.getProperties(context, HttpURL.ConfigName))
+            FileTool.WriteProperties(context, HttpURL.ConfigName, context.getResources().getString(R.string.WifiUpdateTxt), "true");
+        wifiStatus = FileTool.ReadProperties(context, HttpURL.ConfigName, context.getResources().getString(R.string.WifiUpdateTxt));
     }
 
     /**
@@ -105,7 +107,7 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
         }
         dimiss();
         if (STATE && FLAG == UPDATE) {
-            ShowDialog(3, "正在现在请等待", "", "");
+            ShowDialog(3, context.getResources().getString(R.string.DowningNow), "", "");
         }
     }
 
@@ -123,7 +125,7 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
     @Override
     public void FileStart(int FLAG) {
         if (FLAG == UPDATE && "false".equals(wifiStatus))
-            Toast.makeText(context, "开始下载", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getResources().getString(R.string.StartDown), Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -158,7 +160,10 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
                 //解析xml文件
                 Version version = Version.getVersionObj();
                 //解析XML文件用的方法是dom
-                new ParseXmlService().parseXml(new ByteArrayInputStream(bytes), version);
+                if (new ParseXmlService().parseXml(new ByteArrayInputStream(bytes), version) == null) {
+                    Toast.makeText(context, context.getResources().getString(R.string.NetError), Toast.LENGTH_SHORT).show();
+                    return;
+                }
                 //判断版本号是不是大于本地的版本号
                 if (!version.getVersion().equals(SystemTool.getVersionName(context))) {
                     HttpURL.DownApplicationURL = version.getApkdownload();
@@ -199,7 +204,7 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
                 //安装软件
                 ShowDialog(INSTALL, getSystemText(R.string.InstallMessageText), getSystemText(R.string.InstallLeftButText), getSystemText(R.string.InstallRightButText));
             else
-                Toast.makeText(context, "MD5检验不对安装失败，请到官网重新下载", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, context.getResources().getString(R.string.MD5Fail), Toast.LENGTH_SHORT).show();
         }
     }
 

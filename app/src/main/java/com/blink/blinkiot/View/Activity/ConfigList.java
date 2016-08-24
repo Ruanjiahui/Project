@@ -1,5 +1,7 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,22 +20,25 @@ import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
 import com.blink.blinkiot.Other.UDP.UDPConfig;
 import com.blink.blinkiot.R;
+import com.example.administrator.ui_sdk.MyCircleLoading;
+import com.example.administrator.ui_sdk.View.CircleLoading;
 
 import java.util.ArrayList;
 
 /**
  * Created by Administrator on 2016/8/12.
  */
-public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac, AdapterView.OnItemClickListener {
+public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac, AdapterView.OnItemClickListener, MyCircleLoading {
 
     private ListView configList = null;
     private View view = null;
     private LGAdapter adapter = null;
     private ArrayList<Object> list = null;
+    public static Context context = null;
 
     private ArrayList<Object> ListObj = null;
-    private ArrayList<Object> obj = null;
     private UserDevice userDevice = null;
+    private CircleLoading configNet = null;
 
     //这个获取扫描的对象数据
     private String data = null;
@@ -43,6 +48,7 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
      */
     @Override
     public void init() {
+        context = this;
         data = getIntent().getExtras().getString("data");
 
         setTitle(getResources().getString(R.string.SearchTitle));
@@ -54,12 +60,14 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
         view = LayoutInflater.from(context).inflate(R.layout.configlist, null);
 
         configList = (ListView) view.findViewById(R.id.configList);
+        configNet = (CircleLoading) view.findViewById(R.id.configNet);
 
-
-        setContent(view);
 
         configList.setOnItemClickListener(this);
+        configNet.setTextCircle("AirKiss");
+        configNet.setClick(this);
 
+        setContent(view);
 
     }
 
@@ -67,14 +75,13 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     protected void onResume() {
         super.onResume();
 
-        obj = new ArrayList<>();
         ListObj = null;
         ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
 
         list = new ArrayList<>();
         //这个广播是广播Blink所有的设备
         //计时器，广播没一秒发送一次，总共发送5次
-        new ScanDevice().Scanner(UDPConfig.PORT, data , this, UDPConfig.count);
+        new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
     }
 
 
@@ -113,9 +120,9 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
                     return;
                 }
             }
-            addDevice(mac1);
+            list.add(getItem(mac));
         } else
-            addDevice(mac);
+            list.add(getItem(mac));
         setList();
     }
 
@@ -128,13 +135,6 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
             configList.setAdapter(adapter);
         } else
             adapter.RefreshData(list);
-    }
-
-    private void addDevice(String mac) {
-        list.add(getItem(mac));
-        UserDevice userDevice = new UserDevice();
-        userDevice.setDeviceMac(mac);
-        obj.add(userDevice);
     }
 
     /**
@@ -163,7 +163,17 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
      */
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        userDevice = (UserDevice) obj.get(position);
         CommonIntent.IntentActivity(context, DeviceEdit.class, data, "new");
+    }
+
+    /**
+     * 这个是点击事件的接口
+     *
+     * @param v
+     */
+    @Override
+    public void circleClick(View v) {
+        //跳转到Airkiss界面
+        CommonIntent.IntentActivity(context, AirkissNetWork.class, data);
     }
 }

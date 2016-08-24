@@ -94,11 +94,11 @@ public class JSONClass extends JSONResouce {
 
                 }
             } catch (IllegalAccessException e) {
-                e.printStackTrace();
+                return null;
             } catch (InstantiationException e) {
-                e.printStackTrace();
+                return null;
             } catch (JSONException e) {
-                e.printStackTrace();
+                return null;
             }
         }
         return null;

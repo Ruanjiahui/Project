@@ -1,15 +1,22 @@
 package com.blink.blinkiot.Start;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
+import com.blink.blinkiot.Other.Push.MyPushIntentService;
+import com.example.administrator.data_sdk.Crash.LogException;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
 import com.blink.blinkiot.Controllar.CheckUpdate;
@@ -26,6 +33,11 @@ import com.blink.blinkiot.View.Fragment.Fragment2;
 import com.blink.blinkiot.View.Fragment.Fragment3;
 import com.blink.blinkiot.View.Fragment.Fragment4;
 import com.umeng.analytics.MobclickAgent;
+import com.umeng.message.ALIAS_TYPE;
+import com.umeng.message.PushAgent;
+import com.umeng.message.UmengRegistrar;
+
+import java.util.Locale;
 
 public class MainActivity extends NavActivity implements LocalHandle {
     private View view = null;
@@ -34,6 +46,8 @@ public class MainActivity extends NavActivity implements LocalHandle {
     public static boolean isRefresh = true;
     public static RegisterTime registerTime = null;
     private CheckUpdate checkUpdate = null;
+    public static Activity activity = null;
+    public static int isLanguage = -1;
 
 
     /**
@@ -73,7 +87,20 @@ public class MainActivity extends NavActivity implements LocalHandle {
     @Override
     public void Nav() {
         context = this;
+        activity = this;
         view = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
+
+        //注册推送
+        PushAgent pushAgent = PushAgent.getInstance(this);
+        pushAgent.onAppStart();
+//        try {
+//            pushAgent.addAlias("15119481373@163.com" , ALIAS_TYPE.WEIXIN);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+        pushAgent.enable();
+        pushAgent.setPushIntentServiceClass(MyPushIntentService.class);
+
 
         setLeftTitleVisiable(false);
         setLeftImageVisiable(false);
@@ -115,6 +142,21 @@ public class MainActivity extends NavActivity implements LocalHandle {
         intentFragment(new Fragment1());
         //检查更新操作
         checkUpdate.Update(0);
+
+//        isLanguage = 1;
+
+//        isLanguage = -1;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        Intent intent = new Intent();
+//        intent.setClass(this, MainActivity.class);
+//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+//        this.startActivity(intent);
     }
 
     /**

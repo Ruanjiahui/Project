@@ -2,6 +2,7 @@ package com.example.administrator.ui_sdk;
 
 import android.app.Activity;
 import android.app.Application;
+import android.util.Log;
 
 import com.umeng.analytics.MobclickAgent;
 
@@ -62,12 +63,24 @@ public class Applications extends Application {
         }
     }
 
+    public void removeOthers(Activity activity) {
+        Log.e("Ruan" , list.toString());
+        for (int i = 0; i < list.size(); i++) {
+            if (list.get(i) != activity) {
+                Log.e("Ruan" , list.get(i) + "--");
+                list.get(i).finish();
+                list.remove(i);
+            }
+        }
+    }
+
     /**
      * 判断该Activity有没有销毁
+     *
      * @param activity
      * @return
      */
-    public boolean getActivityOnline(Activity activity){
+    public boolean getActivityOnline(Activity activity) {
         for (Activity activity1 : list) {
             if (activity1 == activity) {
                 return true;

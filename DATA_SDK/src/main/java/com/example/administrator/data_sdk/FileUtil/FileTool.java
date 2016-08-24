@@ -8,6 +8,7 @@ import android.util.Log;
 
 import com.example.administrator.data_sdk.FileUtilAbstract.FileRequest;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -416,6 +417,16 @@ public class FileTool {
             Log.e("Ruan", "config.properties IO Exception", e);
         }
         return null;
+    }
+
+
+    public static boolean isFirstRunApplication(Context context) {
+        if (getProperties(context, "FirstRun.properties")) {
+            if (ReadProperties(context, "FirstRun.properties", "FirstRun").equals(SystemTool.getVersionName(context)))
+                return false;
+        }
+        WriteProperties(context, "FirstRun.properties", "FirstRun", SystemTool.getVersionName(context));
+        return true;
     }
 
 

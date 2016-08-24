@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/leadViewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+        <ImageView
+            android:id="@+id/leadImg1"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@mipmap/dot"
+            android:layout_marginRight="2.5dp"
+            android:layout_marginLeft="2.5dp"/>
+
+
+        <ImageView
+            android:id="@+id/leadImg2"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@mipmap/dot"
+            android:layout_marginRight="2.5dp"
+            android:layout_marginLeft="2.5dp"/>
+
+
+        <ImageView
+            android:id="@+id/leadImg3"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:src="@mipmap/dot"
+            android:layout_marginRight="2.5dp"
+            android:layout_marginLeft="2.5dp"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

@@ -206,7 +206,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
     public void handler(int position, String result) {
         if (result != null && result.length() > 0) {
             CheckMac checkMac = getJSON(result);
-            if (checkMac.getList() != null) {
+            if (checkMac != null && checkMac.getList() != null) {
                 //如果返回数据里面有该设备就设置为在线状态
                 for (int i = 0; i < checkMac.getList().size(); i++) {
                     for (int r = 0; r < ListObj.size(); r++) {
@@ -257,7 +257,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
                 list.add(array.getString(i));
             checkMac.setList(list);
         } catch (JSONException e) {
-            e.printStackTrace();
+            return null;
         }
         return checkMac;
     }

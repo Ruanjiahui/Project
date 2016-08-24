@@ -50,7 +50,10 @@ public class FragmentControl {
         }
 
         //判断是否存在场景表   如果没有存在则自动创建场景表
-        new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
+        if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName)) {
+            new DatabaseOpera(context).SceneInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
+        }
+
         //模拟插个人数据库进去
         new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userID", "123456"), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
         //判断是否存在用户表   如果没有存在则自动创建用户表
@@ -74,13 +77,6 @@ public class FragmentControl {
         User.setUser((User) list.get(0));
         //获取个人用户的数据
 //        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "", new String[]{}));
-
-
-        //配置文件操作
-        //将信息写入配置文件
-        //默认为wifi情况下自动更新软件
-        if (!FileTool.getProperties(context, HttpURL.ConfigName))
-            FileTool.WriteProperties(context, HttpURL.ConfigName, "WIFI", true + "");
 
     }
 
@@ -172,7 +168,7 @@ public class FragmentControl {
     private Object getItem(String title, String subtitile, Drawable Image, String rightTitle, String rightTitle1, Drawable RightImage, int height) {
         Item item = new Item();
         item.setHomeImage(Image);
-        item.setHomeRelative(height);
+//        item.setHomeRelative(height);
         item.setHomeRight(rightTitle);
         item.setHomeRight1(rightTitle1);
         item.setHomeRightImage(RightImage);
@@ -185,6 +181,7 @@ public class FragmentControl {
         Item item = new Item();
         item.setHomeText(title);
         item.setHomeImage(drawable);
+        item.setHomeRightImage(context.getResources().getDrawable(R.mipmap.right));
         return item;
     }
 }

@@ -38,6 +38,25 @@ public class Item {
     private int homeRelative = 0;
 
 
+    private String languageText = null;
+    private boolean languageRadio = false;
+
+    public boolean isLanguageRadio() {
+        return languageRadio;
+    }
+
+    public void setLanguageRadio(boolean languageRadio) {
+        this.languageRadio = languageRadio;
+    }
+
+    public String getLanguageText() {
+        return languageText;
+    }
+
+    public void setLanguageText(String languageText) {
+        this.languageText = languageText;
+    }
+
     public boolean isCheck() {
         return isCheck;
     }

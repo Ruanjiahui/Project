@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -214,13 +215,14 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      * @param isClick
      */
     private void setSocketData(int jack, int status, View view, boolean isClick) {
-        setButtonClick(view, isClick);
-        data = socketSwitch.setSocketSwtich(status, jack);
-
-        if (STATUS)
+        //将所有按钮设置为锁定状态
+        if (STATUS) {
+            setButtonState(false);
+            setButtonClick(view, isClick);
+            data = socketSwitch.setSocketSwtich(status, jack);
             //这个进行设备数据的获取 参数分别是  IP  端口  数据  标识
             callBack.setDeviceControl(IP, PORT, MAC, data, jack, userDevice.getDeviceOnlineStatus());
-        else
+        } else
             SocketHandler(jack, null);
     }
 
@@ -268,12 +270,19 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void getMac(int position, Object[] objects) {
+        setButtonState(true);
         if (activity != null) {
-            setButtonClick(button, true);
-            String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
-            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
-            if ("setsocketswtich".equals(socketSwitch.getType()) || "getsocketswtich".equals(socketSwitch.getType()))
-                SocketHandler(position, socketSwitch.getJackArray());
+            if (objects != null) {
+                String json = FormatData.getByteToString((byte[]) objects[0], (int) objects[1]);
+                SocketSwitch socket = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, json.substring(5, json.length()));
+                if (getObjectNull(socket)) {
+                    Toast.makeText(context, getResources().getString(R.string.DeviceControlTie), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                socketSwitch = socket;
+                if ("setsocketswtich".equals(socketSwitch.getType()) || "getsocketswtich".equals(socketSwitch.getType()))
+                    SocketHandler(position, socketSwitch.getJackArray());
+            }
         }
     }
 
@@ -300,7 +309,19 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void Error(int position, int error) {
         Toast.makeText(context, "操作超时", Toast.LENGTH_SHORT).show();
-        setButtonClick(button, true);
+        //将按钮设置为可以点击状态
+        setButtonState(true);
+    }
+
+    /**
+     * 设置按钮点击状态为允许点击
+     */
+    private void setButtonState(boolean click) {
+        setButtonClick(button, click);
+        setButtonClick(button2, click);
+        setButtonClick(button3, click);
+        setButtonClick(button4, click);
+        setButtonClick(button5, click);
     }
 
 
@@ -312,13 +333,29 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
      */
     @Override
     public void handler(int position, String result) {
+        setButtonState(true);
         if (activity != null) {
-            setButtonClick(button, true);
-            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
-            socketSwitch = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
+            SocketSwitch socket = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, result);
+            if (getObjectNull(socket)) {
+                Toast.makeText(context, getResources().getString(R.string.DeviceControlTie), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            socketSwitch = socket;
+            socket = (SocketSwitch) new JSONClass().setJSONToClassDeclared(context, socketSwitch, SocketSwitch.class, socketSwitch.getJson());
+            if (getObjectNull(socket)) {
+                Toast.makeText(context, getResources().getString(R.string.DeviceControlTie), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            socketSwitch = socket;
             if ("setsocketswtich".equals(socketSwitch.getType()) || "getsocketswtich".equals(socketSwitch.getType()))
                 SocketHandler(position, socketSwitch.getJackArray());
         }
+    }
+
+    private boolean getObjectNull(Object object) {
+        if (object == null)
+            return true;
+        return false;
     }
 
 
@@ -331,7 +368,6 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
             setButtonState(button5, socketSwitch.getStatus4());
         }
         if (position == 0) {
-            setButtonClick(button, true);
             socketSwitch.setStatus1(getStatus(socketSwitch.getStatus0()));
             socketSwitch.setStatus2(getStatus(socketSwitch.getStatus0()));
             socketSwitch.setStatus3(getStatus(socketSwitch.getStatus0()));
@@ -344,22 +380,18 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         if (position != 999 && position != 0) {
             switch (position) {
                 case 1:
-                    setButtonClick(button2, true);
                     setButtonState(button2, getStatus(socketSwitch.getStatus1()));
                     socketSwitch.setStatus1(getStatus(socketSwitch.getStatus1()));
                     break;
                 case 2:
-                    setButtonClick(button3, true);
                     setButtonState(button3, getStatus(socketSwitch.getStatus2()));
                     socketSwitch.setStatus2(getStatus(socketSwitch.getStatus2()));
                     break;
                 case 3:
-                    setButtonClick(button4, true);
                     setButtonState(button4, getStatus(socketSwitch.getStatus3()));
                     socketSwitch.setStatus3(getStatus(socketSwitch.getStatus3()));
                     break;
                 case 4:
-                    setButtonClick(button5, true);
                     setButtonState(button5, getStatus(socketSwitch.getStatus4()));
                     socketSwitch.setStatus4(getStatus(socketSwitch.getStatus4()));
                     break;

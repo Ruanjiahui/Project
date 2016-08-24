@@ -75,7 +75,7 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
         thread.start();
         timer = new Timer();
         myTimerTask = new MyTimerTask(this);
-        timer.schedule(myTimerTask, 10000, 5000);
+        timer.schedule(myTimerTask, 3000, 3000);
 
     }
 

@@ -5,12 +5,15 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.blink.blinkiot.Controllar.FragmentControl;
 import com.blink.blinkiot.R;
@@ -80,7 +83,10 @@ public class StartActivity extends Activity {
 
         @Override
         public void dispatchMessage(Message msg) {
-            CommonIntent.IntentActivity(StartActivity.this, MainActivity.class);
+            if (FileTool.isFirstRunApplication(StartActivity.this))
+                CommonIntent.IntentActivity(StartActivity.this, LeadActivity.class);
+            else
+                CommonIntent.IntentActivity(StartActivity.this, MainActivity.class);
             Applications.getInstance().removeOneActivity(StartActivity.this);
         }
     };

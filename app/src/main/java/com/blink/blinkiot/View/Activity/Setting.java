@@ -1,5 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.blink.blinkiot.Start.ActivityCode;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
@@ -32,6 +34,7 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
     private ListView settingList = null;
     private View settingBut = null;
     private TextView circlebut = null;
+    public static Activity activity = null;
 
 
     private ArrayList<Object> list = null;
@@ -46,6 +49,7 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
      */
     @Override
     public void init() {
+        activity = this;
         view = LayoutInflater.from(context).inflate(R.layout.setting, null);
 
         settingList = (ListView) view.findViewById(R.id.settingList);
@@ -53,7 +57,7 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
         settingBut = view.findViewById(R.id.settingBut);
         circlebut = (TextView) view.findViewById(R.id.circlebut);
         settingRel = (RelativeLayout) view.findViewById(R.id.settingRel);
-        settingBut.setVisibility(View.GONE);
+        settingBut.setVisibility(View.VISIBLE);
 
 
         checkUpdate = new CheckUpdate(context);
@@ -125,6 +129,15 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
         item.setHeight(DensityUtil.dip2px(context, 50));
 
         return item;
+    }
+
+    @Override
+    public void Click(View v) {
+        switch (v.getId()){
+            case R.id.settingBut:
+                CommonIntent.IntentActivity(context , Login.class , ActivityCode.SETTING);
+                break;
+        }
     }
 
     /**

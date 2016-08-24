@@ -10,7 +10,7 @@ import java.util.Properties;
 /**
  * Created by Administrator on 2016/1/12.
  */
-public class Configuration {
+public class MyConfiguration {
 
     //    public static String path = "/data/data/com.example.administrator.dreamproject/Properties.dat";
     private static Properties properties = new Properties();

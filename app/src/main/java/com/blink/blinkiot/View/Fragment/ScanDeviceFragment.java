@@ -46,7 +46,7 @@ public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDP
 //        context = getActivity();
 //        list = new ArrayList<>();
 //
-//        scanConn = (CircleLoading) view.findViewById(R.id.scanConn);
+        scanConn = (CircleLoading) view.findViewById(R.id.scanConn);
 //        scanText = (TextView) view.findViewById(R.id.scanText);
 //        scanSlideListView = (RefreshSideListView) view.findViewById(R.id.scanSlideListView);
 //
@@ -54,6 +54,7 @@ public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDP
 //        scanConn.setTime(5000);
 //        scanConn.setSweepAngle(360);
 //        scanConn.setClick(this);
+        scanConn.setTextCircle(getResources().getString(R.string.ScanName));
 
 
         return view;

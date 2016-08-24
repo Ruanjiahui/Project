@@ -10,13 +10,20 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 
+import com.blink.blinkiot.Start.ActivityCode;
+import com.blink.blinkiot.Start.MainActivity;
+import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.blink.blinkiot.Interface.PopWinOnClick;
 import com.blink.blinkiot.Other.Utils.SystemOperation;
 import com.blink.blinkiot.R;
+import com.example.administrator.ui_sdk.View.MyImageView;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -24,51 +31,58 @@ import java.util.Map;
 /**
  * Created by Administrator on 2016/3/1.
  */
-public class Login extends BaseActivity implements View.OnFocusChangeListener, TextWatcher, PopWinOnClick {
+public class Login extends BaseActivity {
 
     //    private Context context = null;
     public static Activity activity = null;
     private View view = null;
     private ImageView logindropImage = null;
 
-    private EditText load_edit1, load_edit2 = null;
-    private ImageView load_image, load_image1 = null;
+    //    private EditText load_edit1, load_edit2 = null;
+//    private ImageView load_image, load_image1 = null;
     //注册的按钮
 //    private Button load_but1 = null;
     //登录的按钮
-    public static Button load_but = null;
+//    public static Button load_but = null;
     private ArrayList<Map<String, String>> map = null;
     private ArrayList<Object> list = null;
 //    private MyPopWindow popWindow = null;
 
     private String id, password = null;
+
+
+    private RelativeLayout base_top_relative = null;
+    private TextView unLogin = null;
+    private MyImageView QQLogin;
+    private MyImageView WeixinLogin;
+    private MyImageView WeiboLogin;
+    private String FLAG = null;
 //    public static View loginProgress = null;
 
 
-
-    @Override
-    public void onFocusChange(View v, boolean hasFocus) {
-        switch (v.getId()) {
-            case R.id.load_edit1:
-                if (hasFocus) {
-                    load_image.setImageResource(R.mipmap.head);
-                    load_image1.setImageResource(R.mipmap.password);
-                } else {
-                    load_image.setImageResource(R.mipmap.head_up);
-                    load_image1.setImageResource(R.mipmap.password_up);
-                }
-                break;
-            case R.id.load_edit2:
-                if (hasFocus) {
-                    load_image.setImageResource(R.mipmap.head_up);
-                    load_image1.setImageResource(R.mipmap.password_up);
-                } else {
-                    load_image.setImageResource(R.mipmap.head);
-                    load_image1.setImageResource(R.mipmap.password);
-                }
-                break;
-        }
-    }
+//    @Override
+//    public void onFocusChange(View v, boolean hasFocus) {
+//        switch (v.getId()) {
+//            case R.id.load_edit1:
+//                if (hasFocus) {
+//                    load_image.setImageResource(R.mipmap.head);
+//                    load_image1.setImageResource(R.mipmap.password);
+//                } else {
+//                    load_image.setImageResource(R.mipmap.head_up);
+//                    load_image1.setImageResource(R.mipmap.password_up);
+//                }
+//                break;
+//            case R.id.load_edit2:
+//                if (hasFocus) {
+//                    load_image.setImageResource(R.mipmap.head_up);
+//                    load_image1.setImageResource(R.mipmap.password_up);
+//                } else {
+//                    load_image.setImageResource(R.mipmap.head);
+//                    load_image1.setImageResource(R.mipmap.password);
+//                }
+//                break;
+//        }
+//    }
 
     private void instance() {
 //        loginProgress.setVisibility(View.GONE);
@@ -93,21 +107,25 @@ public class Login extends BaseActivity implements View.OnFocusChangeListener, T
     @Override
     public void init() {
         activity = (Activity) context;
+        FLAG = getIntent().getStringExtra("data");
 
-        setTitle("登录");
-        setTopColor(R.color.Blue);
-        setRightTitleVisiable(false);
-        setTopTitleColor(R.color.White);
-        setLeftTitleColor(R.color.White);
-        setContentColor(R.color.GreySmoke);
+
+        setTileBar(0);
 
         view = LayoutInflater.from(context).inflate(R.layout.login, null);
 
-        load_edit1 = (EditText) view.findViewById(R.id.load_edit1);
-        load_edit2 = (EditText) view.findViewById(R.id.load_edit2);
-        load_image = (ImageView) view.findViewById(R.id.load_image);
-        load_image1 = (ImageView) view.findViewById(R.id.load_image1);
-        load_but = (Button) view.findViewById(R.id.load_but);
+        base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
+        unLogin = (TextView) view.findViewById(R.id.unLogin);
+        QQLogin = (MyImageView) view.findViewById(R.id.QQLogin);
+        WeixinLogin = (MyImageView) view.findViewById(R.id.WeixinLogin);
+        WeiboLogin = (MyImageView) view.findViewById(R.id.WeiboLogin);
+
+
+//        load_edit1 = (EditText) view.findViewById(R.id.load_edit1);
+//        load_edit2 = (EditText) view.findViewById(R.id.load_edit2);
+//        load_image = (ImageView) view.findViewById(R.id.load_image);
+//        load_image1 = (ImageView) view.findViewById(R.id.load_image1);
+//        load_but = (Button) view.findViewById(R.id.load_but);
 //        logindropImage = (ImageView) view.findViewById(R.id.logindropImage);
 //        loginProgress = view.findViewById(R.id.loginProgress);
 //        load_but1 = (Button) view.findViewById(R.id.load_but1);
@@ -118,19 +136,43 @@ public class Login extends BaseActivity implements View.OnFocusChangeListener, T
         DensityUtil.setWidth(view, width);
         setContent(view);
 
-        load_edit1.setOnFocusChangeListener(this);
-        load_edit2.setOnFocusChangeListener(this);
-        load_edit1.addTextChangedListener(this);
-        load_edit2.addTextChangedListener(this);
+//        load_edit1.setOnFocusChangeListener(this);
+//        load_edit2.setOnFocusChangeListener(this);
+//        load_edit1.addTextChangedListener(this);
+//        load_edit2.addTextChangedListener(this);
 //        logindropImage.setOnClickListener(this);
 //        load_but1.setOnClickListener(this);
-        load_but.setOnClickListener(this);
+//        load_but.setOnClickListener(this);
+        DensityUtil.setRelayoutSize(unLogin, RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT, BaseActivity.height / 2 + DensityUtil.dip2px(context, 50), 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
+
+        QQLogin.setOnClickListener(this);
+        WeixinLogin.setOnClickListener(this);
+        WeiboLogin.setOnClickListener(this);
+        base_top_relative.setOnClickListener(this);
+        unLogin.setOnClickListener(this);
+
+        if (FLAG.equals(ActivityCode.GUIDE)) {
+            unLogin.setVisibility(View.VISIBLE);
+            base_top_relative.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void Click(View v) {
         switch (v.getId()) {
-            case R.id.load_but:
+            case R.id.base_top_relative:
+                Applications.getInstance().removeOneActivity(this);
+                break;
+            case R.id.unLogin:
+                CommonIntent.IntentActivity(context , MainActivity.class);
+                break;
+            case R.id.QQLogin:
+                break;
+            case R.id.WeixinLogin:
+                break;
+            case R.id.WeiboLogin:
+                break;
+//            case R.id.load_but:
 //                if (MainHandler.isConnection(context)) {
 //                    load_but.setClickable(false);
 //                    load_but.setEnabled(false);
@@ -151,7 +193,7 @@ public class Login extends BaseActivity implements View.OnFocusChangeListener, T
 //                    //实现登录的方法
 //                    loadModel.LinkLoad(server);
 //                }
-                break;
+//                break;
 //            case R.id.load_but1:
 //                CommonIntent.IntentActivity(context, Register.class);
 //                break;
@@ -164,28 +206,28 @@ public class Login extends BaseActivity implements View.OnFocusChangeListener, T
 
     }
 
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//    @Override
+//    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//    }
+//
+//    @Override
+//    public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//    }
 
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        if (load_edit1.getText().toString().length() > 0 && load_edit2.getText().toString().length() > 0) {
-            load_but.setClickable(true);
-            load_but.setEnabled(true);
-            load_but.setBackgroundResource(R.drawable.button_selector_red);
-        } else {
-            load_but.setClickable(false);
-            load_but.setEnabled(false);
-            load_but.setBackgroundResource(R.drawable.button_down_red);
-        }
-    }
+//    @Override
+//    public void afterTextChanged(Editable s) {
+//        if (load_edit1.getText().toString().length() > 0 && load_edit2.getText().toString().length() > 0) {
+//            load_but.setClickable(true);
+//            load_but.setEnabled(true);
+//            load_but.setBackgroundResource(R.drawable.button_selector_red);
+//        } else {
+//            load_but.setClickable(false);
+//            load_but.setEnabled(false);
+//            load_but.setBackgroundResource(R.drawable.button_down_red);
+//        }
+//    }
 
     /**
      * 整个屏幕的触摸事件
@@ -217,8 +259,8 @@ public class Login extends BaseActivity implements View.OnFocusChangeListener, T
      * @param position 弹出窗口listview的个数
      * @param id
      */
-    @Override
-    public void OnPopItemClick(AdapterView<?> parent, View view, int position, long id) {
-
-    }
+//    @Override
+//    public void OnPopItemClick(AdapterView<?> parent, View view, int position, long id) {
+//
+//    }
 }

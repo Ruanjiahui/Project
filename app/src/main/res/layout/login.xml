@@ -2,88 +2,168 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/login_back"
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical">
 
-    <LinearLayout
-        android:id="@+id/loginLinear"
-        android:layout_width="fill_parent"
+
+    <RelativeLayout
+        android:id="@+id/base_top_relative"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/edit"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp">
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="30dp">
 
         <ImageView
-            android:id="@+id/load_image"
+            android:id="@+id/base_top_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@mipmap/head" />
+            android:layout_centerVertical="true"
+            android:src="@mipmap/left" />
 
-        <!--<include layout="@layout/logindrop" />-->
-
-        <EditText
-            android:id="@+id/load_edit1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/edit"
-            android:hint="请输入你的账号/手机号"
-            android:inputType="text"
-            android:padding="15dp"
-            android:singleLine="true"
-            android:textColor="@color/Red"
-            android:textColorHint="@color/Grey"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/loginLinear1"
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_below="@id/loginLinear"
-        android:layout_marginTop="5dp"
-        android:background="@drawable/edit"
-        android:orientation="horizontal"
-        android:paddingLeft="10dp">
-
-        <ImageView
-            android:id="@+id/load_image1"
+        <TextView
+            android:id="@+id/base_top_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:src="@mipmap/password" />
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/base_top_image"
+            android:gravity="center"
+            android:text="@string/back"
+            android:textColor="@color/White"
+            android:textSize="15sp" />
+    </RelativeLayout>
 
-        <EditText
-            android:id="@+id/load_edit2"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="10dp"
-            android:background="@drawable/edit"
-            android:hint="请输入你的密码"
-            android:inputType="textPassword"
-            android:padding="15dp"
-            android:singleLine="true"
-            android:textColor="@color/Red"
-            android:textColorHint="@color/Grey"
-            android:textSize="18sp" />
-    </LinearLayout>
-
-    <Button
-        android:id="@+id/load_but"
-        android:layout_width="fill_parent"
+    <TextView
+        android:id="@+id/base_top_title"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/loginLinear1"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/button_down_red"
-        android:clickable="false"
-        android:enabled="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="30dp"
+        android:ellipsize="marquee"
         android:gravity="center"
-        android:padding="5dp"
-        android:text="登录"
+        android:marqueeRepeatLimit="marquee_forever"
+        android:maxEms="8"
+        android:singleLine="true"
+        android:text="@string/LoginTitle"
         android:textColor="@color/White"
         android:textSize="18sp" />
+
+
+    <com.example.administrator.ui_sdk.View.MyImageView
+        android:id="@+id/QQLogin"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:src="@mipmap/qqlogin" />
+
+
+    <com.example.administrator.ui_sdk.View.MyImageView
+        android:id="@+id/WeixinLogin"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/QQLogin"
+        android:src="@mipmap/weixinlogin" />
+
+
+    <com.example.administrator.ui_sdk.View.MyImageView
+        android:id="@+id/WeiboLogin"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/QQLogin"
+        android:src="@mipmap/weibologin" />
+
+
+    <TextView
+        android:id="@+id/unLogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/unLogin"
+        android:textColor="@color/White"
+        android:textSize="15sp"
+        android:visibility="gone"/>
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/loginLinear"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@drawable/edit"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="10dp">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/load_image"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:src="@mipmap/head" />-->
+
+    <!--&lt;!&ndash;<include layout="@layout/logindrop" />&ndash;&gt;-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/load_edit1"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:background="@drawable/edit"-->
+    <!--android:hint="请输入你的账号/手机号"-->
+    <!--android:inputType="text"-->
+    <!--android:padding="15dp"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/Red"-->
+    <!--android:textColorHint="@color/Grey"-->
+    <!--android:textSize="18sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<LinearLayout-->
+    <!--android:id="@+id/loginLinear1"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="50dp"-->
+    <!--android:layout_below="@id/loginLinear"-->
+    <!--android:layout_marginTop="5dp"-->
+    <!--android:background="@drawable/edit"-->
+    <!--android:orientation="horizontal"-->
+    <!--android:paddingLeft="10dp">-->
+
+    <!--<ImageView-->
+    <!--android:id="@+id/load_image1"-->
+    <!--android:layout_width="wrap_content"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_gravity="center_vertical"-->
+    <!--android:src="@mipmap/password" />-->
+
+    <!--<EditText-->
+    <!--android:id="@+id/load_edit2"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_marginLeft="10dp"-->
+    <!--android:background="@drawable/edit"-->
+    <!--android:hint="请输入你的密码"-->
+    <!--android:inputType="textPassword"-->
+    <!--android:padding="15dp"-->
+    <!--android:singleLine="true"-->
+    <!--android:textColor="@color/Red"-->
+    <!--android:textColorHint="@color/Grey"-->
+    <!--android:textSize="18sp" />-->
+    <!--</LinearLayout>-->
+
+    <!--<Button-->
+    <!--android:id="@+id/load_but"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:layout_below="@id/loginLinear1"-->
+    <!--android:layout_marginTop="20dp"-->
+    <!--android:background="@drawable/button_down_red"-->
+    <!--android:clickable="false"-->
+    <!--android:enabled="false"-->
+    <!--android:gravity="center"-->
+    <!--android:padding="5dp"-->
+    <!--android:text="登录"-->
+    <!--android:textColor="@color/White"-->
+    <!--android:textSize="18sp" />-->
 
 
     <!--<include-->

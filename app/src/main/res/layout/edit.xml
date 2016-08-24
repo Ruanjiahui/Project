@@ -23,7 +23,7 @@
         android:layout_height="50dp"
         android:layout_below="@id/editTop"
         android:background="@drawable/whitedit"
-        android:hint="请输入标题"
+        android:hint="@string/EditTitle"
         android:padding="10dp"
         android:textColor="@color/Grey"
         android:textSize="15sp" />
@@ -35,7 +35,7 @@
         android:layout_below="@id/editTitle"
         android:layout_marginTop="1dp"
         android:background="@drawable/whitedit"
-        android:hint="请输入副标题"
+        android:hint="@string/EditSubTitle"
         android:padding="10dp"
         android:textColor="@color/Grey"
         android:textSize="15sp" />
@@ -55,7 +55,7 @@
             android:layout_marginTop="1dp"
             android:background="@drawable/whitedit"
             android:padding="10dp"
-            android:text="选择场景"
+            android:text="@string/SelectScene"
             android:textColor="@color/Grey"
             android:textSize="15sp" />
 

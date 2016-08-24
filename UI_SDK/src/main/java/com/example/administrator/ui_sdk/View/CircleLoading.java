@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -157,13 +158,13 @@ public class CircleLoading extends View {
 
         paint.setAntiAlias(true);                       //设置画笔为无锯齿
         paint.setColor(getResources().getColor(R.color.Red));                    //设置画笔颜色
-        canvas.drawColor(getResources().getColor(R.color.WhiteSmoke));                  //白色背景
+//        canvas.drawColor(getResources().getColor(R.color.WhiteSmoke));                  //白色背景
         paint.setStrokeWidth(size);              //线宽
         paint.setStyle(Paint.Style.STROKE);
 
         paintBack.setAntiAlias(true);                       //设置画笔为无锯齿
         paintBack.setColor(colorBack);                    //设置画笔颜色
-        canvas.drawColor(Color.WHITE);                  //白色背景
+//        canvas.drawColor(Color.WHITE);                  //白色背景
         paintBack.setStrokeWidth(size);              //线宽
         paintBack.setStyle(Paint.Style.STROKE);
 
@@ -171,13 +172,14 @@ public class CircleLoading extends View {
         paintCircle.setColor(getResources().getColor(R.color.Blue1));
         paintCircle.setStrokeWidth(size);              //线宽
 
+        this.canvas.drawColor(getResources().getColor(android.R.color.transparent));
 
         drawA();
         drawC();
 
-        canvas.drawText("配置" , cX - DensityUtil.dip2px(context , textSize) , cY + DensityUtil.dip2px(context , textSize / 2) , paintWhite);
+        canvas.drawText(msg , cX - textSize * msg.length() / 2, cY + DensityUtil.dip2px(context , textSize / 2) , paintWhite);
     }
-    private int textSize = 15;
+    private int textSize = 14;
 
     private void drawC() {
         canvas.drawCircle(cX, cY, (int) nowRadius, paintCircle);
@@ -221,6 +223,12 @@ public class CircleLoading extends View {
      */
     public void setPaintSize(float size) {
         this.size = size;
+    }
+
+
+    private String msg = null;
+    public void setTextCircle(String msg){
+        this.msg = msg;
     }
 
     /**

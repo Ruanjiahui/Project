@@ -31,8 +31,13 @@
     <string name="ClearText">清理</string>
     <string name="MessageTitle">消息设置</string>
     <string name="WifiUpdateTxt">WIFI情况下自动更新</string>
-    <string name="UpdateTieText">更新获取链接失败</string>
+    <string name="LanguageSetting">语言设置</string>
     <string name="DownTieText">下载中</string>
+    <string name="LeadName">开启智能</string>
+    <string name="SystemLanguage">跟随系统</string>
+    <string name="Chinese">中文</string>
+    <string name="English">英文</string>
+    <string name="UpdateTieText">更新获取链接失败</string>
 
 
     <!-- Dialog文字-->
@@ -43,11 +48,14 @@
     <string name="InstallLeftButText">取消</string>
     <string name="InstallRightButText">安装</string>
     <string name="InstallMessageText">下载完成是否安装新版本</string>
+    <string name="DowningNow">现在正在下载请等待..</string>
+    <string name="StartDown">开始下载</string>
+    <string name="MD5Fail">MD5检验不对安装失败，请到官网重新下载</string>
 
 
     <!-- 首页的文字-->
     <string name="Nav1">首页</string>
-    <string name="Nav2">分类</string>
+    <string name="Nav2">场景</string>
     <string name="Nav3">商城</string>
     <string name="Nav4">我的</string>
     <string name="CityName">城市</string>
@@ -61,9 +69,9 @@
     <string name="DeviceName">设备</string>
     <string name="ScanName">扫描</string>
     <string name="NetWorkSetting">配置网络</string>
-    <string name="wifiName">Unknow network</string>
-    <string name="wifiNameHint">please into wifiSSD</string>
-    <string name="wifiPasswordHint">please into password</string>
+    <string name="wifiName">未识别网络</string>
+    <string name="wifiNameHint">请输入WIFI SSD</string>
+    <string name="wifiPasswordHint">请输入密码</string>
     <string name="AboutmeCompanyName">深圳市必联电子有限公司</string>
     <string name="AboutmeCompanyURL">www.b-link.net.cn</string>
     <string name="ONLINE">在线</string>
@@ -72,15 +80,24 @@
     <string name="DeviceControlTitle">设备控制</string>
     <string name="UpdataTitle">修改</string>
     <string name="SuggestTitle">意见反馈</string>
+    <string name="SystemSetting">系统设置</string>
     <string name="HelpTitle">帮助与支持</string>
     <string name="UseHelp">使用帮助</string>
     <string name="OnlineService">在线客服</string>
     <string name="TeamView">远程协助</string>
     <string name="RGBOpen">开</string>
     <string name="RGBClose">关</string>
+    <string name="AirkissSetting">配置</string>
+    <string name="Edit">编辑</string>
+    <string name="Delete">删除</string>
+    <string name="EditTitle">请输入标题</string>
+    <string name="EditSubTitle">请输入副标题</string>
+    <string name="SelectScene">选择场景</string>
+    <string name="LoginTitle">登录</string>
+    <string name="unLogin">我只想做个过路者>></string>
 
     <!-- 编辑页面的文字-->
-    <string name="AddSceneName">添加场景</string>
+    <string name="AddSceneName">添加</string>
     <string name="EditSceneHint">请输入场景名称</string>
     <string name="EditName">姓名</string>
     <string name="EditNameHint">请输入你的姓名</string>
@@ -93,6 +110,7 @@
     <string name="SexMan">男</string>
     <string name="SexLady">女</string>
     <string name="SaveTitle">保存</string>
+    <string name="Family">家庭成员</string>
 
 
     <!-- Toast提示-->
@@ -107,4 +125,20 @@
     <string name="ConnectWifi">请链接wifi</string>
     <string name="ConnectTimeout">连接超时,请重写设置</string>
     <string name="Version">当前为最新版本</string>
+    <string name="DeviceControlTie">控制失败</string>
+    <string name="NetError">网络未连接，请检查网络情况</string>
+    <string name="NotifiTitle">您有新短消息，请注意查收！</string>
+    <string name="NotifiMessTitle">信息标题</string>
+    <string name="NotifiMessContent">信息内容</string>
+
+
+    <!--设置的资料 -->
+    <string name="Room">房间</string>
+    <string name="RGBs">模拟RGB</string>
+    <string name="LivingRoom">客厅</string>
+    <string name="Sockets">模拟排插</string>
+    <string name="Kitchen">厨房</string>
+    <string name="Socket">排插</string>
+    <string name="RGBLight">LEG灯</string>
+    <string name="fourSocket">四座排插</string>
 </resources>

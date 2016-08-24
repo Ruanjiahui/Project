@@ -3,6 +3,7 @@ package com.blink.blinkiot.Other.DataBase;
 import android.content.ContentValues;
 import android.content.Context;
 
+import com.blink.blinkiot.R;
 import com.blink.blinkiot.Start.DeviceURL;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 
@@ -25,6 +26,28 @@ public class DatabaseOpera {
         getDatabaseData = new GetDatabaseData();
     }
 
+
+    public void SceneInert(String db, String table_name) {
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("scenePic", "");
+        contentValues.put("sceneName", context.getResources().getString(R.string.Room));
+        contentValues.put("sceneID", "0");
+
+        ContentValues contentValues1 = new ContentValues();
+        contentValues1.put("scenePic", "");
+        contentValues1.put("sceneName", context.getResources().getString(R.string.LivingRoom));
+        contentValues1.put("sceneID", "1");
+
+        ContentValues contentValues2 = new ContentValues();
+        contentValues2.put("scenePic", "");
+        contentValues2.put("sceneName", context.getResources().getString(R.string.Kitchen));
+        contentValues2.put("sceneID", "2");
+
+        getDatabaseData.Insert(context, db, table_name, contentValues);
+        getDatabaseData.Insert(context, db, table_name, contentValues1);
+        getDatabaseData.Insert(context, db, table_name, contentValues2);
+    }
+
     /**
      * 插数据的时候可以接受json
      *
@@ -34,22 +57,11 @@ public class DatabaseOpera {
      */
     public void DataInert(String db, String table_name, String json) {
         //模拟一下数据添加
-//        for (int i = 0; i < 10; i++) {
-//            ContentValues contentValues = new ContentValues();
-//            contentValues.put("deviceID", "1111111111111" + i);
-//            contentValues.put("deviceName", "设备" + i);
-//            contentValues.put("deviceModel", "000012" + i);
-//            contentValues.put("deviceType", "空调");
-//            contentValues.put("deviceTypeID", "111");
-//            contentValues.put("devicePic", "");
-//            //调用插数据的函数
-//            getDatabaseData.Insert(context, db, table_name, contentValues);
-//        }
         ContentValues contentValues = new ContentValues();
         contentValues.put("deviceID", "RTL8711");
-        contentValues.put("deviceName", "四座排插");
+        contentValues.put("deviceName", context.getResources().getString(R.string.fourSocket));
         contentValues.put("deviceModel", "RTL8711");
-        contentValues.put("deviceType", "排插");
+        contentValues.put("deviceType", context.getResources().getString(R.string.Socket));
         contentValues.put("deviceTypeID", DeviceURL.Switch);
         contentValues.put("devicePic", "");
         //调用插数据的函数
@@ -58,23 +70,13 @@ public class DatabaseOpera {
 
         ContentValues contentValues1 = new ContentValues();
         contentValues1.put("deviceID", "RTL8722");
-        contentValues1.put("deviceName", "RGB灯");
+        contentValues1.put("deviceName", context.getResources().getString(R.string.RGBLight));
         contentValues1.put("deviceModel", "RTL8722");
-        contentValues1.put("deviceType", "LEG灯");
+        contentValues1.put("deviceType", context.getResources().getString(R.string.RGBLight));
         contentValues1.put("deviceTypeID", DeviceURL.RGBLight);
         contentValues1.put("devicePic", "");
         //调用插数据的函数
         getDatabaseData.Insert(context, db, table_name, contentValues1);
-
-//        ContentValues contentValues2 = new ContentValues();
-//        contentValues2.put("deviceID", "1111111111111" + 222);
-//        contentValues2.put("deviceName", "设备" + 222);
-//        contentValues2.put("deviceModel", "000012" + 222);
-//        contentValues2.put("deviceType", "洗衣机");
-//        contentValues2.put("deviceTypeID", "3333");
-//        contentValues2.put("devicePic", "");
-        //调用插数据的函数
-//        getDatabaseData.Insert(context, db, table_name, contentValues2);
 
     }
 
@@ -124,7 +126,7 @@ public class DatabaseOpera {
                 return getDatabaseData.Insert2Update(context, db, table_name, key, values, contentValues, whereclause, whereargs);
             }
         }
-        return (int)getDatabaseData.Insert(context, db, table_name, contentValues);
+        return (int) getDatabaseData.Insert(context, db, table_name, contentValues);
     }
 
     /**

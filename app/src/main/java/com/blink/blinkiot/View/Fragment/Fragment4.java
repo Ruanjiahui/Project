@@ -57,10 +57,10 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
 //        fragment4ID = (TextView) view.findViewById(R.id.fragment4ID);
 
         list = new ArrayList<>();
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.family), "家庭成员", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.help), "帮助与支持", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.suggest), "意见反馈", DensityUtil.dip2px(context, 120)));
-        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.setting), "系统设置", DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.family), getResources().getString(R.string.Family), DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.help), getResources().getString(R.string.HelpTitle), DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.suggest), getResources().getString(R.string.SuggestTitle), DensityUtil.dip2px(context, 120)));
+        list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.setting), getResources().getString(R.string.SystemSetting), DensityUtil.dip2px(context, 120)));
 
         DensityUtil.setHeight(fragment4Top, BaseActivity.height / 3);
 

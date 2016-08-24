@@ -91,6 +91,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
 
         wifiConn.setTime(65000);
         wifiConn.setSweepAngle(360);
+        wifiConn.setTextCircle(context.getResources().getString(R.string.AirkissSetting));
         wifiConn.setClick(this);
 
         ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
@@ -228,28 +229,12 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     public void getMac(int position, Object[] objects) {
         if (objects != null)
             ConfigSueccful();
-//        String mac = new String((byte[]) objects[0], 0, (int) objects[1]);
-//        if (ListObj != null && ListObj.size() > 0) {
-//            for (int i = 0; i < ListObj.size(); i++) {
-//                String mac1 = mac;
-//                userDevice = (UserDevice) ListObj.get(i);
-//                if (!userDevice.getDeviceMac().equals(mac1)) {
-//                    ConfigSueccful();
-//                    return;
-//                }
-//            }
-//        } else {
-//            if (!isSuccesful) {
-//                isSuccesful = true;
-//                ConfigSueccful();
-//                return;
-//            }
-//        }
     }
 
     private void ConfigSueccful() {
         Toast.makeText(context, getResources().getString(R.string.NetWorkSuccess), Toast.LENGTH_SHORT).show();
-        CommonIntent.IntentActivity(context, ConfigList.class, data);
+        if (ConfigList.context == null)
+            CommonIntent.IntentActivity(context, ConfigList.class, data);
         Applications.getInstance().removeOneActivity(this);
     }
 
