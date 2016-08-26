@@ -2,6 +2,7 @@ package com.blink.blinkiot.View.Activity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -167,7 +168,8 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         if (airkissConfig != null)
             airkissConfig.StopAirKiss();
 
-        new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
+        ConfigSueccful();
+//        new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
 //        Toast.makeText(context, "配置成功", Toast.LENGTH_SHORT).show();
 //        Applications.getInstance().removeOneActivity(this);
     }
@@ -181,8 +183,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     public void Error(int error) {
         if (airkissConfig != null)
             airkissConfig.StopAirKiss();
-
-        //计时器，广播没一秒发送一次，总共发送5次
+        //计时器，广播没一秒发送一次，总共发送10次
         new ScanDevice().Scanner(UDPConfig.PORT, data, this, UDPConfig.count);
 //        wifiConn.setStop(CircleLoading.END);
 //        Toast.makeText(context, "配置超时", Toast.LENGTH_SHORT).show();

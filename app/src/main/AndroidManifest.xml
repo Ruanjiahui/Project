@@ -54,6 +54,10 @@
         <activity android:name="com.blink.blinkiot.View.Activity.MessageSetting" />
         <activity android:name="com.blink.blinkiot.View.Activity.AboutMe" />
         <activity android:name=".Start.LeadActivity" />
+        <activity android:name=".View.Activity.ThridLogin" />
+        <activity
+            android:name=".wxapi.WXEntryActivity"
+            android:exported="true" />
 
 
         <!-- 注册广播 -->
@@ -66,18 +70,41 @@
         <!--</intent-filter>-->
         <!--</receiver>-->
 
+        <!--<receiver-->
+        <!--android:name=".AppRegister"-->
+        <!--android:permission="com.tencent.mm.plugin.permission.SEND" >-->
+        <!--<intent-filter>-->
+        <!--<action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />-->
+        <!--</intent-filter>-->
+        <!--</receiver>-->
 
-        <service
-            android:name="com.blink.blinkiot.Other.Push.MyPushIntentService"
-            android:process=":push" />
+
+        <!-- 必须注册在微博授权，分享微博时候用到 -->
+        <activity
+            android:name="com.sina.weibo.sdk.component.WeiboSdkBrowser"
+            android:configChanges="keyboardHidden|orientation"
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"></activity>
+
+        <meta-data
+            android:name="WEIBO_APPKEY"
+            android:value="1033393090" />
+        <meta-data
+            android:name="WEIBO_CHANNEL"
+            android:value="weibo" />
+
+
+        <!--<service-->
+        <!--android:name="com.blink.blinkiot.Other.Push.MyPushIntentService"-->
+        <!--android:process=":push" />-->
 
 
         <meta-data
             android:name="UMENG_APPKEY"
-            android:value="57b57222e0f55aaf9e0008d6"></meta-data>
+            android:value="57b671ac67e58e1b0c004060"></meta-data>
         <meta-data
             android:name="UMENG_MESSAGE_SECRET"
-            android:value="7d472ad09f10d029abb97442086e13f6"></meta-data>
+            android:value="58b4fd2bc775e922341fc61e23f417e3"></meta-data>
 
         <meta-data
             android:name="UMENG_CHANNEL"

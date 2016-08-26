@@ -15,6 +15,7 @@ public class FileURL {
     public static String SDCard = Environment.getExternalStorageDirectory().toString();
 
     public static String APKPath = SDCard + "/BLink/APK/";
+    public static String LogoPath = SDCard + "/Blink/Logo/";
     public static String APKName = "blinkiot.apk";
 
     public static String MD5 = "9aa4eece982bff8bd77141f1dbde82a7";

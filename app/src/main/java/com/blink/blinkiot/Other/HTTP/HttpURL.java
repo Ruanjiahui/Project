@@ -1,5 +1,7 @@
 package com.blink.blinkiot.Other.HTTP;
 
+import com.blink.blinkiot.Other.Weixin.Constants;
+
 /**
  * Created by Administrator on 2016/7/21.
  */
@@ -32,6 +34,13 @@ public class HttpURL {
     //配置文件的名称
     public static String ConfigName = "config.properties";
 
+    //获取微信access_token
+//    public static String GetAccess_token = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=" + Constants.APP_ID + "&secret=" + Constants.APP_Secret;
+    //获取微信用户信息
+    public static String GetWXUserInfor = "https://api.weixin.qq.com/sns/userinfo?";
+    //获取微信的access_token
+//    https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxbf1a3b91393434fd&secret=f8fbd9c6dab48760a686dfeddece0a11&code=011DIdAc0nrodH1W90Bc0qZ7Ac0DIdA7&grant_type=authorization_code
+    public static String GetAccess_token = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + Constants.APP_ID  + "&secret=" + Constants.APP_Secret + "&code=";
 
     //这个标志当前网络状态
     // 0   当前没有网络状态

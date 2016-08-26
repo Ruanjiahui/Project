@@ -47,26 +47,41 @@
         android:layout_below="@id/editSubTitle"
         android:orientation="horizontal">
 
-        <TextView
+        <EditText
             android:id="@+id/editScene"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginTop="1dp"
             android:background="@drawable/whitedit"
+            android:clickable="false"
+            android:enabled="false"
+            android:focusable="false"
+            android:hint="@string/SelectScene"
             android:padding="10dp"
-            android:text="@string/SelectScene"
             android:textColor="@color/Grey"
+            android:textColorHint="@color/Grey"
             android:textSize="15sp" />
+
 
         <ImageView
             android:id="@+id/editDrop"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:layout_marginRight="15dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="15dp"
             android:src="@mipmap/drop" />
+
+        <ImageView
+            android:id="@+id/editDelete"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/editDrop"
+            android:src="@mipmap/delete" />
+
     </RelativeLayout>
 
     <Button

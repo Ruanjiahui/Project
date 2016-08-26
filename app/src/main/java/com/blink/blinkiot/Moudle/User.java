@@ -18,6 +18,13 @@ public class User {
     private String userPhone = null;
     private String userLogin = null;
     private String userCity = null;
+    private String userImage = null;
+    private String userURL = null;
+    private String userLoginStyle = null;
+    private String userLast = null;
+
+    public static String ONLINE = "true";
+    public static String UNONLINE = "false";
 
     private static User user = null;
 
@@ -30,12 +37,47 @@ public class User {
     }
 
     public static User getInstance() {
-        if (user == null)
+        if (user == null) {
             user = new User();
+            synchronized (user) {
+            }
+        }
         return user;
     }
 
-    public static void setUser(User user) {
+    public String getUserLoginStyle() {
+        return userLoginStyle;
+    }
+
+    public void setUserLoginStyle(String userLoginStyle) {
+        this.userLoginStyle = userLoginStyle;
+    }
+
+    public String getUserLast() {
+        return userLast;
+    }
+
+    public void setUserLast(String userLast) {
+        this.userLast = userLast;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public String getUserURL() {
+        return userURL;
+    }
+
+    public void setUserURL(String userURL) {
+        this.userURL = userURL;
+    }
+
+    public void setUser(User user) {
         User.user = user;
     }
 

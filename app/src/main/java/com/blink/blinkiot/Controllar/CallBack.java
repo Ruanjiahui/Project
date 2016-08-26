@@ -34,7 +34,7 @@ public class CallBack {
             case DeviceCode.WIFI:
                 //通过udp进行控制
                 //防止丢包，所以发送5次数据包
-                controlDevice.UDPControl(FLAG, FormatData.getUDP(data), handlerMac, 1);
+                controlDevice.UDPControl(FLAG, FormatData.getUDP(data), handlerMac, 5);
                 break;
             case DeviceCode.CLOUD:
                 //通过云端进行控制

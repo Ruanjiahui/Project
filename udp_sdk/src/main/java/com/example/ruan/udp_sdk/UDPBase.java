@@ -59,7 +59,7 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
     protected void Send(String IP, int PORT, byte[] buffer, int count) {
         this.IP = IP;
         this.PORT = PORT;
-        //每隔0.1发送一个
+        //每隔0.2发送一个
         new Thread(new UDPSend(this, buffer, count)).start();
     }
 

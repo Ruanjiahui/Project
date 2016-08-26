@@ -52,7 +52,6 @@ public class LoadResouce extends LoadClass {
                             field.setAccessible(true);
                             //如果数据库的字段名和类的属性名称一样就说明是同一个变量
                             if (field.getName().equals(columName)) {
-
                                 //将数据库的数据设置给类的属性
                                 field.set(object, cursor.getString(cursor.getColumnIndex(columName)));
                                 break;

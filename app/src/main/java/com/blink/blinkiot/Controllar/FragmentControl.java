@@ -3,6 +3,8 @@ package com.blink.blinkiot.Controllar;
 import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
@@ -42,7 +44,7 @@ public class FragmentControl {
     public static void DataBaseHandler(Context context) {
         //判断是否存在用户表   如果没有存在则自动创建用户表
         new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName);
-        //判断是否存在用户表   如果没有存在则自动创建用户表
+        //判断是否存在模拟设备表   如果没有存在则自动模拟设备表
         if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName)) {
             ArrayList<ContentValues> list = TestDevice.getTestDeviceContent(context);
             for (int i = 0; i < list.size(); i++)
@@ -54,9 +56,7 @@ public class FragmentControl {
             new DatabaseOpera(context).SceneInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName);
         }
 
-        //模拟插个人数据库进去
-        new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userID", "123456"), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
-        //判断是否存在用户表   如果没有存在则自动创建用户表
+        //判断是否存在设备表   如果没有存在则自动创建设备表
         if (!new CreateDataBase().FirstDataBase(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName)) {
             new DatabaseOpera(context).DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.DeviceTableName, "");
         }
@@ -73,8 +73,10 @@ public class FragmentControl {
         }
 
         //获取用户信息
-        ArrayList<Object> list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "userID", "123456", User.class, false);
-        User.setUser((User) list.get(0));
+        ArrayList<Object> list = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, null, "userLogin = ?", new String[]{User.ONLINE}, "", "", "", "", User.class, false);
+        if (list.size() > 0) {
+            User.getInstance().setUser((User) list.get(0));
+        }
         //获取个人用户的数据
 //        User.toModel(new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, "", new String[]{}));
 
@@ -164,6 +166,23 @@ public class FragmentControl {
         return list;
     }
 
+    /**
+     * 底部弹出菜单的选项
+     *
+     * @param ListObj
+     * @return
+     */
+    public ArrayList<Object> getBottomList(ArrayList<Object> ListObj) {
+        Scene scene = null;
+        ArrayList<Object> list = new ArrayList<>();
+
+        for (int i = 0; i < ListObj.size(); i++) {
+            scene = (Scene) ListObj.get(i);
+            list.add(getItemBottom(scene.getSceneName(), context.getResources().getDrawable(R.mipmap.cooker)));
+        }
+        return list;
+    }
+
 
     private Object getItem(String title, String subtitile, Drawable Image, String rightTitle, String rightTitle1, Drawable RightImage, int height) {
         Item item = new Item();
@@ -182,6 +201,13 @@ public class FragmentControl {
         item.setHomeText(title);
         item.setHomeImage(drawable);
         item.setHomeRightImage(context.getResources().getDrawable(R.mipmap.right));
+        return item;
+    }
+
+    private Object getItemBottom(String title, Drawable drawable) {
+        Item item = new Item();
+        item.setListText(title);
+        item.setListImage(drawable);
         return item;
     }
 }

@@ -74,6 +74,11 @@ public class Applications extends Application {
         }
     }
 
+
+    public ArrayList<Activity> getList(){
+        return list;
+    }
+
     /**
      * 判断该Activity有没有销毁
      *

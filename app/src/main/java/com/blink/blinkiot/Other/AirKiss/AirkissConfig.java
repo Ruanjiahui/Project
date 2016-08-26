@@ -2,6 +2,7 @@ package com.blink.blinkiot.Other.AirKiss;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.tencent.mm.plugin.exdevice.jni.C2JavaExDevice;
 import com.tencent.mm.plugin.exdevice.jni.Java2CExDevice;

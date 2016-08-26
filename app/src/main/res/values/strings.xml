@@ -23,6 +23,7 @@
     <!-- 设置的文字 -->
     <string name="SettingTitle">设置</string>
     <string name="LoginBut">登录</string>
+    <string name="LoginButExists">登出</string>
     <string name="ClearCache">清理缓存</string>
     <string name="CheckUpdate">检查更新</string>
     <string name="MessageSetting">消息设置</string>
@@ -95,6 +96,7 @@
     <string name="SelectScene">选择场景</string>
     <string name="LoginTitle">登录</string>
     <string name="unLogin">我只想做个过路者>></string>
+    <string name="WXToast">正在登陆微信</string>
 
     <!-- 编辑页面的文字-->
     <string name="AddSceneName">添加</string>
@@ -111,6 +113,8 @@
     <string name="SexLady">女</string>
     <string name="SaveTitle">保存</string>
     <string name="Family">家庭成员</string>
+    <string name="fragment4LogoTitle">请登录</string>
+    <string name="AirkissConfig">飞吻</string>
 
 
     <!-- Toast提示-->
@@ -130,6 +134,7 @@
     <string name="NotifiTitle">您有新短消息，请注意查收！</string>
     <string name="NotifiMessTitle">信息标题</string>
     <string name="NotifiMessContent">信息内容</string>
+    <string name="LoginToast">登出成功</string>
 
 
     <!--设置的资料 -->
@@ -141,4 +146,10 @@
     <string name="Socket">排插</string>
     <string name="RGBLight">LEG灯</string>
     <string name="fourSocket">四座排插</string>
+
+    <!-- 微信提示-->
+    <string name="errcode_success">发送成功</string>
+    <string name="errcode_cancel">发送取消</string>
+    <string name="errcode_deny">发送被拒绝</string>
+    <string name="errcode_unknown">发送返回</string>
 </resources>

@@ -121,6 +121,10 @@ public class CreateDataBase implements Database.Check {
         establish.put("userPhone", "varchar(11)");
         establish.put("userLogin", "varchar(5)");
         establish.put("userCity", "varchar(10)");
+        establish.put("userImage", "varchar(255)");
+        establish.put("userURL", "varchar(255)");
+        establish.put("userLoginStyle", "varchar(10)");
+        establish.put("userLast", "varchar(10)");
 
         return establish;
     }

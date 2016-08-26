@@ -13,11 +13,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.HttpResult;
 import com.example.administrator.data_sdk.CommonIntent;
@@ -77,9 +79,10 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     private MyImageView MainAdd = null;
     private static RelativeLayout fragment1Background;
     private static View bottomMain = null;
-    private RefreshSideListView bottomListView = null;
+    private ListView bottomListView = null;
     private TextView bottomText = null;
-    private SideListViewAdapter sideListViewAdapter = null;
+    //    private SideListViewAdapter sideListViewAdapter = null;
+    private LGAdapter lgAdapter = null;
     private static boolean isVisiable = false;
 
     private static Animation StopanimationBottom = null;
@@ -118,7 +121,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         MainFind = (MyImageView) view.findViewById(R.id.MainFind);
         MainAdd = (MyImageView) view.findViewById(R.id.MainAdd);
         bottomMain = view.findViewById(R.id.bottomMain);
-        bottomListView = (RefreshSideListView) view.findViewById(R.id.bottomListView);
+        bottomListView = (ListView) view.findViewById(R.id.bottomListView);
         bottomText = (TextView) view.findViewById(R.id.bottomText);
         fragment1weather = (TextView) view.findViewById(R.id.fragment1weather);
         fragment1City = (TextView) view.findViewById(R.id.fragment1City);
@@ -131,6 +134,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         slideListView.setOnItemClickListener(this);
         mPullToRefreshView.setOnRefreshListener(this);
         fragment1Background.setOnClickListener(this);
+        bottomListView.setOnItemClickListener(this);
         MainAdd.setOnClickListener(this);
         MainFind.setOnClickListener(this);
         DensityUtil.setRelayoutSize(MainFind, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 5 * 4, 0, 0, DensityUtil.dip2px(context, 20), new int[]{RelativeLayout.ALIGN_PARENT_RIGHT});
@@ -170,6 +174,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         }
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        isVisiable = false;
+    }
+
     /**
      * Called when a view has been clicked.
      *
@@ -185,16 +195,15 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
             case R.id.MainFind:
                 bottomText.setText(getResources().getString(R.string.SceneName));
                 getBottomList();
-                if (sideListViewAdapter == null) {
-                    sideListViewAdapter = new SideListViewAdapter(context, scenelist);
-                    bottomListView.setAdapter(sideListViewAdapter);
+                if (lgAdapter == null) {
+                    lgAdapter = new LGAdapter(context, scenelist, "ListView");
+                    bottomListView.setAdapter(lgAdapter);
                 } else
-                    sideListViewAdapter.RefreshData(scenelist);
+                    lgAdapter.RefreshData(scenelist);
                 if (!isVisiable)
                     startAnimation();
                 else
                     stopAnimation();
-                bottomListView.setOnItemClickListener(this);
                 break;
             case R.id.MainAdd:
                 CommonIntent.IntentActivity(context, DeviceType.class);
@@ -214,7 +223,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         DatabaseOpera databaseOpera = new DatabaseOpera(context);
         sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
         if (sceneListObj != null && sceneListObj.size() != 0)
-            scenelist = fragmentControl.getFragment2List(sceneListObj);
+            scenelist = fragmentControl.getBottomList(sceneListObj);
         return scenelist;
     }
 

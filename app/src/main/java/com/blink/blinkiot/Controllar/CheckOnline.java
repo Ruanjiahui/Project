@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.example.administrator.Interface.HttpInterface;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
@@ -143,22 +144,14 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
         UserDevice userDevice = (UserDevice) ListObj.get(position);
         if (objects != null) {
             if (objects[0] != null) {
-                HttpURL.STATE = NetWork.WIFI;
-//                for (int i = 0; i < ListObj.size(); i++) {
-//                    if (position == i) {
-//                        UserDevice userDevice = (UserDevice) ListObj.get(position);
                 count++;
                 setOnline(userDevice.getDeviceMac(), DeviceCode.WIFI, (String) objects[2], (int) objects[3]);
-//                    }
-//                }
                 if (total == count)
                     ReData(NORMAL);
             } else {
-//                UserDevice userDevice = (UserDevice) ListObj.get(position);
                 HTTPCheck(userDevice.getDeviceMac());
             }
         } else {
-//            UserDevice userDevice = (UserDevice) ListObj.get(position);
             HTTPCheck(userDevice.getDeviceMac());
         }
     }

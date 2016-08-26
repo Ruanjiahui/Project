@@ -1,6 +1,7 @@
 package com.blink.blinkiot.View.Activity;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,10 +9,15 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.blink.blinkiot.Moudle.User;
+import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
+import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Start.ActivityCode;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
@@ -43,6 +49,8 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
     private LGAdapter adapter = null;
 
     private CheckUpdate checkUpdate = null;
+
+    private User user = null;
 
     /**
      * Start()
@@ -107,6 +115,11 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
         } else {
             adapter.RefreshData(list);
         }
+
+        user = User.getInstance();
+        if (user != null && User.ONLINE.equals(user.getUserLogin()))
+            circlebut.setText(getSystemText(R.string.LoginButExists));
+        else circlebut.setText(getSystemText(R.string.LoginBut));
     }
 
     /**
@@ -133,9 +146,18 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
 
     @Override
     public void Click(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.settingBut:
-                CommonIntent.IntentActivity(context , Login.class , ActivityCode.SETTING);
+                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
+                    user.setUserLogin(User.UNONLINE);
+                    circlebut.setText(getSystemText(R.string.LoginBut));
+                    Toast.makeText(context, getSystemText(R.string.LoginToast), Toast.LENGTH_SHORT).show();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("userLogin", User.UNONLINE);
+                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
+                } else {
+                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.SETTING);
+                }
                 break;
         }
     }

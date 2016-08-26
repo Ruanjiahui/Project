@@ -14,7 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Toast;
 
-import com.blink.blinkiot.Other.Push.MyPushIntentService;
+//import com.blink.blinkiot.Other.Push.MyPushIntentService;
 import com.example.administrator.data_sdk.Crash.LogException;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
@@ -33,9 +33,9 @@ import com.blink.blinkiot.View.Fragment.Fragment2;
 import com.blink.blinkiot.View.Fragment.Fragment3;
 import com.blink.blinkiot.View.Fragment.Fragment4;
 import com.umeng.analytics.MobclickAgent;
-import com.umeng.message.ALIAS_TYPE;
-import com.umeng.message.PushAgent;
-import com.umeng.message.UmengRegistrar;
+//import com.umeng.message.ALIAS_TYPE;
+//import com.umeng.message.PushAgent;
+//import com.umeng.message.UmengRegistrar;
 
 import java.util.Locale;
 
@@ -91,15 +91,15 @@ public class MainActivity extends NavActivity implements LocalHandle {
         view = LayoutInflater.from(this).inflate(R.layout.activity_main, null);
 
         //注册推送
-        PushAgent pushAgent = PushAgent.getInstance(this);
-        pushAgent.onAppStart();
+//        PushAgent pushAgent = PushAgent.getInstance(this);
+//        pushAgent.onAppStart();
 //        try {
 //            pushAgent.addAlias("15119481373@163.com" , ALIAS_TYPE.WEIXIN);
 //        } catch (Exception e) {
 //            e.printStackTrace();
 //        }
-        pushAgent.enable();
-        pushAgent.setPushIntentServiceClass(MyPushIntentService.class);
+//        pushAgent.enable();
+//        pushAgent.setPushIntentServiceClass(MyPushIntentService.class);
 
 
         setLeftTitleVisiable(false);

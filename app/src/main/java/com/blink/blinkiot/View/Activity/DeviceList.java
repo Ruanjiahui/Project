@@ -98,7 +98,6 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
         device = (Device) ListObj.get(position);
         //这里广播是广播设备的型号
         //计时器，广播没一秒发送一次，总共发送5次
-        Log.e("Ruan" , device.getDeviceID());
         new ScanDevice().Scanner(UDPConfig.PORT, device.getDeviceID(), this, UDPConfig.count);
     }
 
@@ -115,7 +114,16 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
     @Override
     public void getMac(int position, Object[] objects) {
         deviceListBack.setVisibility(View.GONE);
-        CommonIntent.IntentActivity(context, ConfigList.class ,device.getDeviceID());
+        if (isEmtry(objects))
+            CommonIntent.IntentActivity(context, ConfigList.class, device.getDeviceID());
+        else
+            CommonIntent.IntentActivity(context, AirkissNetWork.class, device.getDeviceID());
+    }
+
+    private boolean isEmtry(Object[] objects) {
+        if (new String((byte[]) objects[0], 0, (int) objects[1]) != null)
+            return true;
+        return false;
     }
 
     /**
@@ -127,6 +135,6 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
     @Override
     public void Error(int position, int error) {
         deviceListBack.setVisibility(View.GONE);
-        CommonIntent.IntentActivity(context, AirkissNetWork.class ,device.getDeviceID());
+        CommonIntent.IntentActivity(context, AirkissNetWork.class, device.getDeviceID());
     }
 }

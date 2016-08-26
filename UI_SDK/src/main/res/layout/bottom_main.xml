@@ -46,7 +46,7 @@
 
     <!--</LinearLayout>-->
 
-    <com.example.administrator.ui_sdk.View.RefreshSideListView
+    <ListView
         android:id="@+id/bottomListView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"

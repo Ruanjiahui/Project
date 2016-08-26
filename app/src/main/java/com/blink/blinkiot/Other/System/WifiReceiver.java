@@ -14,6 +14,7 @@ import android.net.NetworkInfo;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.blink.blinkiot.Controllar.CheckOnline;
@@ -41,7 +42,7 @@ public class WifiReceiver extends BroadcastReceiver {
 
 
         HttpURL.STATE = SystemTool.isNetState(context);
-        if (isFirst) {
+//        if (isFirst) {
             if (wifiNetInfo.isConnected()) {
                 if (intent.getAction().equals(WifiManager.RSSI_CHANGED_ACTION)) {
                 } else if (intent.getAction().equals(WifiManager.NETWORK_STATE_CHANGED_ACTION)) {//wifi连接上与否
@@ -90,11 +91,11 @@ public class WifiReceiver extends BroadcastReceiver {
                 HttpURL.STATE = NetWork.UNCONN;
                 CheckOnline();
             }
-        } else {
-            //如果是第一次访问软件就是直接用云端访问判断设备是否在线
-            isFirst = true;
-            new CheckOnline(context, fragmentManager).HTTPCheck();
-        }
+//        } else {
+//            //如果是第一次访问软件就是直接用云端访问判断设备是否在线
+//            isFirst = true;
+//            new CheckOnline(context, fragmentManager).UDPCheck();
+//        }
     }
 
     /**

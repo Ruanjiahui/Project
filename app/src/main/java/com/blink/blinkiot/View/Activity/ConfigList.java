@@ -6,10 +6,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
+import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.blink.blinkiot.Interface.UDPInterface;
 import com.blink.blinkiot.Moudle.Item;
@@ -28,7 +31,7 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/8/12.
  */
-public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac, AdapterView.OnItemClickListener, MyCircleLoading {
+public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac, AdapterView.OnItemClickListener {
 
     private ListView configList = null;
     private View view = null;
@@ -38,7 +41,8 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
 
     private ArrayList<Object> ListObj = null;
     private UserDevice userDevice = null;
-    private CircleLoading configNet = null;
+    private View configNet = null;
+    private TextView circlebut = null;
 
     //这个获取扫描的对象数据
     private String data = null;
@@ -60,14 +64,19 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
         view = LayoutInflater.from(context).inflate(R.layout.configlist, null);
 
         configList = (ListView) view.findViewById(R.id.configList);
-        configNet = (CircleLoading) view.findViewById(R.id.configNet);
+        configNet = view.findViewById(R.id.configNet);
+        circlebut = (TextView) view.findViewById(R.id.circlebut);
 
 
         configList.setOnItemClickListener(this);
-        configNet.setTextCircle("AirKiss");
-        configNet.setClick(this);
+        circlebut.setText(getResources().getString(R.string.AirkissConfig));
+        configNet.setOnClickListener(this);
 
         setContent(view);
+
+
+        DensityUtil.setRelayoutSize(configNet, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 4 * 3, 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
+
 
     }
 
@@ -166,14 +175,25 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
         CommonIntent.IntentActivity(context, DeviceEdit.class, data, "new");
     }
 
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ConfigList.context = null;
+    }
+
     /**
      * 这个是点击事件的接口
      *
      * @param v
      */
     @Override
-    public void circleClick(View v) {
-        //跳转到Airkiss界面
-        CommonIntent.IntentActivity(context, AirkissNetWork.class, data);
+    public void Click(View v) {
+        switch (v.getId()) {
+            case R.id.configNet:
+                //跳转到Airkiss界面
+                CommonIntent.IntentActivity(context, AirkissNetWork.class, data);
+                break;
+        }
     }
 }

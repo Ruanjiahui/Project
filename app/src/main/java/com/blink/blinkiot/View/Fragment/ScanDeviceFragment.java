@@ -7,8 +7,11 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.administrator.ui_sdk.DensityUtil;
+import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.MyCircleLoading;
 import com.example.administrator.ui_sdk.View.CircleLoading;
 import com.example.administrator.ui_sdk.View.RefreshSideListView;
@@ -24,15 +27,16 @@ import java.util.ArrayList;
 /**
  * Created by Administrator on 2016/8/2.
  */
-public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDPInterface.HandlerMac {
+public class ScanDeviceFragment extends Fragment implements UDPInterface.HandlerMac, View.OnClickListener {
 
     private Context context = null;
     private View view = null;
-    private CircleLoading scanConn;
+    private View scanConn;
     private TextView scanText;
     private RefreshSideListView scanSlideListView;
     private SideListViewAdapter adapter = null;
     private ArrayList<Object> list = null;
+    private TextView circlebut = null;
 
     //记录扫描当前状态
     private boolean scanState = false;
@@ -43,19 +47,21 @@ public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDP
 
         view = inflater.inflate(R.layout.scandevice, container, false);
 
-//        context = getActivity();
+        context = getActivity();
 //        list = new ArrayList<>();
 //
-        scanConn = (CircleLoading) view.findViewById(R.id.scanConn);
+        scanConn = view.findViewById(R.id.scanConn);
+        circlebut = (TextView) view.findViewById(R.id.circlebut);
 //        scanText = (TextView) view.findViewById(R.id.scanText);
 //        scanSlideListView = (RefreshSideListView) view.findViewById(R.id.scanSlideListView);
 //
 //
 //        scanConn.setTime(5000);
 //        scanConn.setSweepAngle(360);
-//        scanConn.setClick(this);
-        scanConn.setTextCircle(getResources().getString(R.string.ScanName));
+        scanConn.setOnClickListener(this);
+        circlebut.setText(getResources().getString(R.string.ScanName));
 
+        DensityUtil.setRelayoutSize(scanConn, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 4 * 3, 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
 
         return view;
     }
@@ -66,29 +72,11 @@ public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDP
         adapter = new SideListViewAdapter(context, list);
     }
 
-    /**
-     * 这个是点击事件的接口
-     *
-     * @param v
-     */
-    @Override
-    public void circleClick(View v) {
-        if (!scanConn.getNowState()) {
-            scanState = true;
-            scanConn.setStart();
-            ScanDevice();
-            //进行周边扫描
-        } else {
-            scanState = false;
-            scanConn.setStop(CircleLoading.END);
-        }
-    }
-
-
     private void ScanDevice() {
         //计时器，广播没一秒发送一次，总共发送5次
         new ScanDevice().Scanner(UDPConfig.PORT, UDPConfig.data, this, UDPConfig.count);
     }
+
 
     /**
      * 这个方法获取Mac值
@@ -116,15 +104,24 @@ public class ScanDeviceFragment extends Fragment implements MyCircleLoading, UDP
     @Override
     public void Error(int position, int error) {
         scanState = false;
-        scanConn.setStop(CircleLoading.END);
     }
 
 
-    private Object getItem(){
+    private Object getItem() {
         Item item = new Item();
 
 //        item.setHomeImage(ImageTransformation.Resouce2Drawable(context , R.c));
 
         return item;
+    }
+
+    /**
+     * Called when a view has been clicked.
+     *
+     * @param v The view that was clicked.
+     */
+    @Override
+    public void onClick(View v) {
+
     }
 }

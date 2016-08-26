@@ -14,25 +14,25 @@
         android:gravity="center">
 
 
-        <!--<ImageView-->
-            <!--android:id="@+id/fragment4Logo"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_centerHorizontal="true"-->
-            <!--android:layout_marginTop="5dp"-->
-            <!--android:src="@mipmap/companylogo" />-->
+        <ImageView
+            android:id="@+id/fragment4Logo"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="5dp"
+            android:src="@mipmap/userlogo" />
 
-        <!--<TextView-->
-        <!--android:id="@+id/fragment4ID"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:layout_below="@id/fragment4Logo"-->
-        <!--android:layout_centerHorizontal="true"-->
-        <!--android:layout_marginTop="10dp"-->
-        <!--android:gravity="center_horizontal"-->
-        <!--android:text="请登录"-->
-        <!--android:textColor="@color/Black"-->
-        <!--android:textSize="14sp" />-->
+        <TextView
+            android:id="@+id/fragment4ID"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/fragment4Logo"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center_horizontal"
+            android:text="@string/fragment4LogoTitle"
+            android:textColor="@color/White"
+            android:textSize="14sp" />
 
         <!--<RelativeLayout-->
         <!--android:layout_width="wrap_content"-->

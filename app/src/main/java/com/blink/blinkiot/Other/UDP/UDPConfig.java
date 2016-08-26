@@ -14,5 +14,5 @@ public class UDPConfig {
 
 
     //广播的次数
-    public static int count = 5;
+    public static int count = 10;
 }

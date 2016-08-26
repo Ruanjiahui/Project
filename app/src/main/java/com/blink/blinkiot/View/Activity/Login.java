@@ -1,29 +1,32 @@
 package com.blink.blinkiot.View.Activity;
 
 import android.app.Activity;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.blink.blinkiot.Moudle.User;
+import com.blink.blinkiot.Other.Weixin.Constants;
 import com.blink.blinkiot.Start.ActivityCode;
 import com.blink.blinkiot.Start.MainActivity;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
-import com.blink.blinkiot.Interface.PopWinOnClick;
 import com.blink.blinkiot.Other.Utils.SystemOperation;
 import com.blink.blinkiot.R;
 import com.example.administrator.ui_sdk.View.MyImageView;
+import com.blink.blinkiot.wxapi.WXEntryActivity;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -56,6 +59,7 @@ public class Login extends BaseActivity {
     private MyImageView QQLogin;
     private MyImageView WeixinLogin;
     private MyImageView WeiboLogin;
+    private TextView base_top_title = null;
     private String FLAG = null;
 //    public static View loginProgress = null;
 
@@ -119,6 +123,7 @@ public class Login extends BaseActivity {
         QQLogin = (MyImageView) view.findViewById(R.id.QQLogin);
         WeixinLogin = (MyImageView) view.findViewById(R.id.WeixinLogin);
         WeiboLogin = (MyImageView) view.findViewById(R.id.WeiboLogin);
+        base_top_title = (TextView) view.findViewById(R.id.base_top_title);
 
 
 //        load_edit1 = (EditText) view.findViewById(R.id.load_edit1);
@@ -154,6 +159,7 @@ public class Login extends BaseActivity {
         if (FLAG.equals(ActivityCode.GUIDE)) {
             unLogin.setVisibility(View.VISIBLE);
             base_top_relative.setVisibility(View.GONE);
+            base_top_title.setVisibility(View.GONE);
         }
     }
 
@@ -164,13 +170,23 @@ public class Login extends BaseActivity {
                 Applications.getInstance().removeOneActivity(this);
                 break;
             case R.id.unLogin:
-                CommonIntent.IntentActivity(context , MainActivity.class);
+                CommonIntent.IntentActivity(context, MainActivity.class);
                 break;
             case R.id.QQLogin:
+                CommonIntent.IntentActivity(context, ThridLogin.class, ActivityCode.QQ);
                 break;
             case R.id.WeixinLogin:
+                // 通过WXAPIFactory工厂，获取IWXAPI的实例
+                IWXAPI api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, true);
+                SendAuth.Req req = new SendAuth.Req();
+                req.scope = Constants.scope;
+                req.state = Constants.state;
+                api.sendReq(req);
+
+                CommonIntent.IntentActivity(context, WXEntryActivity.class);
                 break;
             case R.id.WeiboLogin:
+                CommonIntent.IntentActivity(context, ThridLogin.class, ActivityCode.WEIBO);
                 break;
 //            case R.id.load_but:
 //                if (MainHandler.isConnection(context)) {
@@ -206,7 +222,7 @@ public class Login extends BaseActivity {
 
     }
 
-//    @Override
+    //    @Override
 //    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 //
 //    }
@@ -229,6 +245,16 @@ public class Login extends BaseActivity {
 //        }
 //    }
 
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        if (FLAG.equals(ActivityCode.GUIDE) && Constants.code != null) {
+            CommonIntent.IntentActivity(context, MainActivity.class);
+            Applications.getInstance().removeOneActivity(this);
+        }
+    }
+
     /**
      * 整个屏幕的触摸事件
      *
@@ -244,7 +270,18 @@ public class Login extends BaseActivity {
         return super.onTouchEvent(event);
     }
 
-//    @Override
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (FLAG.equals(ActivityCode.GUIDE)) {
+                return true;
+            }
+        }
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    //    @Override
 //    public void OnItemClick(AdapterView<?> parent, View view, int position, long id) {
 //        if (map != null && map.size() > 0)
 //            load_edit1.setText(map.get(position).get("mbtel"));

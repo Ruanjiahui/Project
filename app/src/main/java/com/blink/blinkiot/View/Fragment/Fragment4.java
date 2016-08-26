@@ -1,5 +1,6 @@
 package com.blink.blinkiot.View.Fragment;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -10,10 +11,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 
+import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
+import com.blink.blinkiot.Other.DatabaseTableName;
+import com.blink.blinkiot.Other.System.FileURL;
+import com.blink.blinkiot.Start.ActivityCode;
+import com.blink.blinkiot.View.Activity.Login;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.Database.Database;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
+import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -36,11 +48,11 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     private Context context = null;
     private RelativeLayout fragment4Top = null;
     private GridView fragment4Grid = null;
-//    private TextView fragment4ID = null;
+    private TextView fragment4ID = null;
     private ArrayList<Object> list = null;
-//    private ImageView fragment4Logo = null;
+    private ImageView fragment4Logo = null;
 
-//    private View fragmentOrigin = null;
+    //    private View fragmentOrigin = null;
     private User user = null;
 
     @Nullable
@@ -53,8 +65,8 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
         fragment4Top = (RelativeLayout) view.findViewById(R.id.fragment4Top);
         fragment4Grid = (GridView) view.findViewById(R.id.fragment4Grid);
 //        fragmentOrigin = view.findViewById(R.id.fragmentOrigin);
-//        fragment4Logo = (ImageView) view.findViewById(R.id.fragment4Logo);
-//        fragment4ID = (TextView) view.findViewById(R.id.fragment4ID);
+        fragment4Logo = (ImageView) view.findViewById(R.id.fragment4Logo);
+        fragment4ID = (TextView) view.findViewById(R.id.fragment4ID);
 
         list = new ArrayList<>();
         list.add(getItem(ImageTransformation.Resouce2Drawable(context, R.mipmap.family), getResources().getString(R.string.Family), DensityUtil.dip2px(context, 120)));
@@ -76,7 +88,7 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
 
 
         fragment4Grid.setOnItemClickListener(this);
-//        fragment4Logo.setOnClickListener(this);
+        fragment4Logo.setOnClickListener(this);
 
         return view;
     }
@@ -130,12 +142,34 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-//            case R.id.fragment4Logo:
-//                if ("true".equals(user.getUserLogin()))
-//                CommonIntent.IntentActivity(context, Person.class);
+            case R.id.fragment4Logo:
+                if (user != null && User.ONLINE.equals(user.getUserLogin())){
+                    user.setUserLogin(User.UNONLINE);
+                    fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
+                    fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));
+                    Toast.makeText(context, getResources().getString(R.string.LoginToast), Toast.LENGTH_SHORT).show();
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("userLogin", User.UNONLINE);
+                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
+                }else
+//                    Toast.makeText(context , )
+//                    CommonIntent.IntentActivity(context, Person.class);
 //                else
-//                    CommonIntent.IntentActivity(context, Login.class);
-//                break;
+                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.ME);
+                break;
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        //如果用户没有信息则显示默认
+        if (user != null && User.ONLINE.equals(user.getUserLogin())) {
+            fragment4ID.setText(user.getUserName());
+            fragment4Logo.setImageDrawable(FileTool.readPictureByteDrawable(context, user.getUserImage(), FileURL.LogoPath));
+        } else {
+            fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
+            fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));
         }
     }
 }

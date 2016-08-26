@@ -309,8 +309,12 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     @Override
     public void Error(int position, int error) {
         Toast.makeText(context, "操作超时", Toast.LENGTH_SHORT).show();
-        //将按钮设置为可以点击状态
-        setButtonState(true);
+        if (position == 999)
+            //将按钮设置为可以点击状态
+            setButtonState(false);
+        else
+            setButtonState(true);
+        socketBack.setVisibility(View.GONE);
     }
 
     /**

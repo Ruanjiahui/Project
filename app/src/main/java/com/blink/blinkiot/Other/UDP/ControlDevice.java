@@ -14,6 +14,9 @@ public class ControlDevice extends UDP implements UDPListen.UDPHandler {
     private String IP = null;
     private int PORT = 0;
     private UDPInterface.HandlerMac handlerMac = null;
+    private int position = -111111;
+    private int count = 0;
+    private int nowcount = 0;
 
     public ControlDevice(String IP, int PORT) {
         super();
@@ -32,6 +35,7 @@ public class ControlDevice extends UDP implements UDPListen.UDPHandler {
         this.uSend(IP, PORT, control.getBytes(), count);
         this.uReviced(position, this);
         this.handlerMac = handlerMac;
+        this.count = 0;
     }
 
     /**
@@ -67,7 +71,11 @@ public class ControlDevice extends UDP implements UDPListen.UDPHandler {
      */
     @Override
     public void Handler(int position, Object[] objects) {
-        handlerMac.getMac(position, objects);
+        nowcount++;
+        if (position != this.position) {
+            handlerMac.getMac(position, objects);
+            this.position = position;
+        }
     }
 
     /**
@@ -78,6 +86,8 @@ public class ControlDevice extends UDP implements UDPListen.UDPHandler {
      */
     @Override
     public void Error(int position, int error) {
-        handlerMac.Error(position, error);
+        nowcount++;
+        if (position != this.position && count == nowcount)
+            handlerMac.Error(position, error);
     }
 }

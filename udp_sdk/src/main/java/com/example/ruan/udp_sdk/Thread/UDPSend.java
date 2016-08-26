@@ -34,7 +34,7 @@ public class UDPSend implements Runnable {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            //每隔0.1发送一个
+            //每隔0.2发送一个
             uSend.Send(buffer);
             count--;
         }

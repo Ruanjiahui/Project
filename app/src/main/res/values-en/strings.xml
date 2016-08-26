@@ -120,4 +120,13 @@
     <string name="NotifiMessContent">This is the notification message</string>
     <string name="LoginTitle">Login</string>
     <string name="unLogin"><![CDATA[I just want to be a passer-by>>]]></string>
+    <string name="fragment4LogoTitle">Please Login</string>
+    <string name="AirkissConfig">AirKiss</string>
+    <string name="errcode_cancel">Send cancal</string>
+    <string name="errcode_deny">Send deny</string>
+    <string name="errcode_success">Send success</string>
+    <string name="errcode_unknown">Send back</string>
+    <string name="WXToast">Landing WeChat</string>
+    <string name="LoginButExists">Logout</string>
+    <string name="LoginToast">Logout success</string>
 </resources>

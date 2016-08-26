@@ -6,6 +6,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,10 +16,12 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
@@ -56,7 +59,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private EditText editSubTitle = null;
     private Button editBut = null;
     private ImageView editDrop = null;
-    private TextView editScene = null;
+    private ImageView editDelete = null;
+    private EditText editScene = null;
 
     private String FLAG = "";
     //记录场景信息
@@ -75,9 +79,9 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
 
     private RelativeLayout deviceEditBackground;
     private View bottomMain = null;
-    private RefreshSideListView bottomListView = null;
+    private ListView bottomListView = null;
     private TextView bottomText = null;
-    private SideListViewAdapter sideListViewAdapter = null;
+    private LGAdapter adapter = null;
     private boolean isVisiable = false;
 
     private ArrayList<Object> list = null;
@@ -107,7 +111,10 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         databaseOpera = new DatabaseOpera(context);
 
 
-        databaseName = DatabaseTableName.UserDeviceName;
+        if ("new".equals(tableName))
+            databaseName = DatabaseTableName.DeviceTableName;
+        else
+            databaseName = DatabaseTableName.UserDeviceName;
         animationListener = this;
 
         list = new ArrayList<>();
@@ -126,10 +133,11 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         editSubTitle = (EditText) view.findViewById(R.id.editSubTitle);
         editBut = (Button) view.findViewById(R.id.editBut);
         editDrop = (ImageView) view.findViewById(R.id.editDrop);
-        editScene = (TextView) view.findViewById(R.id.editScene);
+        editScene = (EditText) view.findViewById(R.id.editScene);
         bottomMain = view.findViewById(R.id.bottomMain);
-        bottomListView = (RefreshSideListView) view.findViewById(R.id.bottomListView);
+        bottomListView = (ListView) view.findViewById(R.id.bottomListView);
         bottomText = (TextView) view.findViewById(R.id.bottomText);
+        editDelete = (ImageView) view.findViewById(R.id.editDelete);
 
 
         bottomMain.setVisibility(View.GONE);
@@ -143,6 +151,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         editBut.setOnClickListener(this);
         editDrop.setOnClickListener(this);
         editLogo.setOnClickListener(this);
+        editDelete.setOnClickListener(this);
 
         DensityUtil.setRelHeight(bottomMain, BaseActivity.height / 2, new int[]{RelativeLayout.ALIGN_PARENT_BOTTOM});
     }
@@ -173,11 +182,12 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-        if (tableName.equals("edit")) {
-            getDatabaseData("deviceID = ?", new String[]{FLAG});
-        }
+    protected void onResume() {
+        super.onResume();
+
+//        if (tableName.equals("edit")) {
+        getDatabaseData("deviceID = ?", new String[]{FLAG});
+//        }
         getBottomList();
         //设置初始化界面
         setInit();
@@ -186,7 +196,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     private ArrayList<Object> getBottomList() {
         sceneListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, null, "", null, "", "", "", "", Scene.class, false);
         if (sceneListObj != null && sceneListObj.size() != 0)
-            list = new FragmentControl(context).getFragment2List(sceneListObj);
+            list = new FragmentControl(context).getBottomList(sceneListObj);
         return list;
     }
 
@@ -225,11 +235,11 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
                 break;
             case R.id.editDrop:
                 bottomText.setText(getResources().getString(R.string.SceneName));
-                if (sideListViewAdapter == null) {
-                    sideListViewAdapter = new SideListViewAdapter(context, list);
-                    bottomListView.setAdapter(sideListViewAdapter);
+                if (adapter == null) {
+                    adapter = new LGAdapter(context, list, "ListView");
+                    bottomListView.setAdapter(adapter);
                 } else
-                    sideListViewAdapter.RefreshData(list);
+                    adapter.RefreshData(list);
                 if (!isVisiable) {
                     editBut.setVisibility(View.GONE);
                     startAnimation();
@@ -243,6 +253,10 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
             case R.id.deviceEditBackground:
                 if (isVisiable)
                     stopAnimation();
+                break;
+            case R.id.editDelete:
+                editScene.setText("");
+                editScene.setHint(getResources().getString(R.string.SelectScene));
                 break;
         }
     }

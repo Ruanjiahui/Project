@@ -52,17 +52,17 @@
 
     <com.example.administrator.ui_sdk.View.MyImageView
         android:id="@+id/QQLogin"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:layout_margin="20dp"
+        android:layout_margin="25dp"
         android:src="@mipmap/qqlogin" />
 
 
     <com.example.administrator.ui_sdk.View.MyImageView
         android:id="@+id/WeixinLogin"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_toLeftOf="@id/QQLogin"
         android:src="@mipmap/weixinlogin" />
@@ -70,8 +70,8 @@
 
     <com.example.administrator.ui_sdk.View.MyImageView
         android:id="@+id/WeiboLogin"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/QQLogin"
         android:src="@mipmap/weibologin" />
