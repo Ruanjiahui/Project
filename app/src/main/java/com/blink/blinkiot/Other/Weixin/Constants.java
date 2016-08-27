@@ -6,23 +6,18 @@ public class Constants {
     //通过appid和appsecret获取access_token
     public static final String APP_Secret = "f8fbd9c6dab48760a686dfeddece0a11";
 
-    public static String access_token = "";
+    public static String access_token = null;
 
-    public static String openID = "";
+    public static String openID = null;
 
     public final static String scope = "snsapi_userinfo";
 
     public final static String state = "carjob_wx_login";
 
-    public static String code = "";
+    public static String code = null;
 
     public static int expires_in = 0;
 
-    public static String refresh_token = "";
+    public static String refresh_token = null;
 
-    public static class ShowMsgActivity {
-        public static final String STitle = "showmsg_title";
-        public static final String SMessage = "showmsg_message";
-        public static final String BAThumbData = "showmsg_thumb_data";
-    }
 }

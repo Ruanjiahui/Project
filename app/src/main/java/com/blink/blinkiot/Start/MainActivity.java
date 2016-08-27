@@ -1,6 +1,5 @@
 package com.blink.blinkiot.Start;
 
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -15,8 +14,10 @@ import android.view.View;
 import android.widget.Toast;
 
 //import com.blink.blinkiot.Other.Push.MyPushIntentService;
+import com.blink.blinkiot.Other.Weixin.Token;
 import com.example.administrator.data_sdk.Crash.LogException;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
+import com.example.administrator.http_sdk.HTTP;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.NavActivity;
 import com.blink.blinkiot.Controllar.CheckUpdate;
@@ -47,7 +48,7 @@ public class MainActivity extends NavActivity implements LocalHandle {
     public static RegisterTime registerTime = null;
     private CheckUpdate checkUpdate = null;
     public static Activity activity = null;
-    public static int isLanguage = -1;
+    private User user = null;
 
 
     /**
@@ -102,6 +103,16 @@ public class MainActivity extends NavActivity implements LocalHandle {
 //        pushAgent.setPushIntentServiceClass(MyPushIntentService.class);
 
 
+        user = User.getInstance();
+        if (User.ONLINE.equals(user.getUserLogin())) {
+            switch (user.getUserLoginStyle()) {
+                case ActivityCode.WEIXIN:
+                    //判断保存本地的access_token是否有效，有效继续使用，无效则获取新的access_token
+                    new Token(context).CheckAccess_Token();
+                    break;
+            }
+        }
+
         setLeftTitleVisiable(false);
         setLeftImageVisiable(false);
 
@@ -143,21 +154,8 @@ public class MainActivity extends NavActivity implements LocalHandle {
         //检查更新操作
         checkUpdate.Update(0);
 
-//        isLanguage = 1;
-
-//        isLanguage = -1;
     }
 
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        Intent intent = new Intent();
-//        intent.setClass(this, MainActivity.class);
-//        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-//        this.startActivity(intent);
-    }
 
     /**
      * 跳转Fragment
@@ -171,14 +169,6 @@ public class MainActivity extends NavActivity implements LocalHandle {
                 .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commitAllowingStateLoss();
     }
-
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == 001) {
-//            intentFragment(new Fragment1());
-//        }
-//    }
 
     @Override
     protected void onDestroy() {

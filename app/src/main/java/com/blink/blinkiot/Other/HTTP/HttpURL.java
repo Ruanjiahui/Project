@@ -41,6 +41,13 @@ public class HttpURL {
     //获取微信的access_token
 //    https://api.weixin.qq.com/sns/oauth2/access_token?appid=wxbf1a3b91393434fd&secret=f8fbd9c6dab48760a686dfeddece0a11&code=011DIdAc0nrodH1W90Bc0qZ7Ac0DIdA7&grant_type=authorization_code
     public static String GetAccess_token = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + Constants.APP_ID  + "&secret=" + Constants.APP_Secret + "&code=";
+    //检测微信access_token是否有效
+    public static String CheckAccess_token = "https://api.weixin.qq.com/sns/auth?access_token=";
+
+    //刷新access_token
+    public static String Refresh_Token = "https://api.weixin.qq.com/sns/oauth2/refresh_token?appid=" + Constants.APP_ID + "&grant_type=refresh_token&refresh_token=";
+
+
 
     //这个标志当前网络状态
     // 0   当前没有网络状态

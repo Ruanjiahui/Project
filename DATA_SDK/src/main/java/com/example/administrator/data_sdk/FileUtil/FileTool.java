@@ -271,9 +271,8 @@ public class FileTool {
 
             return new String(b);
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return null;
     }
 
     /**

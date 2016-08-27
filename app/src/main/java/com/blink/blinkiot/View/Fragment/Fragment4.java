@@ -143,7 +143,7 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment4Logo:
-                if (user != null && User.ONLINE.equals(user.getUserLogin())){
+                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
                     user.setUserLogin(User.UNONLINE);
                     fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
                     fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));
@@ -151,10 +151,7 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
                     ContentValues contentValues = new ContentValues();
                     contentValues.put("userLogin", User.UNONLINE);
                     new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
-                }else
-//                    Toast.makeText(context , )
-//                    CommonIntent.IntentActivity(context, Person.class);
-//                else
+                } else
                     CommonIntent.IntentActivity(context, Login.class, ActivityCode.ME);
                 break;
         }

@@ -22,6 +22,12 @@ public class FileURL {
 
     private static String SystemURL = "data/data/";
 
+    //获取微信保存token的保存地址
+    public static String getWEIXINTokenPath(Context context) {
+        return SystemURL + SystemTool.getPackageName(context) + "/";
+    }
+
+    public static String getWEIXINTokenName = "access_token";
 
     public static String CacheURL = "";
 

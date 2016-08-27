@@ -47,6 +47,7 @@ public class LeadFragment3 extends Fragment implements View.OnClickListener {
      */
     @Override
     public void onClick(View v) {
-        CommonIntent.IntentActivity(getActivity(), Login.class , ActivityCode.GUIDE);
+//        CommonIntent.IntentActivity(getActivity(), Login.class , ActivityCode.GUIDE);
+        CommonIntent.IntentActivity(getActivity(), MainActivity.class);
     }
 }
