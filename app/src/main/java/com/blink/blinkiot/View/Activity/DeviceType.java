@@ -1,5 +1,8 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -8,6 +11,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 
+import com.blink.blinkiot.View.DialogClick;
+import com.blink.blinkiot.View.MyShareDialog;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.blink.blinkiot.Other.Adapter.FragmentAdapter;
@@ -20,7 +25,7 @@ import java.util.ArrayList;
 /**
  * Created by Soft on 2016/7/9.
  */
-public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeListener, DialogClick {
 
     private View view = null;
     private View qq_Top = null;
@@ -30,6 +35,7 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
     private RelativeLayout base_top_relative = null;
     private TextView qqLeft;
     private TextView qqRight;
+    private TextView deviceTypeShare = null;
 
 
     /**
@@ -46,6 +52,7 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
         base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
         qqLeft = (TextView) view.findViewById(R.id.qqLeft);
         qqRight = (TextView) view.findViewById(R.id.qqRight);
+        deviceTypeShare = (TextView) view.findViewById(R.id.deviceTypeShare);
 
 
         list = new ArrayList<>();
@@ -65,6 +72,7 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
         deviceTypeViewPager.addOnPageChangeListener(this);
         qqLeft.setOnClickListener(this);
         qqRight.setOnClickListener(this);
+        deviceTypeShare.setOnClickListener(this);
     }
 
     @Override
@@ -80,6 +88,9 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
             case R.id.qqRight:
                 deviceTypeViewPager.setCurrentItem(1);
                 setSector(1);
+                break;
+            case R.id.deviceTypeShare:
+//                getMyDialog();
                 break;
         }
     }
@@ -140,5 +151,33 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
                 qqRight.setBackground(getResources().getDrawable(R.drawable.qq_top_right_select));
                 break;
         }
+    }
+
+    private MyShareDialog myShareDialog = null;
+
+    /**
+     * 弹出对话框
+     *
+     * @return
+     */
+    private void getMyDialog() {
+        ClipboardManager clip = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+        myShareDialog = new MyShareDialog(context, R.style.dialog);
+        myShareDialog.DialogClick(this, 0);
+        ClipData data = clip.getPrimaryClip();
+        if (data != null)
+            myShareDialog.setEditText(String.valueOf(data.getItemAt(0).getText()));
+        //如果是真实设置才允许设置闹铃
+        myShareDialog.show();
+    }
+
+    @Override
+    public void Enter(int position) {
+        myShareDialog.dismiss();
+    }
+
+    @Override
+    public void Cancal(int position) {
+        myShareDialog.dismiss();
     }
 }

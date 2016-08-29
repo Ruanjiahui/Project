@@ -38,8 +38,8 @@ import java.util.ArrayList;
 public class Setting extends BaseActivity implements AdapterView.OnItemClickListener {
     private View view = null;
     private ListView settingList = null;
-    private View settingBut = null;
-    private TextView circlebut = null;
+//    private View settingBut = null;
+//    private TextView circlebut = null;
     public static Activity activity = null;
 
 
@@ -62,10 +62,10 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
 
         settingList = (ListView) view.findViewById(R.id.settingList);
 
-        settingBut = view.findViewById(R.id.settingBut);
-        circlebut = (TextView) view.findViewById(R.id.circlebut);
+//        settingBut = view.findViewById(R.id.settingBut);
+//        circlebut = (TextView) view.findViewById(R.id.circlebut);
         settingRel = (RelativeLayout) view.findViewById(R.id.settingRel);
-        settingBut.setVisibility(View.VISIBLE);
+//        settingBut.setVisibility(View.VISIBLE);
 
 
         checkUpdate = new CheckUpdate(context);
@@ -76,15 +76,15 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
         setLeftTitleColor(R.color.White);
         setContentColor(R.color.WhiteSmoke);
         setTitle(getSystemText(R.string.SettingTitle));
-        circlebut.setText(getSystemText(R.string.LoginBut));
+//        circlebut.setText(getSystemText(R.string.LoginBut));
 
         setContent(view);
 
 
         settingList.setOnItemClickListener(this);
-        settingBut.setOnClickListener(this);
+//        settingBut.setOnClickListener(this);
         settingRel.setOnClickListener(this);
-        DensityUtil.setRelayoutSize(settingBut, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 4 * 3, 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
+//        DensityUtil.setRelayoutSize(settingBut, DensityUtil.dip2px(context, 55), DensityUtil.dip2px(context, 55), BaseActivity.height / 4 * 3, 0, 0, 0, new int[]{RelativeLayout.CENTER_HORIZONTAL});
 
     }
 
@@ -117,9 +117,9 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
         }
 
         user = User.getInstance();
-        if (user != null && User.ONLINE.equals(user.getUserLogin()))
-            circlebut.setText(getSystemText(R.string.LoginButExists));
-        else circlebut.setText(getSystemText(R.string.LoginBut));
+//        if (user != null && User.ONLINE.equals(user.getUserLogin()))
+//            circlebut.setText(getSystemText(R.string.LoginButExists));
+//        else circlebut.setText(getSystemText(R.string.LoginBut));
     }
 
     /**
@@ -146,20 +146,20 @@ public class Setting extends BaseActivity implements AdapterView.OnItemClickList
 
     @Override
     public void Click(View v) {
-        switch (v.getId()) {
-            case R.id.settingBut:
-                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
-                    user.setUserLogin(User.UNONLINE);
-                    circlebut.setText(getSystemText(R.string.LoginBut));
-                    Toast.makeText(context, getSystemText(R.string.LoginToast), Toast.LENGTH_SHORT).show();
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("userLogin", User.UNONLINE);
-                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
-                } else {
-                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.SETTING);
-                }
-                break;
-        }
+//        switch (v.getId()) {
+//            case R.id.settingBut:
+//                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
+//                    user.setUserLogin(User.UNONLINE);
+//                    circlebut.setText(getSystemText(R.string.LoginBut));
+//                    Toast.makeText(context, getSystemText(R.string.LoginToast), Toast.LENGTH_SHORT).show();
+//                    ContentValues contentValues = new ContentValues();
+//                    contentValues.put("userLogin", User.UNONLINE);
+//                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
+//                } else {
+//                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.SETTING);
+//                }
+//                break;
+//        }
     }
 
     /**

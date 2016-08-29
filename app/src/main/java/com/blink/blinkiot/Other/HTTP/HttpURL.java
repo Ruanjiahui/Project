@@ -1,6 +1,6 @@
 package com.blink.blinkiot.Other.HTTP;
 
-import com.blink.blinkiot.Other.Weixin.Constants;
+import com.blink.blinkiot.Other.Weixin.Login.Constants;
 
 /**
  * Created by Administrator on 2016/7/21.

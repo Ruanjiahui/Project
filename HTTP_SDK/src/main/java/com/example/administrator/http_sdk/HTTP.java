@@ -194,7 +194,6 @@ public class HTTP implements HttpInterface.HttpConnect {
         //如果数据为空则是GET请求
         if (data == null) {
             String data = httpRequest.GET(url);
-            Log.e("Ruan", "&&&&" + data);
             return httpRequest.GET(url);
         } else {
             //如果数据不为空则分两种清空

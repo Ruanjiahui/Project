@@ -15,6 +15,7 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.ItemClick;
+import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.example.administrator.ui_sdk.View.SideListView;
 import com.blink.blinkiot.Controllar.FragmentControl;
 import com.blink.blinkiot.Moudle.Scene;
@@ -42,7 +43,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
     private RelativeLayout base_top_relative = null;
     private TextView base_top_text1 = null;
     private TextView base_top_title = null;
-    private SideListView sideListView = null;
+    private RefreshSideListView sideListView = null;
     private SideListViewAdapter adapter = null;
     private ArrayList<Object> ListObj = null;
     private DatabaseOpera databaseOpera = null;
@@ -60,7 +61,7 @@ public class Fragment2 extends Fragment implements View.OnClickListener, Adapter
 
         databaseOpera = new DatabaseOpera(context);
 
-        sideListView = (SideListView) view.findViewById(R.id.slideListView1);
+        sideListView = (RefreshSideListView) view.findViewById(R.id.slideListView1);
         fragment2Top = view.findViewById(R.id.fragment2Top);
         base_top_relative = (RelativeLayout) view.findViewById(R.id.base_top_relative);
         base_top_text1 = (TextView) view.findViewById(R.id.base_top_text1);

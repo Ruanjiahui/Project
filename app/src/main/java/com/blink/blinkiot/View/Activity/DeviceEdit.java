@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.ui_sdk.Applications;
 import com.example.administrator.ui_sdk.DensityUtil;
@@ -248,7 +249,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
                 bottomListView.setOnItemClickListener(this);
                 break;
             case R.id.editLogo:
-                CommonIntent.IntentActivity(context, picPick.class);
+//                CommonIntent.IntentActivity(context, picPick.class);
                 break;
             case R.id.deviceEditBackground:
                 if (isVisiable)

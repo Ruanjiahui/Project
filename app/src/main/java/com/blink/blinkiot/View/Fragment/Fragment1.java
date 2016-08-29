@@ -20,9 +20,12 @@ import android.widget.Toast;
 
 
 import com.blink.blinkiot.Other.Adapter.LGAdapter;
+import com.blink.blinkiot.Other.Weixin.Login.Constants;
+import com.blink.blinkiot.Other.Weixin.WXShare.WX_Share;
 import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.HttpResult;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.example.administrator.ui_sdk.View.MyImageView;
@@ -96,7 +99,6 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
         view = inflater.inflate(R.layout.fragment1, null);
         context = getActivity();
         activity = (Activity) context;
@@ -105,14 +107,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         fragmentControl = new FragmentControl(context);
 
         animationListener = this;
-
-
         scenelist = new ArrayList<>();
         list = new ArrayList<>();
 
-        //这里是获取用户设备表的数据，所以首先获取本地数据库的数据同时向服务器获取查询是否有更新数据，如果有更新数据则获取最新的数据
-        //如果没有最新的数据则不进行任何的操作，如果本地没有数据库获取没有任何数据的话，就直接获取服务器上面的数据，之后插入本地数据库
-        //获取数据库数据
         fragment1Background = (RelativeLayout) view.findViewById(R.id.fragment1Background);
         slideListView = (RefreshSideListView) view.findViewById(R.id.slideListView);
         fragment1Top = (RelativeLayout) view.findViewById(R.id.fragment1Top);
@@ -125,8 +122,6 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         bottomText = (TextView) view.findViewById(R.id.bottomText);
         fragment1weather = (TextView) view.findViewById(R.id.fragment1weather);
         fragment1City = (TextView) view.findViewById(R.id.fragment1City);
-
-
         bottomMain.setVisibility(View.GONE);
 
 
@@ -150,7 +145,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
     @Override
     public void onResume() {
         super.onResume();
-
+        //获取数据库的数据
         getDatabaseData("", null);
 
         if (adapter == null) {
@@ -292,6 +287,12 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
                     databaseOpera.DataDelete(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
                     //删除服务器的数据库的数据
                     break;
+                //分享页面
+                case 2:
+                    //点击分享到微信的聊天界面
+//                    WX_Share share = new WX_Share(context, Constants.APP_ID);
+//                    share.share_web("http://www.baidu.com", "这个是一个测试", "123", ImageTransformation.Resouce2Bitmap(context, R.mipmap.logo), WX_Share.sceneWXSceneSession);
+                    break;
             }
         }
     }
@@ -303,13 +304,18 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      * @param whereargs
      */
     private void getDatabaseData(String wherearg, String[] whereargs) {
+        //获取用户设备的数据库
         ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
+        //设置这个是为真实设备
         status = true;
         //如果获取用户设备为空则说明没有用户设备这个时候应该显示模拟设备，将当前的状态设置为模拟状态否则就是真实状态
         if (ListObj.size() <= 0 || ListObj == null) {
+            //设置为模拟设备
             status = false;
+            //获取模拟用户设备表的数据
             ListObj = databaseOpera.DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.AnalogyName, null, wherearg, whereargs, "", "", "", "", UserDevice.class, true);
         }
+        //将用户数据表的数据转化成listview能识别的数据库链表
         list = fragmentControl.setFragment1List(ListObj);
     }
 
@@ -318,7 +324,9 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      * 更新数据
      */
     private void ReData(int position) {
+        //下拉更新数据库的时候重写获取用户设备表的信息进行更新
         getDatabaseData("", null);
+        //列表适配器进行刷新
         adapter.RefreshData(list);
         if (position == 0)
             //关闭动画
@@ -327,6 +335,8 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     /**
      * 更新数据的接口
+     * <p/>
+     * 这个是线程处理完成触发的接口
      */
     @Override
     public void ReStartData(int position) {
@@ -394,16 +404,21 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 
     /**
      * 这个刷新的接口
+     * <p/>
+     * 这个是下拉刷新触发的接口
      */
     @Override
     public void onRefresh() {
         //获取天气
         new HttpWeather(HttpURL.WethereURL + HttpURL.CityName, HttpURL.WeatherID, this, 0);
+        //实例化获取天气的对象
         weather = new Weather();
         //下拉刷新如果是真实状态则允许UDP请求否则则不允许请求
+        //如果是真实设备下拉则进行判断设备的在线状态。如果是模拟设备就不进行操作
         if (status)
             new CheckOnline(context, this).UDPCheck();
         else
+            //模拟设备下拉照样刷新数据
             ReData(0);
     }
 
@@ -415,6 +430,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
      */
     @Override
     public void onSucceful(int code, String result) {
+        //解析获取天气返回来的数据
         weather.setJson(result);
         HttpURL.Cityweather = weather.getWeather();
         if (HttpURL.Cityweather != null && HttpURL.Cityweather[0] != null)
@@ -433,7 +449,13 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
 //            Toast.makeText(context, context.getResources().getString(R.string.HttpError), Toast.LENGTH_SHORT).show();
     }
 
-
+    /**
+     * 这个是点击返回按钮的时候判断下拉菜单是否弹出，
+     * 如果下拉菜单弹出，点击返回按钮的时候就隐藏下拉菜单，
+     * 如果下拉菜单不弹出，点击返回按钮的时候就触发双击退出软件的操作
+     *
+     * @return
+     */
     public static boolean onKeyDown() {
         if (isVisiable == true) {
             stopAnimation();

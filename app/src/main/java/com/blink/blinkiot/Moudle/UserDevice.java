@@ -19,6 +19,7 @@ public class UserDevice extends Device implements Parcelable {
     public String deviceIP = null;
     public String deviceRemarks = null;
     public String deviceOnlineStatus = null;
+    public String deviceSocketFlag = null;
 
     public UserDevice() {
     }
@@ -38,6 +39,7 @@ public class UserDevice extends Device implements Parcelable {
         deviceType = in.readString();
         deviceTypeID = in.readString();
         deviceOnlineStatus = in.readString();
+        deviceSocketFlag = in.readString();
 
     }
 
@@ -60,6 +62,14 @@ public class UserDevice extends Device implements Parcelable {
             return new UserDevice[size];
         }
     };
+
+    public String getDeviceSocketFlag() {
+        return deviceSocketFlag;
+    }
+
+    public void setDeviceSocketFlag(String deviceSocketFlag) {
+        this.deviceSocketFlag = deviceSocketFlag;
+    }
 
     public String getUserID() {
         return userID;
@@ -153,6 +163,7 @@ public class UserDevice extends Device implements Parcelable {
         setSceneID(list.get(0).get("sceneID"));
         setUserID(list.get(0).get("userID"));
         setDeviceOnlineStatus(list.get(0).get("deviceOnlineStatus"));
+        setDeviceOnlineStatus(list.get(0).get("deviceOnlineStatus"));
     }
 
     /**
@@ -190,35 +201,6 @@ public class UserDevice extends Device implements Parcelable {
         dest.writeString(deviceType);
         dest.writeString(deviceTypeID);
         dest.writeString(deviceOnlineStatus);
-    }
-
-    private ArrayList<UserDevice> list = null;
-
-    /**
-     * 将数据库的Map结构的数据封装对象
-     *
-     * @param map
-     * @return
-     */
-    public ArrayList<UserDevice> getMoudle(ArrayList<Map<String, String>> map) {
-        if (map.size() != 0) {
-            list = new ArrayList<>();
-
-            for (int i = 0; i < map.size(); i++) {
-                UserDevice userDevice = new UserDevice();
-                userDevice.setUserID(map.get(i).get("userID"));
-                userDevice.setSceneID(map.get(i).get("sceneID"));
-                userDevice.setDeviceRemarks(map.get(i).get("deviceRemarks"));
-                userDevice.setDevicePORT(map.get(i).get("devicePORT"));
-                userDevice.setDeviceID(map.get(i).get("deviceID"));
-                userDevice.setDeviceIP(map.get(i).get("deviceIP"));
-                userDevice.setDeviceMac(map.get(i).get("deviceMac"));
-                userDevice.setDeviceName(map.get(i).get("deviceName"));
-                userDevice.setDevicePic(map.get(i).get("devicePic"));
-                userDevice.setDeviceOnline(map.get(i).get("deviceOnline"));
-                list.add(userDevice);
-            }
-        }
-        return list;
+        dest.writeString(deviceSocketFlag);
     }
 }

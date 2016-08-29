@@ -3,7 +3,9 @@ package com.blink.blinkiot.View.Activity;
 import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 
 import com.blink.blinkiot.Start.DeviceURL;
@@ -56,15 +58,20 @@ public class DeviceControl extends BaseActivity {
         else
             tableName = DatabaseTableName.AnalogyName;
 
-        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, "deviceMac = ?", new String[]{deviceMac});
 
-        userDevice = new UserDevice();
-        userDevice.getUserDeviceMoudle(map);
+        userDevice = (UserDevice) new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, null, "deviceMac = ?", new String[]{deviceMac}, "", "", "", "", UserDevice.class, true).get(0);
 
+//        map = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, tableName, "deviceMac = ?", new String[]{deviceMac});
+//
+//        userDevice = new UserDevice();
+//        userDevice.getUserDeviceMoudle(map);
+
+        if (userDevice == null)
+            Applications.getInstance().removeOneActivity(this);
 
         switch (Integer.parseInt(flag)) {
             case DeviceURL.Switch:
-                intentFragment(SocketSwitchFragment.getInstance(userDevice , status));
+                intentFragment(SocketSwitchFragment.getInstance(userDevice, status));
                 break;
             case DeviceURL.RGBLight:
                 intentFragment(RGBLightFragment.getInstance(userDevice));

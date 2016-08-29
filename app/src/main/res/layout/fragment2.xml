@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="70dp"></include>
 
-    <com.example.administrator.ui_sdk.View.SideListView
+    <com.example.administrator.ui_sdk.View.RefreshSideListView
         android:id="@+id/slideListView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:divider="@color/WhiteSmoke"
         android:dividerHeight="1dp"
         android:listSelector="@drawable/itemsector"
-        android:background="@color/White"></com.example.administrator.ui_sdk.View.SideListView>
+        android:background="@color/White"></com.example.administrator.ui_sdk.View.RefreshSideListView>
 
 
 

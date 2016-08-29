@@ -30,6 +30,7 @@ public class TestDevice {
         contentValues.put("deviceMac", "11:11:11:11:11:11");
         contentValues.put("deviceOnline", String.valueOf(DeviceCode.ONLINE));
         contentValues.put("deviceOnlineStatus", DeviceCode.WIFI);
+        contentValues.put("deviceSocketFlag", "S1,S2,S3,S4");
         return contentValues;
     }
 

@@ -120,6 +120,15 @@ public class SideListViewAdapter extends BaseAdapter {
                     itemClick.OnClick(position, 0);
                 }
             });
+            if (item.isShare()) {
+                viewHolder.share.setVisibility(View.VISIBLE);
+                viewHolder.share.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        itemClick.OnClick(position, 2);
+                    }
+                });
+            }
         }
 
         return convertView;

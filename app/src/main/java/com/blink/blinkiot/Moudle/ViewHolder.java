@@ -45,6 +45,7 @@ public class ViewHolder {
     public TextView homeRight1;
     public TextView edit;
     public TextView delete;
+    public TextView share;
 
 
     public ViewHolder(View view, String position) {
@@ -60,6 +61,7 @@ public class ViewHolder {
                 homeRight1 = (TextView) view.findViewById(R.id.homeRight1);
                 edit = (TextView) view.findViewById(R.id.edit);
                 delete = (TextView) view.findViewById(R.id.delete);
+                share = (TextView) view.findViewById(R.id.share);
                 break;
             case "ListView":
                 //纯listview布局

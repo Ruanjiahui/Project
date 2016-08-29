@@ -17,6 +17,13 @@
 
     <uses-permission android:name="android.permission.CHANGE_CONFIGURATION" />
 
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
 
     <application
         android:allowBackup="true"
@@ -59,24 +66,10 @@
             android:name=".wxapi.WXEntryActivity"
             android:exported="true" />
 
-
-        <!-- 注册广播 -->
-        <!--<receiver android:name=".Other.System.WifiReceiver">-->
-        <!--<intent-filter>-->
-        <!--<action android:name="android.net.conn.CONNECTIVITY_CHANGE" />-->
-        <!--<action android:name="android.net.wifi.RSSI_CHANGED" />-->
-        <!--<action android:name="android.net.wifi.STATE_CHANGE" />-->
-        <!--<action android:name="android.net.wifi.WIFI_STATE_CHANGED" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
-
-        <!--<receiver-->
-        <!--android:name=".AppRegister"-->
-        <!--android:permission="com.tencent.mm.plugin.permission.SEND" >-->
-        <!--<intent-filter>-->
-        <!--<action android:name="com.tencent.mm.plugin.openapi.Intent.ACTION_REFRESH_WXAPP" />-->
-        <!--</intent-filter>-->
-        <!--</receiver>-->
+        <meta-data
+            android:name="com.amap.api.v2.apikey"
+            android:value="0bc39abaa029b54f109053f4c3d20f96">//开发者申请的key
+        </meta-data>
 
 
         <!-- 必须注册在微博授权，分享微博时候用到 -->
@@ -94,10 +87,10 @@
             android:value="weibo" />
 
 
-        <!--<service-->
-        <!--android:name="com.blink.blinkiot.Other.Push.MyPushIntentService"-->
-        <!--android:process=":push" />-->
-
+        <!-- 推送的配置-->
+        <service
+            android:name="com.blink.blinkiot.Other.Push.MyPushIntentService"
+            android:process=":push" />
 
         <meta-data
             android:name="UMENG_APPKEY"
@@ -109,7 +102,6 @@
         <meta-data
             android:name="UMENG_CHANNEL"
             android:value="Umeng"></meta-data>
-
     </application>
 
 </manifest>

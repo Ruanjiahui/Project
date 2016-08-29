@@ -216,6 +216,8 @@ public class Edit extends BaseActivity implements RadioGroup.OnCheckedChangeList
                 databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, DataHandler.getContentValues("userSex", sex), true, "userID = ?", new String[]{"123456"}, "userID = ?", new String[]{"123456"});
                 break;
             case "scene":
+                if (personEdit.getText().toString() == null || "".equals(personEdit.getText().toString()))
+                    return;
                 databaseOpera.DataInert(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.SceneName, DataHandler.getSceneContentValues(sceneID + "", personEdit.getText().toString()), true, "sceneID = ?", new String[]{sceneID + ""}, "sceneID = ?", new String[]{sceneID + ""});
                 break;
         }

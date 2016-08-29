@@ -79,7 +79,11 @@ public class HttpReadSource {
             Object[] object = new Object[3];
             object[0] = buffer.length;
 
-//            int count = 0;
+            if (httpURLConnection.getContentLength() == -1) {
+                return (HttpCode.NULL + "").getBytes();
+            }
+
+            int count = 0;
 //            while (count <= 10) {
 //                if (in != null) {
 //                    int numRead = in.read(buffer);
@@ -97,9 +101,6 @@ public class HttpReadSource {
 //                    break;
 //                }
 //            }
-            if (httpURLConnection.getContentLength() == -1) {
-                return (HttpCode.NULL + "").getBytes();
-            }
 
             while ((n = in.read(buffer)) != -1) {
                 output.write(buffer, 0, n);
@@ -121,7 +122,14 @@ public class HttpReadSource {
             }
             return (HttpCode.TIMEOUT + "").getBytes();
         }
-        buffer = null;
+        if (output != null)
+            try {
+                output.close();
+                buffer = null;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
         return output.toByteArray();
     }
 }

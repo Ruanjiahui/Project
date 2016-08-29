@@ -10,11 +10,11 @@
         android:layout_height="wrap_content" />
 
 
-    <include
-        android:id="@+id/settingBut"
-        layout="@layout/circlelayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <!--<include-->
+        <!--android:id="@+id/settingBut"-->
+        <!--layout="@layout/circlelayout"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content" />-->
     <!--<Button-->
         <!--android:id="@+id/settingBut"-->
         <!--android:layout_width="match_parent"-->

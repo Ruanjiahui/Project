@@ -158,6 +158,7 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceMac", "varchar(50)");
         establish.put("deviceOnline", "varchar(10)");
         establish.put("deviceOnlineStatus", "varchar(10)");
+        establish.put("deviceSocketFlag", "varchar(255)");
 
 
         return establish;
@@ -183,7 +184,7 @@ public class CreateDataBase implements Database.Check {
         establish.put("deviceMac", "varchar(50)");
         establish.put("deviceOnline", "varchar(10)");
         establish.put("deviceOnlineStatus", "varchar(10)");
-
+        establish.put("deviceSocketFlag", "varchar(255)");
 
         return establish;
     }

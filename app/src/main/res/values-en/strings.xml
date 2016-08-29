@@ -129,4 +129,12 @@
     <string name="WXToast">Landing WeChat</string>
     <string name="LoginButExists">Logout</string>
     <string name="LoginToast">Logout success</string>
+    <string name="share">Share</string>
+    <string name="ShareDevice">Share Device</string>
+    <string name="ShareEditHint">Please enter WeChat share code</string>
+    <string name="SocketDialogHint">Please enter the name of the jack</string>
+    <string name="SocketDialogText1">S1</string>
+    <string name="SocketDialogText2">S2</string>
+    <string name="SocketDialogText3">S3</string>
+    <string name="SocketDialogText4">S4</string>
 </resources>

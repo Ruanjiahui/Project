@@ -26,6 +26,7 @@ import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.Database.Database;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
+import com.example.administrator.data_sdk.ImageUtil.ImageTool;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -143,16 +144,16 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.fragment4Logo:
-                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
-                    user.setUserLogin(User.UNONLINE);
-                    fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
-                    fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));
-                    Toast.makeText(context, getResources().getString(R.string.LoginToast), Toast.LENGTH_SHORT).show();
-                    ContentValues contentValues = new ContentValues();
-                    contentValues.put("userLogin", User.UNONLINE);
-                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
-                } else
-                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.ME);
+//                if (user != null && User.ONLINE.equals(user.getUserLogin())) {
+//                    user.setUserLogin(User.UNONLINE);
+//                    fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
+//                    fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));
+//                    Toast.makeText(context, getResources().getString(R.string.LoginToast), Toast.LENGTH_SHORT).show();
+//                    ContentValues contentValues = new ContentValues();
+//                    contentValues.put("userLogin", User.UNONLINE);
+//                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserTableName, contentValues, "userID = ?", new String[]{user.getUserID()});
+//                } else
+//                    CommonIntent.IntentActivity(context, Login.class, ActivityCode.ME);
                 break;
         }
     }
@@ -163,7 +164,7 @@ public class Fragment4 extends Fragment implements AdapterView.OnItemClickListen
         //如果用户没有信息则显示默认
         if (user != null && User.ONLINE.equals(user.getUserLogin())) {
             fragment4ID.setText(user.getUserName());
-            fragment4Logo.setImageDrawable(FileTool.readPictureByteDrawable(context, user.getUserImage(), FileURL.LogoPath));
+            fragment4Logo.setImageDrawable(ImageTool.CreateRoundImage(context, FileTool.readPictureByteDrawable(context, user.getUserImage(), FileURL.LogoPath)));
         } else {
             fragment4ID.setText(getResources().getString(R.string.fragment4LogoTitle));
             fragment4Logo.setImageDrawable(ImageTransformation.Resouce2Drawable(context, R.mipmap.userlogo));

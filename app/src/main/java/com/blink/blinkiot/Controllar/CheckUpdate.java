@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.HttpFileResult;
+import com.example.administrator.Interface.HttpResult;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.administrator.http_sdk.HTTP;
@@ -24,7 +25,7 @@ import java.io.ByteArrayInputStream;
 /**
  * Created by Administrator on 2016/8/16.
  */
-public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
+public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult, HttpResult.HttpString {
 
     private Context context = null;
     private MyDialog myDialog = null;
@@ -43,7 +44,7 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
     public void Update(int Status) {
         this.Status = Status;
         //进行检查更新
-        new HTTP(this, DOWNXML, HttpCode.DOWN, HttpURL.UpdateURL, null);
+        new HTTP(this, HttpCode.GET, HttpURL.UpdateURL, null, 0, false);
 
         if (!FileTool.getProperties(context, HttpURL.ConfigName))
             FileTool.WriteProperties(context, HttpURL.ConfigName, context.getResources().getString(R.string.WifiUpdateTxt), "true");
@@ -154,50 +155,8 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
 
     @Override
     public void FileEnd(byte[] bytes, int FLAG) {
-        //下载完成xml文件
-        if (FLAG == DOWNXML) {
-            if (bytes != null) {
-                //解析xml文件
-                Version version = Version.getVersionObj();
-                //解析XML文件用的方法是dom
-                if (new ParseXmlService().parseXml(new ByteArrayInputStream(bytes), version) == null) {
-                    Toast.makeText(context, context.getResources().getString(R.string.NetError), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                //判断版本号是不是大于本地的版本号
-                if (!version.getVersion().equals(SystemTool.getVersionName(context))) {
-                    HttpURL.DownApplicationURL = version.getApkdownload();
-                    FileURL.MD5 = version.getMd5();
-                    //获取本地版本的版本号
-                    localVersion = SubString(SystemTool.getVersionName(context));
-                    nowVersion = SubString(version.getVersion());
-
-                    //如果前面两个版本都一样的话一定是强制更新
-                    version.setUpdate(isUpdate());
-                    //不用更新
-                    if (!isUpdate()) {
-                        if (Status == 1)
-                            Toast.makeText(context, context.getResources().getString(R.string.Version), Toast.LENGTH_SHORT).show();
-                        disView();
-                        return;
-                    }
-
-                    if (Status == 0 && wifiStatus != null) {
-                        if (wifiStatus.equals("true")) {
-                            //更新的操作就是下载软件
-                            new HTTP(this, UPDATE, HttpCode.DOWN, HttpURL.DownApplicationURL, null);
-                            return;
-                        }
-                    }
-                    //如果wifi情况下不提示框
-                    ShowDialog(UPDATE, getSystemText(R.string.UpdateMessageText), getSystemText(R.string.UpdateLeftButText), getSystemText(R.string.UpdateRightButText));
-                    disView();
-                    return;
-                }
-                disView();
-            }
-            //下载完成软件
-        } else if (FLAG == UPDATE) {
+        //下载完成软件
+        if (FLAG == UPDATE) {
             FileTool.saveFileByte(bytes, FileURL.APKName, FileURL.APKPath);
             //判断apk的MD5值是否一样
             if (FileURL.MD5.equals(FileTool.getMd5ByFile(FileURL.APKPath, FileURL.APKName)))
@@ -268,4 +227,64 @@ public class CheckUpdate implements MyOnClickInterface.Click, HttpFileResult {
         }
     }
 
+    /**
+     * 处理http成功返回的接口
+     *
+     * @param code   请求标识
+     * @param result 请求返回的字节流
+     */
+    @Override
+    public void onSucceful(int code, String result) {
+        if (result != null && result.length() != 0) {
+            //解析xml文件
+            Version version = Version.getVersionObj();
+            //解析XML文件用的方法是dom
+            if (new ParseXmlService().parseXml(new ByteArrayInputStream(result.getBytes()), version) == null) {
+                Toast.makeText(context, context.getResources().getString(R.string.NetError), Toast.LENGTH_SHORT).show();
+                return;
+            }
+            //判断版本号是不是大于本地的版本号
+            if (!version.getVersion().equals(SystemTool.getVersionName(context))) {
+                HttpURL.DownApplicationURL = version.getApkdownload();
+                FileURL.MD5 = version.getMd5();
+                //获取本地版本的版本号
+                localVersion = SubString(SystemTool.getVersionName(context));
+                nowVersion = SubString(version.getVersion());
+
+                //如果前面两个版本都一样的话一定是强制更新
+                version.setUpdate(isUpdate());
+                //不用更新
+                if (!isUpdate()) {
+                    if (Status == 1)
+                        Toast.makeText(context, context.getResources().getString(R.string.Version), Toast.LENGTH_SHORT).show();
+                    disView();
+                    return;
+                }
+
+                if (Status == 0 && wifiStatus != null) {
+                    if (wifiStatus.equals("true")) {
+                        //更新的操作就是下载软件
+                        new HTTP(this, UPDATE, HttpCode.DOWN, HttpURL.DownApplicationURL, null);
+                        return;
+                    }
+                }
+                //如果wifi情况下不提示框
+                ShowDialog(UPDATE, getSystemText(R.string.UpdateMessageText), getSystemText(R.string.UpdateLeftButText), getSystemText(R.string.UpdateRightButText));
+                disView();
+                return;
+            }
+            disView();
+        }
+    }
+
+    /**
+     * 处理http连接出错的接口
+     *
+     * @param code  请求标识
+     * @param Error 请求出错的标识
+     */
+    @Override
+    public void onError(int code, int Error) {
+
+    }
 }

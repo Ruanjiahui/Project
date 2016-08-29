@@ -1,11 +1,14 @@
 package com.blink.blinkiot.View.Control;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.ContentValues;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +17,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blink.blinkiot.Other.DatabaseTableName;
+import com.blink.blinkiot.View.Activity.DeviceControl;
+import com.blink.blinkiot.View.DialogClick;
+import com.blink.blinkiot.View.MyShareDialog;
 import com.example.administrator.Interface.HttpInterface;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.JSON.JSONClass;
 import com.blink.blinkiot.Controllar.CallBack;
 import com.blink.blinkiot.Interface.UDPInterface;
@@ -27,18 +35,28 @@ import com.blink.blinkiot.Other.System.ReceiverHandler;
 import com.blink.blinkiot.Other.UDP.FormatData;
 import com.blink.blinkiot.R;
 import com.blink.blinkiot.View.MyTimeDialog;
+import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 
 
 /**
  * Created by Administrator on 2016/7/29.
  */
-public class SocketSwitchFragment extends Fragment implements UDPInterface.HandlerMac, HttpInterface.HttpHandler, View.OnClickListener, ReceiverHandler.TimeHandler, MyTimeDialog.MyTimeClick {
+public class SocketSwitchFragment extends Fragment implements UDPInterface.HandlerMac, HttpInterface.HttpHandler, View.OnClickListener, ReceiverHandler.TimeHandler, DialogClick {
 
     private ImageView button;
     private ImageView button2;
     private ImageView button3;
     private ImageView button4;
     private ImageView button5;
+
+    private TextView socket1Title = null;
+    private TextView socket2Title = null;
+    private TextView socket3Title = null;
+    private TextView socket4Title = null;
+    private ImageView socketPic1 = null;
+    private ImageView socketPic2 = null;
+    private ImageView socketPic3 = null;
+    private ImageView socketPic4 = null;
 
     private ImageView switchCell2;
     private TextView switchTime2;
@@ -55,6 +73,17 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     public final static int FLAG2 = 2;
     public final static int FLAG3 = 3;
     public final static int FLAG4 = 4;
+
+    public final static int FLAG1Pic = 10;
+    public final static int FLAG2Pic = 20;
+    public final static int FLAG3Pic = 30;
+    public final static int FLAG4Pic = 40;
+
+    private String FLAGData1 = null;
+    private String FLAGData2 = null;
+    private String FLAGData3 = null;
+    private String FLAGData4 = null;
+    private String SocketName = null;
 
 
     private View view = null;
@@ -79,6 +108,7 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
     private int UnOn = 0;
 
     private boolean STATUS;
+    private String[] nameVules = null;
 
 
     /**
@@ -119,6 +149,14 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         button4 = (ImageView) view.findViewById(R.id.button4);
         button5 = (ImageView) view.findViewById(R.id.button5);
         socketBack = (RelativeLayout) view.findViewById(R.id.socketBack);
+        socket1Title = (TextView) view.findViewById(R.id.socket1Title);
+        socket2Title = (TextView) view.findViewById(R.id.socket2Title);
+        socket3Title = (TextView) view.findViewById(R.id.socket3Title);
+        socket4Title = (TextView) view.findViewById(R.id.socket4Title);
+        socketPic1 = (ImageView) view.findViewById(R.id.socketPic1);
+        socketPic2 = (ImageView) view.findViewById(R.id.socketPic2);
+        socketPic3 = (ImageView) view.findViewById(R.id.socketPic3);
+        socketPic4 = (ImageView) view.findViewById(R.id.socketPic4);
 
         //获取Activuity传输的数据
         userDevice = getArguments().getParcelable("data");
@@ -151,6 +189,10 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
         button3.setOnClickListener(this);
         button4.setOnClickListener(this);
         button5.setOnClickListener(this);
+        socketPic1.setOnClickListener(this);
+        socketPic2.setOnClickListener(this);
+        socketPic3.setOnClickListener(this);
+        socketPic4.setOnClickListener(this);
 
         setNormalTimeStyle();
 
@@ -159,10 +201,18 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
 
 
     private void setNormalTimeStyle() {
+        nameVules = new String[4];
         setTimeStyle(FLAG1, TimeMoudle.getSwitch1(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG1));
         setTimeStyle(FLAG2, TimeMoudle.getSwitch2(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG2));
         setTimeStyle(FLAG3, TimeMoudle.getSwitch3(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG3));
         setTimeStyle(FLAG4, TimeMoudle.getSwitch4(), MainActivity.registerTime.getregisterTime(ReceiverAction.USER_TIME, FLAG4));
+        if (userDevice.getDeviceSocketFlag() == null)
+            return;
+        nameVules = userDevice.getDeviceSocketFlag().split(",");
+        socket1Title.setText(nameVules[0]);
+        socket2Title.setText(nameVules[1]);
+        socket3Title.setText(nameVules[2]);
+        socket4Title.setText(nameVules[3]);
     }
 
     /**
@@ -201,7 +251,51 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
                 case R.id.switchCell5:
                     setTime(FLAG4);
                     return;
+                case R.id.socketPic1:
+                    if (nameVules[0] == null)
+                        nameVules[0] = getResources().getString(R.string.SocketDialogText1);
+                    showDialog(FLAG1Pic, nameVules[0]);
+                    return;
+                case R.id.socketPic2:
+                    if (nameVules[1] == null)
+                        nameVules[1] = getResources().getString(R.string.SocketDialogText2);
+                    showDialog(FLAG2Pic, nameVules[1]);
+                    return;
+                case R.id.socketPic3:
+                    if (nameVules[2] == null)
+                        nameVules[2] = getResources().getString(R.string.SocketDialogText3);
+                    showDialog(FLAG3Pic, nameVules[2]);
+                    return;
+                case R.id.socketPic4:
+                    if (nameVules[3] == null)
+                        nameVules[3] = getResources().getString(R.string.SocketDialogText4);
+                    showDialog(FLAG4Pic, nameVules[3]);
+                    return;
             }
+        }
+    }
+
+    private MyShareDialog myShareDialog = null;
+
+    /**
+     * 显示弹出框并且设置写入数据库
+     *
+     * @param position 标志
+     * @param data     输入框的数据
+     */
+    private void showDialog(int position, String data) {
+        FLAGData1 = socket1Title.getText().toString();
+        FLAGData2 = socket2Title.getText().toString();
+        FLAGData3 = socket3Title.getText().toString();
+        FLAGData4 = socket4Title.getText().toString();
+        myShareDialog = new MyShareDialog(context, R.style.dialog);
+        myShareDialog.DialogClick(this, position);
+        myShareDialog.setEditHint(getResources().getString(R.string.SocketDialogHint));
+        if (data != null)
+            myShareDialog.setEditText(data);
+        //如果是真实设置才允许设置名称
+        if (STATUS) {
+            myShareDialog.show();
         }
     }
 
@@ -532,15 +626,58 @@ public class SocketSwitchFragment extends Fragment implements UDPInterface.Handl
 
     @Override
     public void Enter(int FLAG) {
-        number = myTimeDialog.getNumber();
-        //注册时间  注册开始监听
-        MainActivity.registerTime.registerTime(number, ReceiverAction.USER_TIME, FLAG, this);
-        setTimeStyle(FLAG, number, true);
-        myTimeDialog.dismiss();
+        if (FLAG == FLAG1 || FLAG == FLAG2 || FLAG == FLAG3 || FLAG == FLAG4) {
+            number = myTimeDialog.getNumber();
+            //注册时间  注册开始监听
+            MainActivity.registerTime.registerTime(number, ReceiverAction.USER_TIME, FLAG, this);
+            setTimeStyle(FLAG, number, true);
+            myTimeDialog.dismiss();
+        } else {
+            SocketName = myShareDialog.getEditText();
+            setSocketName(FLAG, SocketName);
+            //将名称设置到数据库
+            myShareDialog.dismiss();
+        }
     }
 
     @Override
     public void Cancal(int FLAG) {
-        myTimeDialog.dismiss();
+        if (FLAG == FLAG1 || FLAG == FLAG2 || FLAG == FLAG3 || FLAG == FLAG4) {
+            myTimeDialog.dismiss();
+        } else {
+            myShareDialog.dismiss();
+        }
+    }
+
+    /**
+     * 设置每个插孔的名称
+     *
+     * @param FLAG
+     * @param data
+     */
+    private void setSocketName(int FLAG, String data) {
+        switch (FLAG) {
+            case FLAG1Pic:
+                socket1Title.setText(data);
+                FLAGData1 = data;
+                break;
+            case FLAG2Pic:
+                socket2Title.setText(data);
+                FLAGData2 = data;
+                break;
+            case FLAG3Pic:
+                socket3Title.setText(data);
+                FLAGData3 = data;
+                break;
+            case FLAG4Pic:
+                socket4Title.setText(data);
+                FLAGData4 = data;
+                break;
+        }
+        String name = FLAGData1 + "," + FLAGData2 + "," + FLAGData3 + "," + FLAGData4;
+        //将数据更新到数据库
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("deviceSocketFlag", name);
+        new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "deviceID = ?", new String[]{userDevice.getDeviceID()});
     }
 }

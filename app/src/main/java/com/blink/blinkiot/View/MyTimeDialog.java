@@ -12,6 +12,7 @@ import com.example.administrator.data_sdk.SystemUtil.TimeTool;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
 import com.blink.blinkiot.R;
+import com.example.administrator.ui_sdk.View.MyDialog;
 
 /**
  * Created by Administrator on 2016/8/4.
@@ -79,8 +80,7 @@ public class MyTimeDialog extends Dialog implements NumberPicker.OnValueChangeLi
         numberPicker = (NumberPicker) view.findViewById(R.id.numberPicker);
         numberPicker1 = (NumberPicker) view.findViewById(R.id.numberPicker1);
 
-        DensityUtil.setRelWidth(timeRelayout , BaseActivity.width / 3 * 2);
-
+        DensityUtil.setRelWidth(timeRelayout, BaseActivity.width / 3 * 2);
 
 
         NumberPicker();
@@ -122,14 +122,14 @@ public class MyTimeDialog extends Dialog implements NumberPicker.OnValueChangeLi
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.timeCancal:
-                if (myTimeClick == null)
+                if (dialogClick == null)
                     this.dismiss();
                 else
-                    myTimeClick.Cancal(position);
+                    dialogClick.Cancal(position);
                 break;
             case R.id.timeEnter:
-                if (myTimeClick != null)
-                    myTimeClick.Enter(position);
+                if (dialogClick != null)
+                    dialogClick.Enter(position);
                 break;
             case R.id.timeRelayout:
                 this.dismiss();
@@ -137,16 +137,16 @@ public class MyTimeDialog extends Dialog implements NumberPicker.OnValueChangeLi
         }
     }
 
-    private MyTimeClick myTimeClick = null;
+    private DialogClick dialogClick = null;
     private int position = 0;
 
     /**
      * 对话框点击事件 的外部接口
      *
-     * @param myTimeClick
+     * @param dialogClick
      */
-    public void DialogClick(MyTimeClick myTimeClick , int position) {
-        this.myTimeClick = myTimeClick;
+    public void DialogClick(DialogClick dialogClick, int position) {
+        this.dialogClick = dialogClick;
         this.position = position;
     }
 
@@ -176,18 +176,5 @@ public class MyTimeDialog extends Dialog implements NumberPicker.OnValueChangeLi
                 number[1] = String.valueOf(newVal);
                 break;
         }
-    }
-
-    /**
-     * 点击事件的接口
-     */
-    public interface MyTimeClick {
-
-
-        public void Enter(int position);
-
-
-        public void Cancal(int position);
-
     }
 }

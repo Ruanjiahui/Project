@@ -52,6 +52,11 @@
     <string name="DowningNow">现在正在下载请等待..</string>
     <string name="StartDown">开始下载</string>
     <string name="MD5Fail">MD5检验不对安装失败，请到官网重新下载</string>
+    <string name="SocketDialogHint">请输入插孔的名称</string>
+    <string name="SocketDialogText1">S1</string>
+    <string name="SocketDialogText2">S2</string>
+    <string name="SocketDialogText3">S3</string>
+    <string name="SocketDialogText4">S4</string>
 
 
     <!-- 首页的文字-->
@@ -91,12 +96,15 @@
     <string name="AirkissSetting">配置</string>
     <string name="Edit">编辑</string>
     <string name="Delete">删除</string>
+    <string name="share">分享</string>
     <string name="EditTitle">请输入标题</string>
     <string name="EditSubTitle">请输入副标题</string>
     <string name="SelectScene">选择场景</string>
     <string name="LoginTitle">登录</string>
     <string name="unLogin">我只想做个过路者>></string>
     <string name="WXToast">正在登陆微信</string>
+    <string name="ShareDevice">分享设备</string>
+    <string name="ShareEditHint">请输入微信分享码</string>
 
     <!-- 编辑页面的文字-->
     <string name="AddSceneName">添加</string>

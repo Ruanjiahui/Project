@@ -9,7 +9,7 @@ android {
         minSdkVersion 16
         targetSdkVersion 23
         versionCode 1
-        versionName "1.0.4"
+        versionName "1.0.0"
     }
     buildTypes {
         release {
@@ -18,17 +18,21 @@ android {
         }
     }
 
-    task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
-        destinationDir file("$projectDir/libs")
-        baseName "Native"
-        extension "jar"
-        from fileTree(dir: "libs", include: "**/*.so")
-        into "lib"
+    defaultConfig {
+        multiDexEnabled true
     }
 
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn(nativeLibsToJar)
-    }
+//    task nativeLibsToJar(type: Zip, description: "create a jar archive of the native libs") {
+//        destinationDir file("$projectDir/libs")
+//        baseName "Native"
+//        extension "jar"
+//        from fileTree(dir: "libs", include: "**/*.so")
+//        into "lib"
+//    }
+//
+//    tasks.withType(JavaCompile) {
+//        compileTask -> compileTask.dependsOn(nativeLibsToJar)
+//    }
 
 }
 
@@ -47,4 +51,6 @@ dependencies {
     compile files('libs/AMap_Location_V2.7.0_20160726.jar')
     compile files('libs/weibosdkcore_release.jar')
     compile files('libs/weixinSDK.jar')
+    compile files('libs/Native.jar')
+    compile project(':PushSDK')
 }

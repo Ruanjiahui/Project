@@ -567,8 +567,10 @@ public class RefreshSideListView extends ListView {
         //获取侧滑菜单
         sideWidth = 0;
         //获取侧滑菜单的宽度
-        for (int i = 1; i < itemChildView.getChildCount(); i++)
-            sideWidth += itemChildView.getChildAt(i).getLayoutParams().width;
+        for (int i = 1; i < itemChildView.getChildCount(); i++) {
+            if (itemChildView.getChildAt(i).getVisibility() == VISIBLE)
+                sideWidth += itemChildView.getChildAt(i).getLayoutParams().width;
+        }
         //获取显示界面的布局LinearLayout
         itemLinearLayout = (LinearLayout.LayoutParams) itemChildView.getChildAt(0).getLayoutParams();
         //重写显示界面的宽度

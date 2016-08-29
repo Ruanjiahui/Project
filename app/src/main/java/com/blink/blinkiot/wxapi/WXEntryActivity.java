@@ -2,17 +2,14 @@ package com.blink.blinkiot.wxapi;
 
 
 import com.blink.blinkiot.Moudle.User;
-import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.HTTP.HttpURL;
 import com.blink.blinkiot.Other.System.FileURL;
-import com.blink.blinkiot.Other.Weixin.Constants;
-import com.blink.blinkiot.Other.Weixin.Token;
+import com.blink.blinkiot.Other.Weixin.Login.Constants;
+import com.blink.blinkiot.Other.Weixin.Login.Token;
 import com.blink.blinkiot.R;
-import com.blink.blinkiot.Start.ActivityCode;
 import com.example.administrator.HttpCode;
 import com.example.administrator.Interface.HttpFileResult;
 import com.example.administrator.Interface.HttpResult;
-import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.FileUtil.FileTool;
 import com.example.administrator.http_sdk.HTTP;
 import com.example.administrator.ui_sdk.Applications;
@@ -29,10 +26,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.RelativeLayout;
-import android.widget.Toast;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 public class WXEntryActivity extends BaseActivity implements IWXAPIEventHandler, HttpResult.HttpString, HttpFileResult {
 

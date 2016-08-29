@@ -193,6 +193,7 @@ public class FragmentControl {
         item.setHomeRightImage(RightImage);
         item.setHomeSubText(subtitile);
         item.setHomeText(title);
+        item.setShare(true);
         return item;
     }
 
@@ -201,6 +202,7 @@ public class FragmentControl {
         item.setHomeText(title);
         item.setHomeImage(drawable);
         item.setHomeRightImage(context.getResources().getDrawable(R.mipmap.right));
+        item.setShare(false);
         return item;
     }
 

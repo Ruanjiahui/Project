@@ -1,7 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
 import android.app.Activity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -9,11 +8,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
-import com.blink.blinkiot.Moudle.User;
-import com.blink.blinkiot.Other.Weixin.Constants;
+import com.blink.blinkiot.Other.Weixin.Login.Constants;
 import com.blink.blinkiot.Start.ActivityCode;
 import com.blink.blinkiot.Start.MainActivity;
 import com.example.administrator.data_sdk.CommonIntent;

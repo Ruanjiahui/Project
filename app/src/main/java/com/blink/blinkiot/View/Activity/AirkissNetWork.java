@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.administrator.data_sdk.CommonIntent;
@@ -45,6 +46,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
     private boolean isClick = false;
 
     private AirkissConfig airkissConfig = null;
+    private RelativeLayout airkissRelative = null;
 
     private ArrayList<String> listMac = null;
 
@@ -77,6 +79,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         wifiSSID = (EditText) view.findViewById(R.id.wifiSSID);
         wifiPassword = (EditText) view.findViewById(R.id.wifiPassword);
         wifiConn = (CircleLoading) view.findViewById(R.id.wifiConn);
+        airkissRelative = (RelativeLayout) view.findViewById(R.id.airkissRelative);
 
         //判断当前是不是wifi状态
         if (SystemTool.isNetState(context) == NetWork.WIFI)
@@ -88,6 +91,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
 
         wifiSSID.addTextChangedListener(this);
         wifiPassword.addTextChangedListener(this);
+        airkissRelative.setOnClickListener(this);
 
 
         wifiConn.setTime(65000);
@@ -96,6 +100,16 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         wifiConn.setClick(this);
 
         ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
+    }
+
+
+    @Override
+    public void Click(View v) {
+        switch (v.getId()) {
+            case R.id.airkissRelative:
+                SystemTool.CloseBroad(this);
+                break;
+        }
     }
 
     /**

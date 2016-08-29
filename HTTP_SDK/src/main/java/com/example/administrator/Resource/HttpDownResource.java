@@ -48,7 +48,9 @@ public class HttpDownResource extends HttpDown {
             int res = urlConnection.getResponseCode();
             if (res == 200) {
                 httpReadSource = new HttpReadSource(urlConnection);
-                return httpReadSource.getResultByte();
+                byte[] result = httpReadSource.getResultByte();
+                urlConnection.disconnect();
+                return result;
             }
         } catch (IOException e) {
             return (HttpCode.TIMEOUT + "").getBytes();

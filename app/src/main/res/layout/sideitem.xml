@@ -146,7 +146,7 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/Edit"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/White" />
 
     <TextView
         android:id="@+id/delete"
@@ -157,6 +157,19 @@
         android:paddingLeft="20dp"
         android:paddingRight="20dp"
         android:text="@string/Delete"
-        android:textColor="@android:color/white" />
+        android:textColor="@color/White" />
+
+
+    <TextView
+        android:id="@+id/share"
+        android:layout_width="80dp"
+        android:layout_height="match_parent"
+        android:background="@color/Oragle"
+        android:gravity="center"
+        android:paddingLeft="20dp"
+        android:paddingRight="20dp"
+        android:text="@string/share"
+        android:visibility="gone"
+        android:textColor="@color/White" />
 
 </LinearLayout>

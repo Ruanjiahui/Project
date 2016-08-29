@@ -36,7 +36,7 @@ public class ImageTool {
                 bitmap.getHeight(), Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(target);
         RectF rect = new RectF(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        canvas.drawRoundRect(rect, 200, 200, paint);
+        canvas.drawRoundRect(rect, 400, 400, paint);
         paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(bitmap, 0, 0, paint);
 

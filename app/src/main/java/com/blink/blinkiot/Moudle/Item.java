@@ -14,6 +14,7 @@ public class Item {
     private Drawable Logo = null;
     private int height = 0;
     private String RightTitle = null;
+    private boolean isShare = false;
 
     private Drawable gridImage = null;
     private String gridText = null;
@@ -40,6 +41,14 @@ public class Item {
 
     private String languageText = null;
     private boolean languageRadio = false;
+
+    public boolean isShare() {
+        return isShare;
+    }
+
+    public void setShare(boolean share) {
+        isShare = share;
+    }
 
     public boolean isLanguageRadio() {
         return languageRadio;

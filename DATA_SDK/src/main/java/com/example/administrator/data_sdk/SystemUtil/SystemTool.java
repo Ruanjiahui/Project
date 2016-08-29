@@ -1,5 +1,6 @@
 package com.example.administrator.data_sdk.SystemUtil;
 
+import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -19,6 +20,8 @@ import android.text.format.Formatter;
 import android.util.Base64;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
@@ -383,5 +386,18 @@ public class SystemTool {
     public static Locale getSystemLanguage(Context context) {
         Locale locale = context.getResources().getConfiguration().locale;
         return locale;
+    }
+
+    /**
+     * 关闭软键盘
+     *
+     * @param activity
+     */
+    public static void CloseBroad(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(activity.INPUT_METHOD_SERVICE);
+        View v = activity.getWindow().peekDecorView();
+        if (imm.isActive()) {
+            imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+        }
     }
 }

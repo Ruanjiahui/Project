@@ -5,6 +5,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Build;
 import android.os.Handler;
@@ -154,7 +155,7 @@ public class CircleLoading extends View {
 
         paintWhite.setAntiAlias(true);                       //设置画笔为无锯齿
         paintWhite.setColor(getResources().getColor(R.color.White));
-        paintWhite.setTextSize(DensityUtil.dip2px(context , textSize));
+        paintWhite.setTextSize(DensityUtil.dip2px(context, textSize));
 
         paint.setAntiAlias(true);                       //设置画笔为无锯齿
         paint.setColor(getResources().getColor(R.color.Red));                    //设置画笔颜色
@@ -177,8 +178,12 @@ public class CircleLoading extends View {
         drawA();
         drawC();
 
-        canvas.drawText(msg , cX - textSize * msg.length() / 2, cY + DensityUtil.dip2px(context , textSize / 2) , paintWhite);
+        Rect bounds = new Rect();
+        paintWhite.getTextBounds(msg, 0, msg.length(), bounds);
+        canvas.drawText(msg, getMeasuredWidth() / 2 - bounds.width() / 2, cY + DensityUtil.dip2px(context, textSize / 2), paintWhite);
+
     }
+
     private int textSize = 14;
 
     private void drawC() {
@@ -227,7 +232,8 @@ public class CircleLoading extends View {
 
 
     private String msg = null;
-    public void setTextCircle(String msg){
+
+    public void setTextCircle(String msg) {
         this.msg = msg;
     }
 

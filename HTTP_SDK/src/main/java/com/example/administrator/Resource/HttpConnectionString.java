@@ -8,6 +8,7 @@ import com.example.administrator.HttpCode;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.URL;
 
 /**
  * Created by Administrator on 2016/2/15.
@@ -33,14 +34,16 @@ public class HttpConnectionString extends HttpRequest {
     public String GET(String uri) {
         String result = null;
         try {
-            httpConnectSource = new HttpConnectSource(uri);
+            URL url = new URL(uri);
+            HttpURLConnection httpURLConnection = (HttpURLConnection) url.openConnection();
             // 将默认设置请求方式POST改成GET
-            httpConnectSource.setRequestMethod("GET");
-            connection = httpConnectSource.getHttpURLConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.setConnectTimeout(20000);
+            httpURLConnection.setReadTimeout(20000);//设置请求时间
 
 //            connection.connect();//发送请求链接
-            if (connection.getResponseCode() == 200) {
-                httpReadSource = new HttpReadSource(connection);
+            if (httpURLConnection.getResponseCode() == 200) {
+                httpReadSource = new HttpReadSource(httpURLConnection);
                 return httpReadSource.getResult();
             }
         } catch (IOException e) {
