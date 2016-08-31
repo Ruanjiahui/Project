@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.blink.blinkiot.Other.Adapter.LGAdapter;
+import com.blink.blinkiot.Other.UDP.ScanDevice;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
@@ -41,6 +42,7 @@ import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.DeviceCode;
 import com.blink.blinkiot.Other.System.NetWork;
 import com.blink.blinkiot.R;
+import com.example.ruan.udp_sdk.UDPConfig;
 
 import java.util.ArrayList;
 
@@ -92,6 +94,8 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
     public Context context = null;
     private Animation.AnimationListener animationListener = null;
 
+    private RelativeLayout deviceeditBack = null;
+
 
     /**
      * Start()
@@ -139,6 +143,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         bottomListView = (ListView) view.findViewById(R.id.bottomListView);
         bottomText = (TextView) view.findViewById(R.id.bottomText);
         editDelete = (ImageView) view.findViewById(R.id.editDelete);
+        deviceeditBack = (RelativeLayout) view.findViewById(R.id.deviceeditBack);
 
 
         bottomMain.setVisibility(View.GONE);
@@ -222,12 +227,13 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
                 userDevice.setDeviceName(title);
                 userDevice.setDeviceRemarks(subtitle);
                 userDevice.setSceneID(sceneID);
+                deviceeditBack.setVisibility(View.VISIBLE);
 
                 //配置完网络这个是否使用设备编辑，这个时候应当扫描周边设备获取在线设备
                 if (tableName.equals("new")) {
                     if (SystemTool.isNetState(context) == NetWork.WIFI)
-//                        //扫描局域网的设备
-                        new UdpOpera(this).UDPDeviceScan(this, FLAG);
+                        //扫描周边的设备
+                        new ScanDevice().Scanner(UDPConfig.PORT, FLAG, this, UDPConfig.count);
                     else
                         Toast.makeText(context, getResources().getString(R.string.ConnectWifi), Toast.LENGTH_SHORT).show();
                 } else if (tableName.equals("edit")) {
@@ -351,6 +357,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
             userDevice.setDeviceOnlineStatus(DeviceCode.WIFI);
             Exists(userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         }
+        deviceeditBack.setVisibility(View.GONE);
     }
 
 
@@ -362,6 +369,7 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"}, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
         Applications.getInstance().removeOneActivity(activity);
+        deviceeditBack.setVisibility(View.GONE);
     }
 
     /**
@@ -369,14 +377,10 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
      *
      * @param position
      */
-    private boolean visiable = false;
-
     @Override
     public void Error(int position, int error) {
-        if (!visiable) {
-            Toast.makeText(context, getResources().getString(R.string.ConnectTimeout), Toast.LENGTH_SHORT);
-            visiable = true;
-        }
+        deviceeditBack.setVisibility(View.GONE);
+        Toast.makeText(context, getResources().getString(R.string.ConnectTimeout), Toast.LENGTH_SHORT);
     }
 
 

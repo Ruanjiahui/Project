@@ -1,7 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,10 +20,8 @@ import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
 import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
-import com.blink.blinkiot.Other.UDP.UDPConfig;
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.blink.blinkiot.R;
-import com.example.administrator.ui_sdk.MyCircleLoading;
-import com.example.administrator.ui_sdk.View.CircleLoading;
 
 import java.util.ArrayList;
 
@@ -47,6 +44,8 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     //这个获取扫描的对象数据
     private String data = null;
 
+    private RelativeLayout configListBack = null;
+
     /**
      * Start()
      */
@@ -66,6 +65,7 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
         configList = (ListView) view.findViewById(R.id.configList);
         configNet = view.findViewById(R.id.configNet);
         circlebut = (TextView) view.findViewById(R.id.circlebut);
+        configListBack = (RelativeLayout) view.findViewById(R.id.configListBack);
 
 
         configList.setOnItemClickListener(this);
@@ -84,6 +84,7 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
     protected void onResume() {
         super.onResume();
 
+        configListBack.setVisibility(View.VISIBLE);
         ListObj = null;
         ListObj = new DatabaseOpera(context).DataQuerys(DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, null, "", null, "", "", "", "", UserDevice.class, true);
 
@@ -115,6 +116,7 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
      */
     @Override
     public void getMac(int position, Object[] objects) {
+        configListBack.setVisibility(View.GONE);
         isMac(objects);
     }
 
@@ -154,7 +156,14 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
      */
     @Override
     public void Error(int position, int error) {
-        Toast.makeText(context, getResources().getString(R.string.DeviceTimeout), Toast.LENGTH_SHORT).show();
+        if (ConfigList.context != null) {
+            if (adapter != null) {
+                list.clear();
+                adapter.RefreshData(list);
+            }
+            Toast.makeText(context, getResources().getString(R.string.DeviceTimeout), Toast.LENGTH_SHORT).show();
+            configListBack.setVisibility(View.GONE);
+        }
     }
 
     /**

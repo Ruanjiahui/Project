@@ -1,5 +1,10 @@
 package com.example.ruan.udp_sdk.Thread;
 
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.example.ruan.udp_sdk.UDPListen;
 
 /**
@@ -22,21 +27,35 @@ public class UDPSend implements Runnable {
     }
 
     /**
+     * 这个方法是发送UDP调用的方法
+     *
+     * @param uSend 发送信息的接口
+     */
+    public UDPSend(UDPListen.UDPSend uSend, byte[] buffer) {
+        this.uSend = uSend;
+        this.buffer = buffer;
+    }
+
+    /**
      * Starts executing the active part of the class' code. This method is
      * called when a thread is started that has been created with a class which
      * implements {@code Runnable}.
      */
     @Override
     public void run() {
-        while (count > 0) {
-            try {
-                Thread.sleep(200);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            //每隔0.2发送一个
-            uSend.Send(buffer);
-            count--;
-        }
+        //每隔1秒发送一个
+        uSend.Send(buffer);
+
+        Message msg = new Message();
+        handler.sendMessage(msg);
     }
+
+
+    private Handler handler = new Handler(Looper.getMainLooper()) {
+
+        @Override
+        public void dispatchMessage(Message msg) {
+            uSend.SendReults();
+        }
+    };
 }

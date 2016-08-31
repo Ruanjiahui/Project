@@ -1,6 +1,7 @@
 package com.example.ruan.udp_sdk;
 
 import android.os.Message;
+import android.util.Log;
 
 import com.example.ruan.udp_sdk.Thread.MyTimerTask;
 import com.example.ruan.udp_sdk.Thread.UDPReviced;
@@ -20,15 +21,13 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
 
 
     private DatagramSocket datagramSocket = null;
-    private DatagramPacket indatagramPacket = null;
-    private DatagramPacket outdatagramPacket = null;
     private String IP = null;
     private int PORT = 0;
     private byte[] buffer = null;
     private int size = 5120;
     private Thread thread = null;
     private Timer timer = null;
-    private UDPListen.UDPHandler handler = null;
+    private UDPListen.UDPCallback callback = null;
     private int position = 0;
     private MyTimerTask myTimerTask = null;
 
@@ -38,12 +37,11 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
      */
     @Override
     protected void Connect() {
-        if (datagramSocket == null) {
-            try {
+        try {
+            if (datagramSocket == null)
                 datagramSocket = new DatagramSocket();
-            } catch (SocketException e) {
-                e.printStackTrace();
-            }
+        } catch (SocketException e) {
+            e.printStackTrace();
         }
     }
 
@@ -53,14 +51,12 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
      * @param IP     发送的IP
      * @param PORT   发送的端口
      * @param buffer 发送的数据
-     * @param count  发送的次数
      */
     @Override
-    protected void Send(String IP, int PORT, byte[] buffer, int count) {
+    protected void Send(String IP, int PORT, byte[] buffer) {
         this.IP = IP;
         this.PORT = PORT;
-        //每隔0.2发送一个
-        new Thread(new UDPSend(this, buffer, count)).start();
+        new Thread(new UDPSend(this, buffer)).start();
     }
 
 
@@ -68,15 +64,11 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
      * 这个方法是接收信息
      */
     @Override
-    protected void Revice(int position, UDPListen.UDPHandler handler) {
+    protected void Revice(int position, UDPListen.UDPCallback callback) {
         this.position = position;
-        this.handler = handler;
-        thread = new Thread(new UDPReviced(position, this, handler));
+        this.callback = callback;
+        thread = new Thread(new UDPReviced(position, this, callback));
         thread.start();
-        timer = new Timer();
-        myTimerTask = new MyTimerTask(this);
-        timer.schedule(myTimerTask, 3000, 3000);
-
     }
 
 
@@ -85,8 +77,10 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
      */
     @Override
     protected void unConnect() {
-        if (datagramSocket != null)
+        if (datagramSocket != null) {
             this.datagramSocket.close();
+            datagramSocket = null;
+        }
     }
 
     /**
@@ -102,21 +96,24 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
         //2 储存接收的地址
         //3 储存接收的端口
         Object[] objects = new Object[4];
-        try {
-            buffer = new byte[size];
-            indatagramPacket = new DatagramPacket(buffer, buffer.length);
-            datagramSocket.receive(indatagramPacket);
-            //获取返回数据的长度
-            objects[0] = buffer;
-            objects[1] = indatagramPacket.getLength();
-            objects[2] = indatagramPacket.getAddress().getHostName();
-            objects[3] = indatagramPacket.getPort();
-            if (timer != null) {
-                timer.cancel();
-                timer = null;
+        if (datagramSocket != null) {
+            try {
+                buffer = new byte[size];
+                DatagramPacket indatagramPacket = new DatagramPacket(buffer, buffer.length);
+                datagramSocket.receive(indatagramPacket);
+                //获取返回数据的长度
+                objects[0] = buffer;
+                objects[1] = indatagramPacket.getLength();
+                objects[2] = indatagramPacket.getAddress().getHostName();
+                objects[3] = indatagramPacket.getPort();
+                if (timer != null) {
+                    timer.cancel();
+                    timer = null;
+                }
+            } catch (IOException e) {
+                CloseUDP();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+            CloseUDP();
         }
         return objects;
     }
@@ -127,25 +124,41 @@ public class UDPBase extends UDPSource implements UDPListen.UDPReviced, UDPListe
     @Override
     public void Send(byte[] buffer) {
         try {
-            outdatagramPacket = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(IP), PORT);
+            DatagramPacket outdatagramPacket = new DatagramPacket(buffer, buffer.length, InetAddress.getByName(IP), PORT);
             datagramSocket.send(outdatagramPacket);
         } catch (Exception e) {
-            e.printStackTrace();
+            CloseUDP();
         }
     }
 
     @Override
+    public void SendReults() {
+        timer = new Timer();
+        myTimerTask = new MyTimerTask(this);
+        timer.schedule(myTimerTask, UDPConfig.time, UDPConfig.time);
+    }
+
+    @Override
     public void timerHandler(Message msg) {
-        if (thread != null)
-            thread.interrupt();
-        if (timer != null)
-            timer.cancel();
+        CloseUDP();
         //超时
-        handler.Error(position, 0);
+        callback.CallError(position, 0);
     }
 
     @Override
     public Message timerRun() {
         return new Message();
+    }
+
+
+    private void CloseUDP() {
+//        if (datagramSocket != null) {
+//            datagramSocket.close();
+//            datagramSocket = null;
+//        }
+        if (thread != null)
+            thread.interrupt();
+        if (timer != null)
+            timer.cancel();
     }
 }

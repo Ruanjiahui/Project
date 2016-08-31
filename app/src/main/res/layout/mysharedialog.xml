@@ -50,6 +50,7 @@
             android:id="@+id/shareCancal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/button_cancal"
             android:gravity="center"
@@ -61,11 +62,12 @@
             android:id="@+id/shareEnter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/button_enter"
             android:gravity="center"
             android:text="@string/center"
-            android:textColor="@color/White"
+            android:textColor="@color/Blue"
             android:textSize="15sp" />
 
     </LinearLayout>

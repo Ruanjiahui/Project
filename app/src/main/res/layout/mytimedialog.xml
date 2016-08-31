@@ -34,16 +34,19 @@
         android:layout_height="50dp"
         android:layout_below="@id/timePicker"
         android:layout_marginTop="20dp"
-        android:orientation="horizontal">
+        android:background="@drawable/circlebottomback"
+        android:orientation="horizontal"
+        android:paddingTop="1dp">
 
         <TextView
             android:id="@+id/timeCancal"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginRight="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/button_cancal"
             android:gravity="center"
-            android:text="取消"
+            android:text="@string/cancal"
             android:textColor="@color/Blue"
             android:textSize="14sp" />
 
@@ -51,10 +54,11 @@
             android:id="@+id/timeEnter"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="0.5dp"
             android:layout_weight="1"
             android:background="@drawable/button_enter"
             android:gravity="center"
-            android:text="确定"
+            android:text="@string/center"
             android:textColor="@color/White"
             android:textSize="14sp" />
 

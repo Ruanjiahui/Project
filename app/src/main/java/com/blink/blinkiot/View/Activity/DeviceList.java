@@ -1,7 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -18,7 +17,7 @@ import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
 import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
-import com.blink.blinkiot.Other.UDP.UDPConfig;
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.blink.blinkiot.R;
 
 import java.util.ArrayList;

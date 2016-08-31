@@ -2,6 +2,7 @@ package com.example.ruan.udp_sdk.Thread;
 
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import com.example.ruan.udp_sdk.UDPListen;
 
@@ -11,19 +12,19 @@ import com.example.ruan.udp_sdk.UDPListen;
  */
 public class UDPReviced implements Runnable {
     private UDPListen.UDPReviced uReviced = null;
-    private UDPListen.UDPHandler uHandler = null;
+    private UDPListen.UDPCallback callback = null;
     private int position = 0;
 
     /**
      * 这个方法是接收信息调用的方法
      *
      * @param uReviced 接收信息的接口
-     * @param uHandler 处理接收信息的接口
+     * @param callback 处理接收信息的接口
      */
-    public UDPReviced(int position , UDPListen.UDPReviced uReviced, UDPListen.UDPHandler uHandler) {
+    public UDPReviced(int position, UDPListen.UDPReviced uReviced, UDPListen.UDPCallback callback) {
         this.position = position;
         this.uReviced = uReviced;
-        this.uHandler = uHandler;
+        this.callback = callback;
     }
 
     /**
@@ -47,7 +48,7 @@ public class UDPReviced implements Runnable {
 
         @Override
         public void dispatchMessage(Message msg) {
-            uHandler.Handler(position , (Object[]) msg.obj);
+            callback.CallSuccess(position, (Object[]) msg.obj);
         }
     };
 }

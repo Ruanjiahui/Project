@@ -1,8 +1,11 @@
 package com.blink.blinkiot.Other.UDP;
 
 
+import android.util.Log;
+
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
 import com.example.ruan.udp_sdk.UDP;
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.example.ruan.udp_sdk.UDPListen;
 import com.blink.blinkiot.Interface.UDPInterface;
 
@@ -22,15 +25,14 @@ public class ScanDevice extends UDP implements UDPListen.UDPHandler {
      * 实例化对象
      */
     public ScanDevice() {
-        super();
         this.mac = new ArrayList<>();
     }
 
 
-    public void Scanner(int PORT, String msg, UDPInterface.HandlerMac handlerMac , int count) {
+    public void Scanner(int PORT, String msg, UDPInterface.HandlerMac handlerMac, int count) {
         this.handlerMac = handlerMac;
+        uSend(UDPConfig.IP, PORT, msg.getBytes(), count);
         uReviced(1, this);
-        uSend(UDPConfig.IP, PORT, msg.getBytes() , count);
     }
 
     /**
@@ -67,7 +69,7 @@ public class ScanDevice extends UDP implements UDPListen.UDPHandler {
         //判断链表里面是不是存在相同的mac地址，不存在则添加，存在则不操作
         byte[] buffer = (byte[]) objects[0];
         objects[1] = 17;
-        int lenght = (int)objects[1];
+        int lenght = (int) objects[1];
         if (isEmpty(buffer, lenght)) {
             if (SystemTool.isMac(new String(buffer, 0, lenght))) {
                 handlerMac.getMac(position, objects);

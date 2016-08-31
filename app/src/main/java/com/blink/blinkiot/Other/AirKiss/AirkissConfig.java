@@ -32,9 +32,9 @@ public class AirkissConfig {
         this.airKissCallBack = airKissCallBack;
 
         try {
-            Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 60000L, 0, 5);
             C2JavaExDevice.getInstance().setHandler(this.handler);
-        }catch (Exception e){
+            Java2CExDevice.startAirKissWithInter(wifiPassword, wifiSSID, new byte[]{}, 45000L, 0, 5);
+        } catch (Exception e) {
             airKissCallBack.Error(-1);
         }
 
@@ -59,11 +59,12 @@ public class AirkissConfig {
                 case 1:
             }
             StopAirKiss();
-            if (msg.arg1 == 0)
+            if (msg.arg1 == 0) {
                 airKissCallBack.Result(msg.what);
+                return true;
+            }
             airKissCallBack.Error(msg.what);
             return true;
         }
     });
-
 }

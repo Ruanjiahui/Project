@@ -1,5 +1,6 @@
 package com.blink.blinkiot.Controllar;
 
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.example.administrator.Interface.HttpInterface;
 import com.blink.blinkiot.Interface.UDPInterface;
 import com.blink.blinkiot.Other.DeviceCode;
@@ -34,7 +35,7 @@ public class CallBack {
             case DeviceCode.WIFI:
                 //通过udp进行控制
                 //防止丢包，所以发送5次数据包
-                controlDevice.UDPControl(FLAG, FormatData.getUDP(data), handlerMac, 5);
+                controlDevice.UDPControl(FLAG, FormatData.getUDP(data), handlerMac, UDPConfig.controlCount);
                 break;
             case DeviceCode.CLOUD:
                 //通过云端进行控制

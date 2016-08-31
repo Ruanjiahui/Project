@@ -17,18 +17,17 @@ public abstract class UDPSource{
      * @param IP            发送的IP
      * @param PORT          发送的端口
      * @param buffer        发送的数据
-     * @param count         发送的次数
      */
-    protected abstract void Send(String IP , int PORT , byte[] buffer , int count);
+    protected abstract void Send(String IP , int PORT , byte[] buffer);
 
 
     /**
      * 这个方法是接收信息
      *
      * @param position  请求的标示
-     * @param handler   返回数据进行更新
+     * @param callback   返回数据进行更新
      */
-    protected abstract void Revice(int position , UDPListen.UDPHandler handler);
+    protected abstract void Revice(int position , UDPListen.UDPCallback callback);
 
 
     /**

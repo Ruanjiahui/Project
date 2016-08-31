@@ -12,18 +12,24 @@ public class MyWebViewClient extends WebViewClient {
 
     /**
      * 加载网页直接调用内核浏览器
+     *
      * @param view
      * @param url
      * @return
      */
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        view.loadUrl(url);
-        return true;
+//        if (url.startsWith("http:") || url.startsWith("https:")) {
+//            return false;
+//        }
+//        view.loadUrl(url);
+//        return true;
+        return super.shouldOverrideUrlLoading(view, url);
     }
 
     /**
      * 控制手机按钮调用方法
+     *
      * @param view
      * @param event
      * @return
@@ -35,6 +41,7 @@ public class MyWebViewClient extends WebViewClient {
 
     /**
      * 页面加载时调用的方法
+     *
      * @param view
      * @param url
      * @param favicon
@@ -46,6 +53,7 @@ public class MyWebViewClient extends WebViewClient {
 
     /**
      * 页面加载完成是加载的方法
+     *
      * @param view
      * @param url
      */

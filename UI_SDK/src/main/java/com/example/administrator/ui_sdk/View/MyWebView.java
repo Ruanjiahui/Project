@@ -47,12 +47,12 @@ public class MyWebView extends WebView {
     private void inti() {
         this.setWebViewClient(new MyWebViewClient());
         this.setWebChromeClient(new MyWebChromeClient(myWebClient));
-
         //添加链接
         this.loadUrl(url);
         settings = this.getSettings();
         //设置webview支持javascript
         settings.setJavaScriptEnabled(true);
+
         // 设置可以使用localStorage
         settings.setDomStorageEnabled(true);
         // 应用可以有数据库

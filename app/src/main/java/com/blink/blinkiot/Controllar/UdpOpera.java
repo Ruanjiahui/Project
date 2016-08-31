@@ -6,7 +6,7 @@ import com.example.ruan.udp_sdk.UDP;
 import com.blink.blinkiot.Interface.UDPInterface;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
 import com.example.ruan.udp_sdk.UDPListen.UDPHandler;
-import com.blink.blinkiot.Other.UDP.UDPConfig;
+import com.example.ruan.udp_sdk.UDPConfig;
 
 /**
  * Created by Administrator on 2016/7/19.
@@ -26,7 +26,7 @@ public class UdpOpera implements UDPHandler {
      *
      * @param handlerMac
      */
-    public void UDPDeviceScan(UDPInterface.HandlerMac handlerMac , String data) {
+    public void UDPDeviceScan(UDPInterface.HandlerMac handlerMac, String data) {
         //计时器，广播没一秒发送一次，总共发送5次
         new ScanDevice().Scanner(UDPConfig.PORT, data, handlerMac, UDPConfig.count);
     }
@@ -77,6 +77,5 @@ public class UdpOpera implements UDPHandler {
      */
     @Override
     public void Error(int position, int error) {
-
     }
 }

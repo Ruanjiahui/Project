@@ -2,7 +2,6 @@ package com.blink.blinkiot.View.Activity;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -24,7 +23,7 @@ import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
 import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.System.NetWork;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
-import com.blink.blinkiot.Other.UDP.UDPConfig;
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.blink.blinkiot.R;
 
 import java.util.ArrayList;
@@ -94,7 +93,7 @@ public class AirkissNetWork extends BaseActivity implements TextWatcher, AirKiss
         airkissRelative.setOnClickListener(this);
 
 
-        wifiConn.setTime(65000);
+        wifiConn.setTime(50000);
         wifiConn.setSweepAngle(360);
         wifiConn.setTextCircle(context.getResources().getString(R.string.AirkissSetting));
         wifiConn.setClick(this);

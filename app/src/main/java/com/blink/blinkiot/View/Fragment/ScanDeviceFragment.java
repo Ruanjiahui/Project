@@ -12,14 +12,12 @@ import android.widget.TextView;
 
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
-import com.example.administrator.ui_sdk.MyCircleLoading;
-import com.example.administrator.ui_sdk.View.CircleLoading;
 import com.example.administrator.ui_sdk.View.RefreshSideListView;
 import com.blink.blinkiot.Interface.UDPInterface;
 import com.blink.blinkiot.Moudle.Item;
 import com.blink.blinkiot.Other.Adapter.SideListViewAdapter;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
-import com.blink.blinkiot.Other.UDP.UDPConfig;
+import com.example.ruan.udp_sdk.UDPConfig;
 import com.blink.blinkiot.R;
 
 import java.util.ArrayList;
