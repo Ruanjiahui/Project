@@ -142,6 +142,7 @@ public class Fragment1 extends Fragment implements View.OnClickListener, ItemCli
         return view;
     }
 
+
     @Override
     public void onResume() {
         super.onResume();

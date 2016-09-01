@@ -64,10 +64,8 @@ public class Applications extends Application {
     }
 
     public void removeOthers(Activity activity) {
-        Log.e("Ruan" , list.toString());
         for (int i = 0; i < list.size(); i++) {
             if (list.get(i) != activity) {
-                Log.e("Ruan" , list.get(i) + "--");
                 list.get(i).finish();
                 list.remove(i);
             }

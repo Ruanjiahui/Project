@@ -1,5 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
@@ -37,12 +38,15 @@ public class DeviceType extends BaseActivity implements ViewPager.OnPageChangeLi
     private TextView qqRight;
     private TextView deviceTypeShare = null;
 
+    public static Activity activity = null;
+
 
     /**
      * Start()
      */
     @Override
     public void init() {
+        activity = (Activity) context;
         view = LayoutInflater.from(context).inflate(R.layout.device, null);
 
         setTileBar(0);

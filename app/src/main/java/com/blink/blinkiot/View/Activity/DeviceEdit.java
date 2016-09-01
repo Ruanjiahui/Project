@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
+import com.blink.blinkiot.Start.MainActivity;
 import com.example.administrator.data_sdk.CommonIntent;
 import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.SystemUtil.SystemTool;
@@ -368,6 +369,10 @@ public class DeviceEdit extends BaseActivity implements TextWatcher, UDPInterfac
         userDevice.setUserID("123456");
         ContentValues contentValues = DataHandler.getContentValue(context, UserDevice.class, userDevice, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName);
         databaseOpera.DataInert(db, Table_Name, contentValues, true, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"}, "deviceMac = ? and userID = ?", new String[]{userDevice.getDeviceMac(), "123456"});
+        if (tableName.equals("new")) {
+            Applications.getInstance().removeOneActivity(DeviceList.activity);
+            Applications.getInstance().removeOneActivity(DeviceType.activity);
+        }
         Applications.getInstance().removeOneActivity(activity);
         deviceeditBack.setVisibility(View.GONE);
     }

@@ -22,6 +22,7 @@ import com.blink.blinkiot.Other.UDP.FormatData;
 import com.blink.blinkiot.Other.UDP.OnlineDeveice;
 import com.blink.blinkiot.R;
 import com.blink.blinkiot.View.Fragment.Fragment1;
+import com.example.ruan.udp_sdk.UDPConfig;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,7 +115,7 @@ public class CheckOnline implements UDPInterface.HandlerMac, HttpInterface.HttpH
         for (int i = 0; i < ListObj.size(); i++) {
             isUser[i] = 0;
             UserDevice userDevice = (UserDevice) ListObj.get(i);
-            new OnlineDeveice().Check(i, userDevice.getDeviceIP(), Integer.parseInt(userDevice.getDevicePORT()), userDevice.getDeviceMac(), handlerMac, 1);
+            new OnlineDeveice().Check(i, userDevice.getDeviceIP(), Integer.parseInt(userDevice.getDevicePORT()), userDevice.getDeviceMac(), handlerMac, UDPConfig.count);
             //计时器，广播没一秒发送一次，总共发送1次
         }
         ReData(UnNORMAL);

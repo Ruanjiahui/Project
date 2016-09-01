@@ -151,21 +151,6 @@ public class UserDevice extends Device implements Parcelable {
         this.deviceRemarks = deviceRemarks;
     }
 
-    public void getUserDeviceMoudle(ArrayList<Map<String, String>> list) {
-        setDeviceID(list.get(0).get("deviceID"));
-        setDeviceIP(list.get(0).get("deviceIP"));
-        setDeviceMac(list.get(0).get("deviceMac"));
-        setDeviceName(list.get(0).get("deviceName"));
-        setDeviceOnline(list.get(0).get("deviceOnline"));
-        setDevicePic(list.get(0).get("devicePic"));
-        setDevicePORT(list.get(0).get("devicePORT"));
-        setDeviceRemarks(list.get(0).get("deviceRemarks"));
-        setSceneID(list.get(0).get("sceneID"));
-        setUserID(list.get(0).get("userID"));
-        setDeviceOnlineStatus(list.get(0).get("deviceOnlineStatus"));
-        setDeviceOnlineStatus(list.get(0).get("deviceOnlineStatus"));
-    }
-
     /**
      * Describe the kinds of special objects contained in this Parcelable's
      * marshalled representation.

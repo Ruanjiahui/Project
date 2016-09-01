@@ -1,5 +1,7 @@
 package com.blink.blinkiot.Other.UDP;
 
+import android.util.Log;
+
 import com.example.ruan.udp_sdk.Thread.UDPReviced;
 import com.example.ruan.udp_sdk.UDP;
 import com.example.ruan.udp_sdk.UDPConfig;
@@ -27,8 +29,8 @@ public class OnlineDeveice extends UDP implements UDPListen.UDPHandler {
 
     public void Check(int position, String IP, int PORT, String msg, UDPInterface.HandlerMac handlerMac, int count) {
         this.handlerMac = handlerMac;
-        uReviced(position, this);
         uSend(IP, PORT, msg.getBytes(), count);
+        uReviced(position, this);
     }
 
     /**

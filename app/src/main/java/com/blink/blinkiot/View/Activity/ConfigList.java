@@ -1,6 +1,8 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -9,7 +11,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.blink.blinkiot.Other.DeviceCode;
 import com.example.administrator.data_sdk.CommonIntent;
+import com.example.administrator.data_sdk.Database.GetDatabaseData;
 import com.example.administrator.data_sdk.ImageUtil.ImageTransformation;
 import com.example.administrator.ui_sdk.DensityUtil;
 import com.example.administrator.ui_sdk.MyBaseActivity.BaseActivity;
@@ -20,6 +24,7 @@ import com.blink.blinkiot.Other.Adapter.LGAdapter;
 import com.blink.blinkiot.Other.DataBase.DatabaseOpera;
 import com.blink.blinkiot.Other.DatabaseTableName;
 import com.blink.blinkiot.Other.UDP.ScanDevice;
+import com.example.ruan.udp_sdk.UDP;
 import com.example.ruan.udp_sdk.UDPConfig;
 import com.blink.blinkiot.R;
 
@@ -127,6 +132,12 @@ public class ConfigList extends BaseActivity implements UDPInterface.HandlerMac,
             for (int i = 0; i < ListObj.size(); i++) {
                 userDevice = (UserDevice) ListObj.get(i);
                 if (userDevice.getDeviceMac().equals(mac1)) {
+                    //将数据库存在设备的数据更新
+                    ContentValues contentValues = new ContentValues();
+                    contentValues.put("deviceIP", (String) objects[2]);
+                    contentValues.put("deviceOnlineStatus", DeviceCode.WIFI);
+                    contentValues.put("deviceOnline", DeviceCode.ONLINE);
+                    new GetDatabaseData().Update(context, DatabaseTableName.DeviceDatabaseName, DatabaseTableName.UserDeviceName, contentValues, "deviceMac = ?", new String[]{userDevice.getDeviceMac()});
                     setList();
                     return;
                 }

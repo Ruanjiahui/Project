@@ -1,5 +1,6 @@
 package com.blink.blinkiot.View.Activity;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -41,12 +42,14 @@ public class DeviceList extends BaseActivity implements AdapterView.OnItemClickL
     private DeviceActivityControl deviceActivityControl = null;
 
     private RelativeLayout deviceListBack = null;
+    public static Activity activity = null;
 
     /**
      * Start()
      */
     @Override
     public void init() {
+        activity = (Activity) context;
         Bundle bundle = getIntent().getExtras();
         FLAG = bundle.getString("data");
         title = bundle.getString("flag");
